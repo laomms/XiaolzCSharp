@@ -67,29 +67,29 @@ LayoutKind：指定结构体的布局类型。
             public KXTV_UINT16DataType;///数据类型(KDB_VALUE_DATA_TPYE)
             [FieldOffset(2)]
             [MarshalAs(UnmanagedType.U1)]
-            public KXTV_BOOLEANbitVal;///布尔类型
+            public KXTV_BOOLEAN bitVal;///布尔类型
             [FieldOffset(2)]
-            public KXTV_INT8i1Val;///单字节整数oy
+            public KXTV_INT8i 1Val;///单字节整数oy
             [FieldOffset(2)]
-            public KXTV_INT16i2Val;///双字节整数oy
+            public KXTV_INT16i 2Val;///双字节整数oy
             [FieldOffset(2)]
-            public KXTV_INT32i4Val;///四字节整数oy
+            public KXTV_INT32i 4Val;///四字节整数oy
             [FieldOffset(2)]
-            public KXTV_INT64i8Val;///八字节整数oy
+            public KXTV_INT64i 8Val;///八字节整数oy
             [FieldOffset(2)]
-            public KXTV_UINT8ui1Val;///单字节整数oy(无符号)
+            public KXTV_UINT8ui 1Val;///单字节整数oy(无符号)
             [FieldOffset(2)]
-            public KXTV_UINT16ui2Val;//双字节整数(无
+            public KXTV_UINT16ui 2Val;//双字节整数(无
             [FieldOffset(2)]
-            public KXTV_UINT32ui4Val;//四字节整数(无
+            public KXTV_UINT32ui 4Val;//四字节整数(无
             [FieldOffset(2)]
-            public KXTV_UINT64ui8Val;///八字节整数(无符号)
+            public KXTV_UINT64ui 8Val;///八字节整数(无符号)
             [FieldOffset(2)]
-            public KXTV_FLOAT32r4Val;///单精度浮点
+            public KXTV_FLOAT32r 4Val;///单精度浮点
             [FieldOffset(2)]
-            public KXTV_FLOAT64r8Val;///双精度浮点数///
+            public KXTV_FLOAT64r 8Val;///双精度浮点数///
             [FieldOffset(2)]
-            public KXTV_PTRrefVal;///其他类型
+            public KXTV_PTR refVal;///其他类型
         };
 ```
 但是需要注意的是值类型和引用类型的地址不能够重叠。所以上面使用refVal代表所有引用类型，最后通过Marshal类进行转换即可。  
@@ -107,15 +107,15 @@ LayoutKind：指定结构体的布局类型。
         public struct KXTVTagPubData
         {
             //[FieldOffset(0)]
-            public KXTV_UINT32TagID;
+            public KXTV_UINT32 TagID;
             //[FieldOffset(4)]
-            public KXTV_INT16FieldID;
+            public KXTV_INT16 FieldID;
             //[FieldOffset(6)]
-            public KXTV_VALUEFieldValue;
+            public KXTV_VALUE FieldValue;
             //[FieldOffset(16)]
-            public FILETIMETimeStamp;
+            public FILETIME TimeStamp;
             //[FieldOffset(24)]
-            public KXTV_UINT32QualityStamp;
+            public KXTV_UINT32 QualityStamp;
         };
 ```
 
