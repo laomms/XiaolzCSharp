@@ -2,7 +2,7 @@
 小栗子C# SDK
 
 
-转一个C#调用非托管DLL注意事项：  
+转一个C#调用非托管程序注意事项：  
 
 1>C#值类型与引用类型的内存特点  
 2>平台调用中DllImport，StructLayout，MarshalAS的各属性及其含义  
