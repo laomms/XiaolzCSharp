@@ -127,12 +127,12 @@ LayoutKind：指定结构体的布局类型。
 一般使用引用传递结构体参数。结构体在C#中本身是值类型，一般在线程的堆栈区分配内存。
 例子：
 ```C
-    KXTV_RETKXTVAPIKXTVServerConnect(INPKXTV_CONNECTION_OPTIONpConnectOption,OUTKXTV_HANDLE*ServerHandle);  
+    KXTV_RETKXTVAPIKXTVServerConnect(INPKXTV_CONNECTION_OPTION pConnectOption,OUTKXTV_HANDLE* ServerHandle);  
 ```
 其中参数pConnectOption是一个结构体指针类型变量。由于参数是指针类型则可以使用引用传递方式传递结构体，在C#中方法的声明为：
 ```C
 [DllImport(dllName,CallingConvention=CallingConvention.StdCall,CharSet=CharSet.Unicode)]
-publicexternstaticKXTV_RETKXTVServerConnect(refKXTVConnectionOptionConnectOption,refKXTV_HANDLEServerHandle);
+publicexternstaticKXTV_RETKXTVServerConnect(refKXTVConnection OptionConnectOption,ref KXTV_HANDLE ServerHandle);
 ```
 在C#中的调用方式为：
 ```C
@@ -146,7 +146,7 @@ ConnectOption.ConnectionFlags=2;
 ConnectOption.NetUserFlag=false;
 ConnectOption.NetworkTimeout=0;
 ConnectOption.Reserved1=1;
-ErrorCode=KXTV.KXTVServerConnect(refConnectOption,refm_hClient);
+ErrorCode=KXTV.KXTVServerConnect(ref ConnectOption,ref m_hClient);
 if(IsOK(ErrorCode,"KXTVServerConnect")==false)
     return false;
 ```
@@ -177,12 +177,12 @@ typedef struct KXTVStringArray
 该结构体的StringArray为指向指针数组的指针，该指针数组中的每个元素指向一个字符串。这些字符串的内存大多在C++非托管内存中申请的。需要使用IntPtr来取代StringArray。
 然后用Marshal中的方法解析出字符串数组：
 ```C
-        publicstaticKXTV_WSTR[] parseToString(KXTV.KXTVStringArrayTagNameArray)
+        public static KXTV_WSTR[] parseToString(KXTV.KXTVStringArray TagNameArray)
         {
             uintsize = TagNameArray.SizeOfArray;
             KXTV_PTR[] ptrs = newKXTV_HANDLE[size];
             Marshal.Copy(TagNameArray.StringArray, ptrs, 0, (int)size);//将指针数组复制到ptrs指向的内存中
-            KXTV_WSTR[] str = newKXTV_WSTR[size]; for (uinti = 0; i < size; i++)
+            KXTV_WSTR[] str = new KXTV_WSTR[size]; for (uinti = 0; i < size; i++)
             {
                 str[i] = Marshal.PtrToStringUni(ptrs[i]);//将非托管内存中的字符串复制并构建托管内存中的String对象
             }
@@ -220,11 +220,12 @@ boolMallocString([Out]StirngStr);
 所有封送拆收器在进行类型转换时，会自动调用CoTaskMenFree方法来尝试释放内存，当然也可以显示释放内存。  
 使用IntPtr数据类型来对应pStr，封送拆收器将非托管数据封送成IntPtr时，直接将指针复制进IntPtr的值中，如上声明为：
 ```C
-[DllImport("dllName.dll",CharSet=CharSet.Ansi)]boolMallocString([Out]IntPtrpStr);
+[DllImport("dllName.dll",CharSet=CharSet.Ansi)]
+bool MallocString([Out] IntPtr pStr);
 ``` 
 使用Marshal类的PtrToStringAni()方法实现数据拷贝:
 ```C
-StringStr=Marshal.PtrToStringAni(pStr);
+String Str=Marshal.PtrToStringAni(pStr);
 ``` 
 这时数据已经复制到Str对象中了，可以释放非托管内存中pStr的内存了：
 ```C
@@ -232,7 +233,7 @@ Marshal.FreeCoTaskMem(pStr);
 ``` 
 这就是手动释放CoTaskMenAlloc分配的内存，当然也可以在C++中提供一个函数来释放分配的内存：
 ```C
-boolReleaseString(char*pStr);
+bool ReleaseString(char*pStr);
 ``` 
 之后在C#中调用该函数释放内存也可以。注：对于不确定内存分配方式的，只能使用C++提供的函数来释放内存。  
 本项目中的例子：
