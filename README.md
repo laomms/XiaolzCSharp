@@ -182,7 +182,7 @@ typedef struct KXTVStringArray
         public static KXTV_WSTR[] parseToString(KXTV.KXTVStringArray TagNameArray)
         {
             uintsize = TagNameArray.SizeOfArray;
-            KXTV_PTR[] ptrs = newKXTV_HANDLE[size];
+            KXTV_PTR[] ptrs = new KXTV_HANDLE[size];
             Marshal.Copy(TagNameArray.StringArray, ptrs, 0, (int)size);//将指针数组复制到ptrs指向的内存中
             KXTV_WSTR[] str = new KXTV_WSTR[size]; for (uinti = 0; i < size; i++)
             {
