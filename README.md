@@ -45,7 +45,7 @@ MarshalAS属性：用来指定单个参数或者是结构体中单个字段的�
 UnmanagedType：必须字段。用于指定该参数对应非托管数据类型。由于C#中的数据类型和C++中的数据类型不是一一对应的，有些时候C#中的同一种数据类型可以对应于C++中的几种数据类型，所以需要指定该参数，封送拆收器会在两个类型之间进行相应的类型转换。
 比如C#中的String类型，则可以对应于非托管C++中的char*或者wchat_t*。如果是char*，则指定UnmanagedType.LPStr，如果是wchat_t*，则指定为UnmanagedType.LPWStr。
 另一个例子是C#中的托管类型System.Boolean可以对应非托管C++中的bool，但是C++中的bool可能是1个字节，2个字节或者4个字节。这时就需要指定为UnmanagedType.U1,UnmanagedType.U2或者UnmanagedType.U4。  
-本项目中KXTV_BOOLEA为N1字节无符号数：typedefunsignedcharKXTV_BOOLEAN;所以在C#中：  
+本项目中KXTV_BOOLEA为N1字节无符号数：typedef unsignedchar KXTV_BOOLEAN;所以在C#中：  
 ```C
 using KXTV_BOOLEAN=System.Boolean;
 [MarshalAs(UnmanagedType.U1)]
