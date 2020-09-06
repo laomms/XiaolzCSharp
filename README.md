@@ -227,6 +227,6 @@ KXTV.KXTVTagGetTagNamebyID(m_hClient,1,TagIDArray,ref TagNameArray,ErrorCodeArra
 String[] TagNames=parseToString(TagNameArray);
 KXTV.KXTVAPIFreeStringArray(ref TagNameArray);/释放内存
 ``` 
-
+调用Marshal.AllocHGlobal必须调用 Marshal.FreeHGlobal(ptr)来手动释放内存，即使调用GC.Collect();方法也无法释放，导致内存泄露！！  
 
 
