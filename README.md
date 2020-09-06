@@ -34,14 +34,16 @@ UnmanagedType：必须字段。用于指定该参数对应非托管数据类型�
 比如C#中的String类型，则可以对应于非托管C++中的char*或者wchat_t*。如果是char*，则指定UnmanagedType.LPStr，如果是wchat_t*，则指定为UnmanagedType.LPWStr。
 另一个例子是C#中的托管类型System.Boolean可以对应非托管C++中的bool，但是C++中的bool可能是1个字节，2个字节或者4个字节。这时就需要指定为UnmanagedType.U1,UnmanagedType.U2或者UnmanagedType.U4。  
 本项目中KXTV_BOOLEA为N1字节无符号数：typedefunsignedcharKXTV_BOOLEAN;所以在C#中：  
-usingKXTV_BOOLEAN=System.Boolean;
+```C
+using KXTV_BOOLEAN=System.Boolean;
 [MarshalAs(UnmanagedType.U1)]
-KXTV_BOOLEANNetUserFlag,
-
+KXTV_BOOLEAN NetUserFlag,
+```
 count：对于需要传递定长字符串或者数组的情况，需要使用count字段来指定字符串长度或者数组中元素的个数。  
 StructLayout属性：控制C#中的结构体在内存中的布局。为了能够和非托管C++中的结构体在内存中进行转换，封送拆收器必须知道结构体中每一个字段在结构体中内存中的偏移量。
-LayoutKind：指定结构体的布局类型。有两种布局类型可以设置，1，Sequential：顺序布局。2，Explicit：精确布局。可以精确控制结构体中每个字段在非托管内存中的精确位置。
-一般使用顺序布局方式，这也是C#默认的布局方式。  
+LayoutKind：指定结构体的布局类型。   
+有两种布局类型可以设置，1，Sequential：顺序布局。2，Explicit：精确布局。可以精确控制结构体中每个字段在非托管内存中的精确位置。  
+一般使用顺序布局方式，这也是C#默认的布局方式。   
 但是在以下两种情况下需要使用精确控制Explicit方式：  
 1，部分定义结构体中的字段。有些结构体很庞大，而C#中仅使用其中几个字段，则可以只定义那几个字段，但是要精确指定它们在非托管内存中精确偏移。该偏移应与有其他字段时的偏移一致。  
 2，非托管代码中的联合体，需要使用Explicit将字段重合在一起。如： 
