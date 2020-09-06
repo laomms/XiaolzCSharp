@@ -22,6 +22,9 @@ dllName：必须字段，指定对应的dll的路径，可以使用绝对路径�
 EntryPoint：指定要调用的DLL入口点。注意如果使用extern"C"+stdcall则编译器会对函数名进行重整。最终的函数名会是_FuncName@，8其中8为FuncName函数所有参数的字节数。如果是extern"C"+cdecl调用约定，则函数名不变。  
 举例：函数声明如下：  
 对应的函数入口点如下：  
+```C
+extern "C" __declspec(dllexport) void __stdcall fn(LPCTSTR szParam , BYTE *pBuffer, int cMax);
+```
 注：  
 其中extern"C"使得C++编译器生成的函数名对于C编译器是能够理解的，因为C++编译器为了处理函数重载的情况，将参数类型加入到了函数的签名中，所以生成的函数入口只能C++编译器自己懂。而加入extern"C"则使得生成的函数签名能够被其他编译器理解。  
 stdcall和cdecl是两种调用约定方式。主要区别在于压入堆栈中的函数参数的清理方式，stdcall规定被调用函数负责参数出栈，称自动清除；  
