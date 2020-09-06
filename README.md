@@ -229,4 +229,228 @@ KXTV.KXTVAPIFreeStringArray(ref TagNameArray);/释放内存
 ``` 
 调用Marshal.AllocHGlobal必须调用 Marshal.FreeHGlobal(ptr)来手动释放内存，即使调用GC.Collect();方法也无法释放，导致内存泄露！！  
 
+6>略谈unsafe   
+msdn里讲到:
+“在 C# 中很少需要使用指针，但仍有一些需要使用的情况。例如，在下列情况中使用允许采用指针的不安全上下文是正确的：    
+处理磁盘上的现有结构
+涉及内部包含指针的结构的高级 COM 或平台调用方案
+性能关键代码
+对于第一和第二点，主要是调win32的api。
+但是“性能关键代码”这个非常重要。我来举例引申一下。  
+我们都知道像飞信这种大型IM服务端，难免会面临大量的字符处理（协议报文）。
+如果同时在线100多万，而且大家都同时进行会话，服务端的程序如果对内存回收不好，那肯定会crash.
+飞信服务端是.net的，所以就拉扯一下这个例子。
+不过你可以大胆猜测，它服务端肯定用了unsafe，不然顶不住这档子活!!
+还是msdn上的demo:
+以下示例使用指针将一个字节数组从 src 复制到 dst。用 /unsafe 选项编译此示例.
+```C
+    class Test
+    {
+        // The unsafe keyword allows pointers to be used within
+        // the following method:
+        static unsafe void Copy(byte[] src, int srcIndex,
+        byte[] dst, int dstIndex, int count)
+        {
+            if (src == null || srcIndex < 0 ||
+            dst == null || dstIndex < 0 || count < 0)
+            {
+                throw new ArgumentException();
+            }
+            int srcLen = src.Length;
+            int dstLen = dst.Length;
+            if (srcLen - srcIndex < count ||
+            dstLen - dstIndex < count)
+            {
+                throw new ArgumentException();
+            }
+            // The following fixed statement pins the location of
+            // the src and dst objects in memory so that they will
+            // not be moved by garbage collection.
+            fixed (byte* pSrc = src, pDst = dst)
+            {
+                byte* ps = pSrc;
+                byte* pd = pDst;
+                // Loop over the count in blocks of 4 bytes, copying an
+                // integer (4 bytes) at a time:
+                for (int n = 0; n < count / 4; n++)
+                {
+                    *((int*)pd) = *((int*)ps);
+                    pd += 4;
+                    ps += 4;
+                }
+                // Complete the copy by moving any bytes that weren’t
+                // moved in blocks of 4:
+                for (int n = 0; n < count % 4; n++)
+                {
+                    *pd = *ps;
+                    pd++;
+                    ps++;
+                }
+            }
+        }
+        static void Main(string[] args)
+        {
+            byte[] a = new byte[100];
+            byte[] b = new byte[100];
+            for (int i = 0; i < 100; ++i)
+                a[i] = (byte)i;
+            Copy(a, 0, b, 0, 100);
+            Console.WriteLine(”The first 10 elements are:”);
+            for (int i = 0; i < 10; ++i)
+                Console.Write(b[i] + ” “);
+            Console.WriteLine(”/ n”);
+        }
+    }
+``` 
+请注意使用了 unsafe 关键字，这允许在 Copy 方法内使用指针。  
+fixed 语句用于声明指向源和目标数组的指针。它锁定 src 和 dst 对象在内存中的位置以便使其不会被垃圾回收移动。当 fixed 块完成后，这些对象将被解除锁定。
+通过略过数组界限检查，不安全代码可提高性能。  
+fixed 语句允许您获取指向字节数组使用的内存的指针，并且标记实例，以便垃圾回收器不会移动它。  
+在 fixed 块的末尾，将标记该实例以便可以移动它。此功能称为声明式锁定。锁定的好处是系统开销非常小，除非在 fixed 块中发生垃圾回收（但此情况不太可能发生）。  
+对头，fixed 内我只分配我自己的内存，用完就释放，从不霸占平民土地，不多征收平民余粮！！  
+对于如果你要是等着GC来跟你处理，它寻根寻址还得点时候呢。。。。。  
+
+7>略谈GCHandle   
+我们在使用c#托管代码时，内存地址和GC回收那不是我们关心的，CLR已经给我们暗箱操作。
+但是如果我们在c#中调用了一个非托管代码，比如vc的DLL,而且他有个回调函数，需要引用c#中的某个对象并操作，
+这时候你就得要小心了。
+要是非托管代码中用到得托管代码那个对象被GC给回收了，这时候就会报内存错误。
+所以我们就要把那个对象“钉”住(pin)，让它的内存地址固定，而不被垃圾回收掉，然后最后我们自己管理，自己释放内存,这时候就需要GCHandle,来看个msdn上的例子:  
+```C
+public delegate bool CallBack(int handle, IntPtr param);
+        public class LibWrap
+        {
+            [DllImport("user32.dll")]
+            public static extern bool EnumWindows(CallBack cb, IntPtr param);
+        }
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+
+                TextWriter tw = System.Console.Out;
+                GCHandle gch = GCHandle.Alloc(tw);
+                CallBack cewp = new CallBack(CaptureEnumWindowsProc);
+                LibWrap.EnumWindows(cewp, (IntPtr)gch);
+                gch.Free();
+                Console.Read();
+
+            }
+            private static bool CaptureEnumWindowsProc(int handle, IntPtr param)
+            {
+                GCHandle gch = (GCHandle)param;
+                TextWriter tw = (TextWriter)gch.Target;
+
+                tw.WriteLine(handle);
+                return true;
+            }
+
+        }
+``` 
+对上面的代码，略加解释：gch 会钉住(pin)tw这个对象，使其不受GC管理，告诉它，以后你崩管我，我也不用给你上税,其实管理权已经给gch，通过free来释放内存。
+这种情况主要用在托管和非托管代码交互的时候，防止内存泄露来使用GCHandle。  
+另也可以使用GC.KeepAlive 方法(引用msdn)  
+KeepAlive 方法的目的是确保对对象的引用存在，该对象有被垃圾回收器过早回收的危险。这种现象可能发生的一种常见情形是，当在托管代码或数据中已没有对该对象的引用，但该对象仍然在非托管代码（如 Win32 API、非托管 DLL 或使用 COM 的方法）中使用。
+下面是例子:
+```C
+using System;
+using System.Threading;
+using System.Runtime.InteropServices;
+
+// A simple class that exposes two static Win32 functions.
+// One is a delegate type and the other is an enumerated type.
+public class MyWin32
+{
+    // Declare the SetConsoleCtrlHandler function 
+    // as external and receiving a delegate.   
+    [DllImport("Kernel32")]
+    public static extern Boolean SetConsoleCtrlHandler(HandlerRoutine Handler,
+        Boolean Add);
+
+    // A delegate type to be used as the handler routine 
+    // for SetConsoleCtrlHandler.
+    public delegate Boolean HandlerRoutine(CtrlTypes CtrlType);
+
+    // An enumerated type for the control messages 
+    // sent to the handler routine.
+    public enum CtrlTypes
+    {
+        CTRL_C_EVENT = 0,
+        CTRL_BREAK_EVENT,
+        CTRL_CLOSE_EVENT,
+        CTRL_LOGOFF_EVENT = 5,
+        CTRL_SHUTDOWN_EVENT
+    }
+}
+
+public class MyApp
+{
+    // A private static handler function in the MyApp class.
+    static Boolean Handler(MyWin32.CtrlTypes CtrlType)
+    {
+        String message = "This message should never be seen!";
+
+        // A switch to handle the event type.
+        switch (CtrlType)
+        {
+            case MyWin32.CtrlTypes.CTRL_C_EVENT:
+                message = "A CTRL_C_EVENT was raised by the user.";
+                break;
+            case MyWin32.CtrlTypes.CTRL_BREAK_EVENT:
+                message = "A CTRL_BREAK_EVENT was raised by the user.";
+                break;
+            case MyWin32.CtrlTypes.CTRL_CLOSE_EVENT:
+                message = "A CTRL_CLOSE_EVENT was raised by the user.";
+                break;
+            case MyWin32.CtrlTypes.CTRL_LOGOFF_EVENT:
+                message = "A CTRL_LOGOFF_EVENT was raised by the user.";
+                break;
+            case MyWin32.CtrlTypes.CTRL_SHUTDOWN_EVENT:
+                message = "A CTRL_SHUTDOWN_EVENT was raised by the user.";
+                break;
+        }
+
+        // Use interop to display a message for the type of event.
+        Console.WriteLine(message);
+
+        return true;
+    }
+
+    public static void Main()
+    {
+
+        // Use interop to set a console control handler.
+        MyWin32.HandlerRoutine hr = new MyWin32.HandlerRoutine(Handler);
+        MyWin32.SetConsoleCtrlHandler(hr, true);
+
+        // Give the user some time to raise a few events.
+        Console.WriteLine("Waiting 30 seconds for console ctrl events");
+
+        // The object hr is not referred to again.
+        // The garbage collector can detect that the object has no
+        // more managed references and might clean it up here while
+        // the unmanaged SetConsoleCtrlHandler method is still using it.      
+
+        // Force a garbage collection to demonstrate how the hr
+        // object will be handled.
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Thread.Sleep(10000);
+
+        // Display a message to the console when the unmanaged method
+        // has finished its work.
+        Console.WriteLine("Finished!");
+
+        // Call GC.KeepAlive(hr) at this point to maintain a reference to hr. 
+        // This will prevent the garbage collector from collecting the 
+        // object during the execution of the SetConsoleCtrlHandler method.
+        GC.KeepAlive(hr);
+        Console.Read();
+    }
+}
+
+``` 
 
