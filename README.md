@@ -470,4 +470,18 @@ public class MyApp
 }
 
 ``` 
+总结:    
+针对string，可以使用Marshal.StringToHGlobalAnsi、Marshal.StringToHGlobalAuto、Marshal.StringToHGlobalUni把string封送到非托管函数，之后需要调用Marshal.FreeHGlobal释放内存；或者使用Marshal.PtrToStringAnsi、Marshal.PtrToStringAuto、Marshal.PtrToStringUni从非托管函数里面取出string。
 
+针对byte[](或基础类型的数组)，可以使用Marshal.Copy从byte[]拷贝封送到非托管函数或者从非托管函数拷贝封送到byte[]。此外从byte[]封送到非托管函数还可以采取固定内存直接传送byte[]的原始地址(省去了申请内存和拷贝的开销，速度更快)，方法是使用GCHandle并指定GCHandleType.Pinned类型。
+
+针对委托，可以使用Marshal.GetFunctionPointerForDelegate从delegate封送到非托管函数，或者使用Marshal.GetDelegateForFunctionPointer从非托管函数里面取出。和byte[]一样，在封送到非托管函数时需要确保GC不要回收委托(需要保持引用但不需要Pinned)。
+
+针对结构体，可以在C#中按一样的顺序和对应的数据类型声明一个同样的struct(只能使用基础类型和固定长度的数组)，并且标记StructLayout的LayoutKind.Sequential属性，然后使用Marshal.StructureToPtr和Marshal.PtrToStructure进行封送。
+
+C#的对象不能在Native中进行处理，只能保存以待之后再传回给C#调用，保存的方式为C#用GCHandle引用对象，然后把GCHandle转成IntPtr，传给Native作为指针保存。
+
+当C#声明的extern函数返回类型和参数类型中有托管类型时(如string、byte[]、委托等)，就会进行自动封送处理，因此可以省写大部分的封送代码。不过有几种情况还是需要手动进行封送的，如：
+
+string的编码是utf8之类的非ansi非utf16编码，则必须手动进行封送同时转换编码。
+委托转换成函数指针的操作比较耗时，如果有频繁的对同一委托进行封送调用，则预存转换后的结果能够很显著的提升性能。
