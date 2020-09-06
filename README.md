@@ -334,7 +334,7 @@ fixed 语句允许您获取指向字节数组使用的内存的指针，并且�
 要是非托管代码中用到得托管代码那个对象被GC给回收了，这时候就会报内存错误。
 所以我们就要把那个对象“钉”住(pin)，让它的内存地址固定，而不被垃圾回收掉，然后最后我们自己管理，自己释放内存,这时候就需要GCHandle,来看个msdn上的例子:  
 ```C
-public delegate bool CallBack(int handle, IntPtr param);
+        public delegate bool CallBack(int handle, IntPtr param);
         public class LibWrap
         {
             [DllImport("user32.dll")]
