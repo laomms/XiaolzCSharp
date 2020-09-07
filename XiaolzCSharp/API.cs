@@ -129,7 +129,7 @@ namespace XiaolzCSharp
 				gchSendGroupMsg.Free();
 
 			//apprun = null;
-Loop:
+//Loop:
 			string dllpath = System.Environment.CurrentDirectory + "\\main\\plugin\\XiaolzCSharp.dll";
 			try
 			{
@@ -138,7 +138,7 @@ Loop:
 			catch (Exception e)
 			{
 				Console.WriteLine(e.Message.ToString());
-				goto Loop;
+				//goto Loop;
 			}
 			return 0;
 		}
