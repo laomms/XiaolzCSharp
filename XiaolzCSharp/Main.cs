@@ -100,13 +100,14 @@ namespace XiaolzCSharp
 				else
 				{
 
-					//for (int i = 0; i < 200; i++)
-					//{
-					//	API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + "第1枚密钥:类别: Win 10 RTM ProfessionalEducation OEM: DM 密钥: VR72F - 6NJ39 - WJD82 - GKTBG - HFT4M 代码: 0x8007007A 时间: 2020 - 09 - 05 14:14:30 PM");
-					//	API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, i.ToString());
-					//	Thread.Sleep(200);
-					//}
-					API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent);
+                    for (int i = 0; i < 200; i++)
+                    {
+						API.OutLog("发送了这样的消息:"+ i.ToString(), 16711680, 16777215);
+                        API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + "第1枚密钥:类别: Win 10 RTM ProfessionalEducation OEM: DM 密钥: VR72F - 6NJ39 - WJD82 - GKTBG - HFT4M 代码: 0x8007007A 时间: 2020 - 09 - 05 14:14:30 PM");
+                        API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, i.ToString());
+                        Thread.Sleep(200);
+                    }
+                    //API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent);
 
 				}
 
