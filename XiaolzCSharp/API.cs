@@ -134,7 +134,6 @@ namespace XiaolzCSharp
 			//if (gchSendGroupMsg.IsAllocated)
 			//	gchSendGroupMsg.Free();
 
-
 			//Loop:
 			string dllpath = System.Environment.CurrentDirectory + "\\main\\plugin\\XiaolzCSharp.dll";
 			try
