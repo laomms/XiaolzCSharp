@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace XiaolzCSharp
 {
-    class PInvoke
+	public class PInvoke
     {
 		#region 全局变量
 		public static string jsonstr;
