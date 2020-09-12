@@ -21,10 +21,9 @@ namespace XiaolzCSharp
 		public static GCHandle gchAppRun;
 		#region 导出函数给框架并取到两个参数值
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
+		//[return: MarshalAs(UnmanagedType.LPStr)]
 		public static string apprun([MarshalAs(UnmanagedType.LPStr)] string apidata, [MarshalAs(UnmanagedType.LPStr)] string pluginkey)
 		{
-
 			jsonstr = apidata;
 			plugin_key = pluginkey;
 
@@ -59,6 +58,7 @@ namespace XiaolzCSharp
 			App_Info.data = "\\\\" + resultJson + "\\\\";
 			string jsonstring = (new JavaScriptSerializer()).Serialize(App_Info);
 			jsonstring = jsonstring.Replace("\"\\\\", "").Replace("\\\\\"", "").Replace("\\", "");
+
 			return jsonstring;
 		}
 		public static string AddPermission(string desc, string json)
@@ -114,44 +114,44 @@ namespace XiaolzCSharp
 		public delegate int DelegateAppUnInstall();
 		public static int AppUnInstall()
 		{
-			appEnableFunc=null;
-			AppDisabledEvent = null;
-			AppSettingEvent = null;
-			AppUninstallEvent = null;
-			Main.funRecvicePrivateMsg = null;
-			Main.funRecviceGroupMsg = null;
-			funEvent = null;
-
-			//if (gchGetLoginQQ.IsAllocated)
-			//	gchGetLoginQQ.Free();
-			//if (gchGetClientKey.IsAllocated)
-			//	gchGetClientKey.Free();
-			//if (gchGetPSKey.IsAllocated)
-			//	gchGetPSKey.Free();
-			//if (gchGetSKey.IsAllocated)
-			//	gchGetSKey.Free();
-			//if (gchGetSKey.IsAllocated)
-			//	gchGetSKey.Free();
-			//if (gchSendGroupMsg.IsAllocated)
-			//	gchSendGroupMsg.Free();
-
-			//Loop:
-			string dllpath = System.Environment.CurrentDirectory + "\\main\\plugin\\XiaolzCSharp.dll";
-			try
-			{
-				File.Delete(dllpath);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.Message.ToString());
-				//goto Loop;
-			}
+			//托管程序集插件不支持FreeLibrary的方式卸载插件,只支持AppDomain的方式卸载,所以要删除插件,必须先关掉框架,手动删除.
 			return 0;
 		}
-		public void Disposed()
+        public static IntPtr GetCurrentModule(bool bRef)
+        {
+            IntPtr hModule = IntPtr.Zero;
+			//IntPtr tAddress = Marshal.GetFunctionPointerForDelegate(t);
+			hModule = GetModuleHandle("XiaolzCSharp.dll");
+			if (hModule != IntPtr.Zero)
+			//if (GetModuleHandleEx(bRef ? GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS : (GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT), "XiaolzCSharp.dll", out hModule))
+            {
+                return hModule;
+            }
+
+            return IntPtr.Zero;
+        }
+        public static IntPtr GetSelfModuleHandle()
 		{
-			GC.SuppressFinalize(this);
+			MEMORY_BASIC_INFORMATION mbi = new MEMORY_BASIC_INFORMATION();
+			UIntPtr GetSelfModuleHandle = new UIntPtr(); 
+			return (VirtualQuery( ref GetSelfModuleHandle,ref mbi, Marshal.SizeOf(mbi) )!= 0) ? (IntPtr)mbi.AllocationBase : IntPtr.Zero;
 		}
+		public static String GetSelfModulePath(ref string path)
+		{
+			MEMORY_BASIC_INFORMATION mbi = new MEMORY_BASIC_INFORMATION();
+			UIntPtr GetSelfModuleHandle = new UIntPtr();
+			IntPtr dllHandle = (VirtualQuery(ref GetSelfModuleHandle, ref mbi, Marshal.SizeOf(mbi)) != 0) ? (IntPtr)mbi.AllocationBase : IntPtr.Zero;
+			string lpFileName="";
+			int filesize = 0;
+			var sb = new StringBuilder(260);
+			int res=GetModuleFileNameA(dllHandle, sb, filesize);
+			int iLength = WideCharToMultiByte(Convert.ToUInt32(Encoding.UTF8.CodePage), 0, lpFileName, -1, null, 0, IntPtr.Zero, IntPtr.Zero);  //
+			StringBuilder utf8String = new StringBuilder(iLength);
+			res= WideCharToMultiByte(Convert.ToUInt32(Encoding.UTF8.CodePage), 0, lpFileName, -1, utf8String, iLength, IntPtr.Zero, IntPtr.Zero);
+
+			return lpFileName;
+		}
+
 		#endregion
 		#region 插件禁用
 		public static DelegateAppDisabled AppDisabledEvent = new DelegateAppDisabled(appDisable);
