@@ -165,6 +165,7 @@ namespace XiaolzCSharp
 		#region 取框架QQ
 		//public static GCHandle gchGetLoginQQ;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string DelegateGetLoginQQ(string pkey);
 		public static string GetLoginQQ()
 		{
