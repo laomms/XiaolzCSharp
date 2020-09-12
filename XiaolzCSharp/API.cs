@@ -92,6 +92,7 @@ namespace XiaolzCSharp
 		public static int appEnable()		{
 		
 			string res = GetLoginQQ();
+	
 			return 0;
 		}
 		#endregion
@@ -231,6 +232,7 @@ namespace XiaolzCSharp
 		#region 获取pskey
 		//public static GCHandle gchGetPSKey;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string GetPSKey(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
 		public string GetPSKeyEvent(long thisQQ, string domain)
 		{
@@ -249,6 +251,7 @@ namespace XiaolzCSharp
 		#region 获取skey
 		//public static GCHandle gchGetSKey;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string GetSKey(string pkey, long thisQQ);
 		public string GetSKeyEvent(long thisQQ, string domain)
 		{
@@ -267,6 +270,7 @@ namespace XiaolzCSharp
 		#region 输出日志
 		//public static GCHandle gchOutputLog;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string OutputLog(string pkey, [MarshalAs(UnmanagedType.LPStr)] string message, int text_color, int background_color);
 		public static string OutLog(string message, int text_color = 16711680, int background_color = 16777215)
 		{
@@ -374,6 +378,7 @@ namespace XiaolzCSharp
 		#region 发送私聊消息
 		//public static GCHandle gchSendPivateMsg;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, ref long MessageRandom, ref int MessageReq);
 		public static string SendPrivateMessage(long ThisQQ, long SenderQQ, string MessageContent)
 		{
@@ -407,6 +412,7 @@ namespace XiaolzCSharp
 		#region 发送群聊消息
 		//public static GCHandle gchSendGroupMsg;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, bool Anonymous);
 		public static string SendGroupMessage(long ThisQQ, long GroupQQ, string MessageContent)
 		{
@@ -441,6 +447,7 @@ namespace XiaolzCSharp
 		}
 		//public static GCHandle gchUploadFriendImage;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadFriendImage(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 		public string UploadFriendImageEvent(long thisQQ, long friendQQ, string picpath, bool is_flash)
 		{
@@ -505,6 +512,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 上传头像
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadAvatar(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 		public string UploadAvatarEvent(long thisQQ, string picpath)
 		{
@@ -539,6 +547,7 @@ namespace XiaolzCSharp
 		#region 上传好友语音
 		//public static GCHandle gchUploadFriendAudio;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadFriendAudio(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
 		public string UploadFriendAudioEvent(long thisQQ, long friendQQ, AudioTypeEnum audio_type, string audio_text, byte[] audio)
 		{
@@ -583,6 +592,7 @@ namespace XiaolzCSharp
 		#region 获取图片地址
 		//public static GCHandle gchGetImageDownloadLink;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string DelegateGetImageDownloadLink(string pkey, string guid, long thisQQ, long groupQQ);
 		public static string GetImageDownloadLink(long thisQQ, long sendQQ, long groupQQ, string ImgGuid)
 		{
@@ -730,6 +740,7 @@ namespace XiaolzCSharp
 		#region 取管理列表
 		//public static GCHandle gchGetadministratorList;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string DelegateGetadministratorList(string pkey, long thisQQ, long gruopNumber);
 		public string[] GetAdministratorList(long thisQQ, long gruopNumber)
 		{
@@ -813,6 +824,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 发送群临时消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string SendGroupTemporaryMessage(string pkey, long thisQQ, long groupQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string content, ref long random, ref int req);
 		public string SendGroupTemporaryMessageEvent(long thisQQ, long groupQQ, long otherQQ, string content, long random = 0, int req = 0)
 		{
@@ -826,6 +838,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 发送好友json消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string SendFriendJSONMessage(string pkey, long thisQQ, long friendQQ, [MarshalAs(UnmanagedType.LPStr)] string json_content);
 		public string SendFriendJSONMessageEvent(long thisQQ, long friendQQ, string json_content)
 		{
@@ -909,6 +922,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 保存文件到微云
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string DelegateSaveFileToWeiYun(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string file_id);
 		public string SaveFileToWeiYunEvent(long thisQQ, long groupQQ, string file_id)
 		{
@@ -935,6 +949,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 上传群文件
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadGroupFile(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string path, [MarshalAs(UnmanagedType.LPStr)] string folder);
 		public string UploadGroupFileEvent(long thisQQ, long groupQQ, string path, string folder)
 		{
@@ -961,6 +976,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 取群文件列表
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string GetGroupFileList(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref GroupFileInfoDataList[] groupFileInfoDataLists);
 		public List<GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
 		{
@@ -991,6 +1007,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 创建群文件夹
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string CreateGroupFolder(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder);
 		public string CreateGroupFolderEvent(long thisQQ, long groupQQ, string folder)
 		{
