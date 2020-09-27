@@ -112,37 +112,8 @@ namespace XiaolzCSharp
 			return ItemList;
 		}
 
-		public static List<string> WithdrewMSG(string szGroup, string szQQ, int nMSGtype, int nMSG)
-		{
-			Console.WriteLine("WithdrewMSG");
-			List<string> ContentList = new List<string>();
-			var szDataPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", $"{3475748568}", "eventv2.db"); //'"Data Source=" & CurDir().ToString & "\data\" & App.Common.CqApi.GetLoginQQ & "\eventv2.DB"
-			string sql = "Select content,time From event  Where `group` Like '%" + szGroup + "' And account Like '%" + szQQ + "' And type='" + nMSGtype + "' ORDER BY ID DESC LIMIT " + nMSG + " OFFSET 0"; //group得加单引号
-			int num = System.Text.Encoding.Unicode.GetByteCount(sql);
-			IntPtr hSqlite = new IntPtr();
-			DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-			if (sqlite3_open(ConvertString2UTF8(szDataPath), ref hSqlite) == SQLITE_OK)
-			{
-				IntPtr stmt = new IntPtr();
-				IntPtr transient = new IntPtr();
-				if (sqlite3_prepare16_v2(hSqlite, sql, num, out stmt, transient) == SQLITE_OK)
-				{
-					while (sqlite3_step(stmt) == SQLITE_ROW)
-					{
-						ContentList.Add(dtDateTime.AddSeconds(Convert.ToDouble(sqlite3_column_text(stmt, 1))).ToLocalTime() + " " + PointerToString(sqlite3_column_text(stmt, 0)));
-					}
-				}
-				else
-				{
-					Console.WriteLine(sqlite3_errcode(hSqlite));
-				}
-				sqlite3_finalize(stmt);
-			}
-			return ContentList;
-		}
-
-		//CheckDataExsit("KeyStore", "Keys", RetKey) = True
-		public static void CheckImporlistview(Form Forms, ListView ListView1, string tableName, string TiaoJina8)
+	   //CheckDataExsit("KeyStore", "Keys", RetKey) = True
+		public static void CheckImporlistview(ListView ListView1, string tableName, string TiaoJina8)
 		{
 			ListView1.Items.Clear();
 			ListViewItem ITM = null;
@@ -164,7 +135,7 @@ namespace XiaolzCSharp
 						for (var i = 1; i < columnCount; i++)
 						{
 							Console.WriteLine(PointerToString(sqlite3_column_text(stmt, i)));
-							if (i == 5)
+							if (i == 2)
 							{
 								if (!(PointerToString(sqlite3_column_text(stmt, i)) == null))
 								{
