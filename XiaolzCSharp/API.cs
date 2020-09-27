@@ -18,7 +18,6 @@ namespace XiaolzCSharp
 {
 	public class API
 	{
-		public static GCHandle gchAppRun;
 		#region 导出函数给框架并取到两个参数值
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
 		//[return: MarshalAs(UnmanagedType.LPStr)]
@@ -37,23 +36,31 @@ namespace XiaolzCSharp
 			json = AddPermission("取群成员列表", json);
 			json = AddPermission("取群列表", json);
 			json = AddPermission("取框架QQ", json);
-			object jsonkey = (new JavaScriptSerializer()).DeserializeObject(json);
-			var resultJson = (new JavaScriptSerializer()).Serialize(new { needapilist = jsonkey });
+
+
+			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
+			var resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 			var App_Info = new AppInfo();
-			//定义插件信息
+
 			App_Info.sdkv = "2.7.1";
 			App_Info.appname = "测试插件";
 			App_Info.author = "插件作者";
 			App_Info.describe = "这是一个测试插件" + "\r\n" + "可以用此空壳来开发插件" + "\r\n" + "官网地址：http://www.xiaolz.cn/";
 			App_Info.appv = "1.0.0";
+			GC.KeepAlive(appEnableFunc);
 			App_Info.useproaddres = Marshal.GetFunctionPointerForDelegate(appEnableFunc).ToInt64();
+			GC.KeepAlive(AppDisabledEvent);
 			App_Info.banproaddres = Marshal.GetFunctionPointerForDelegate(AppDisabledEvent).ToInt64();
-			App_Info.setproaddres = Marshal.GetFunctionPointerForDelegate(AppSettingEvent).ToInt64(); //点击插件设置
+			GC.KeepAlive(AppSettingEvent);
+			App_Info.setproaddres = Marshal.GetFunctionPointerForDelegate(AppSettingEvent).ToInt64();
+			GC.KeepAlive(AppUninstallEvent);
 			App_Info.unitproaddres = Marshal.GetFunctionPointerForDelegate(AppUninstallEvent).ToInt64();
+			GC.KeepAlive(Main.funRecvicePrivateMsg);
 			App_Info.friendmsaddres = Marshal.GetFunctionPointerForDelegate(Main.funRecvicePrivateMsg).ToInt64();
+			GC.KeepAlive(Main.funRecviceGroupMsg);
 			App_Info.groupmsaddres = Marshal.GetFunctionPointerForDelegate(Main.funRecviceGroupMsg).ToInt64();
+			GC.KeepAlive(funEvent);
 			App_Info.eventmsaddres = Marshal.GetFunctionPointerForDelegate(funEvent).ToInt64();
-			//添加你要添加的其他函数的指针地址
 
 			App_Info.data = "\\\\" + resultJson + "\\\\";
 			string jsonstring = (new JavaScriptSerializer()).Serialize(App_Info);
@@ -163,7 +170,6 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取框架QQ
-		//public static GCHandle gchGetLoginQQ;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string DelegateGetLoginQQ(string pkey);
@@ -171,9 +177,7 @@ namespace XiaolzCSharp
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["取框架QQ"];
-			DelegateGetLoginQQ GetLoginQQAPI = (DelegateGetLoginQQ)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(DelegateGetLoginQQ));
-			//gchGetLoginQQ = GCHandle.Alloc(GetLoginQQAPI);
-			//GC.Collect();
+			DelegateGetLoginQQ GetLoginQQAPI = (DelegateGetLoginQQ)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(DelegateGetLoginQQ));		
 			var RetJson = GetLoginQQAPI(plugin_key);
 			try
 			{
@@ -214,7 +218,6 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 获取clientkey
-		//public static GCHandle gchGetClientKey;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		private delegate string GetClientKey(string pkey, long thisQQ);
 		public string GetClientKeyEvent(long thisQQ)
@@ -222,16 +225,12 @@ namespace XiaolzCSharp
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["获取clientkey"];
 			GetClientKey GetClientKeyAPI = (GetClientKey)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(GetClientKey));
-			//gchGetClientKey = GCHandle.Alloc(GetClientKeyAPI);
-			//GC.Collect();
 			var ret = GetClientKeyAPI(plugin_key, thisQQ);
 			GetClientKeyAPI = null;
-			//gchGetClientKey.Free();
 			return ret;
 		}
 		#endregion
 		#region 获取pskey
-		//public static GCHandle gchGetPSKey;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string GetPSKey(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
@@ -239,18 +238,14 @@ namespace XiaolzCSharp
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["获取clientkey"];
-			GetPSKey GetPSKeyAPI = (GetPSKey)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(GetPSKey));
-			//gchGetPSKey = GCHandle.Alloc(GetPSKeyAPI);
-			//GC.Collect();
+			GetPSKey GetPSKeyAPI = (GetPSKey)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(GetPSKey));		
 			var ret = GetPSKeyAPI(plugin_key, thisQQ, domain);
 			GetPSKeyAPI = null;
-			//gchGetPSKey.Free();
 			return ret;
 		}
 
 		#endregion
 		#region 获取skey
-		//public static GCHandle gchGetSKey;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string GetSKey(string pkey, long thisQQ);
@@ -258,18 +253,14 @@ namespace XiaolzCSharp
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["获取clientkey"];
-			GetSKey GetSKeyAPI = (GetSKey)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(GetSKey));
-			//gchGetSKey = GCHandle.Alloc(GetSKeyAPI);
-			//GC.Collect();
+			GetSKey GetSKeyAPI = (GetSKey)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(GetSKey));		
 			var ret = GetSKeyAPI(plugin_key, thisQQ);
-			GetSKeyAPI = null;
-			//gchGetSKey.Free();
+			GetSKeyAPI = null;	
 			return ret;
 		}
 
 		#endregion
 		#region 输出日志
-		//public static GCHandle gchOutputLog;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string OutputLog(string pkey, [MarshalAs(UnmanagedType.LPStr)] string message, int text_color, int background_color);
@@ -277,12 +268,9 @@ namespace XiaolzCSharp
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["输出日志"];
-			OutputLog outputLogAPI = (OutputLog)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(OutputLog));
-			//gchOutputLog = GCHandle.Alloc(outputLogAPI);
-			//GC.Collect();
+			OutputLog outputLogAPI = (OutputLog)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(OutputLog));		
 			var ret = outputLogAPI(plugin_key, message, text_color, background_color);
 			outputLogAPI = null;
-			//gchOutputLog.Free();
 			return ret;
 		}
 
@@ -377,7 +365,6 @@ namespace XiaolzCSharp
 		#endregion
 
 		#region 发送私聊消息
-		//public static GCHandle gchSendPivateMsg;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, ref long MessageRandom, ref int MessageReq);
@@ -392,14 +379,11 @@ namespace XiaolzCSharp
 			{
 				dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 				int ptr = json["发送好友消息"];
-				SendPivateMsg SendPrivateMsgAPI = (SendPivateMsg)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(SendPivateMsg));
-				//gchSendPivateMsg = GCHandle.Alloc(SendPrivateMsgAPI);
-				//GC.Collect();
+				SendPivateMsg SendPrivateMsgAPI = (SendPivateMsg)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(SendPivateMsg));			
 				long MessageRandom = 0;
 				int MessageReq = 0;
 				res = SendPrivateMsgAPI(plugin_key, ThisQQ, SenderQQ, MessageContent, ref MessageRandom, ref MessageReq);
 				SendPrivateMsgAPI = null;
-				//gchSendPivateMsg.Free();
 			}
 			catch (Exception ex)
 			{
@@ -411,7 +395,6 @@ namespace XiaolzCSharp
 		#endregion
 
 		#region 发送群聊消息
-		//public static GCHandle gchSendGroupMsg;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, bool Anonymous);
@@ -426,12 +409,9 @@ namespace XiaolzCSharp
 			{
 				dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 				int ptr = json["发送群消息"];
-				SendGroupMsg SendGroupMsgAPI = (SendGroupMsg)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(SendGroupMsg));
-				//gchSendGroupMsg = GCHandle.Alloc(SendGroupMsgAPI);
-				//GC.Collect();
+				SendGroupMsg SendGroupMsgAPI = (SendGroupMsg)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(SendGroupMsg));			
 				res = SendGroupMsgAPI(plugin_key, ThisQQ, GroupQQ, MessageContent, false);				
 				SendGroupMsgAPI = null;
-				//gchSendGroupMsg.Free();
 			}
 			catch (Exception ex)
 			{
@@ -446,7 +426,6 @@ namespace XiaolzCSharp
 			string piccode = UploadFriendImageEvent(thisQQ, friendQQ, picpath, is_flash);
 			return SendPrivateMessage(thisQQ, friendQQ, piccode);
 		}
-		//public static GCHandle gchUploadFriendImage;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadFriendImage(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
@@ -457,12 +436,9 @@ namespace XiaolzCSharp
 			int picsize = picture.Length;
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["上传好友图片"];
-			UploadFriendImage UploadFriendImageAPI = (UploadFriendImage)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendImage));
-			//gchUploadFriendImage = GCHandle.Alloc(UploadFriendImageAPI);
-			//GC.Collect();
+			UploadFriendImage UploadFriendImageAPI = (UploadFriendImage)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendImage));		
 			string ret = UploadFriendImageAPI(plugin_key, thisQQ, friendQQ, is_flash, picture, picsize);
 			UploadFriendImageAPI = null;
-			//gchUploadFriendImage.Free();
 			return ret;
 		}
 		private byte[] GetByteArrayByImage(Bitmap bitmap)
@@ -494,7 +470,6 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 上传群图片
-		//public static GCHandle gchUploadGroupImage;
 		public string UploadGroupImage(long thisQQ, long groupQQ, string picpath, bool is_flash)
 		{
 			Bitmap bitmap = new Bitmap(picpath);
@@ -503,11 +478,9 @@ namespace XiaolzCSharp
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["上传群图片"];
 			UploadFriendImage UploadFriendImageAPI = (UploadFriendImage)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendImage));
-			//gchUploadGroupImage = GCHandle.Alloc(UploadFriendImageAPI);
 			GC.Collect();
 			string ret = UploadFriendImageAPI(plugin_key, thisQQ, groupQQ, is_flash, picture, picsize);
 			UploadFriendImageAPI = null;
-			//gchUploadGroupImage.Free();
 			return ret;
 		}
 		#endregion
@@ -546,7 +519,6 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 上传好友语音
-		//public static GCHandle gchUploadFriendAudio;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadFriendAudio(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
@@ -554,12 +526,9 @@ namespace XiaolzCSharp
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["上传好友语音"];
-			UploadFriendAudio UploadFriendAudioAPI = (UploadFriendAudio)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendAudio));
-			//gchUploadFriendAudio = GCHandle.Alloc(UploadFriendAudioAPI);
-			//GC.Collect();
+			UploadFriendAudio UploadFriendAudioAPI = (UploadFriendAudio)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendAudio));	
 			var ret = UploadFriendAudioAPI(plugin_key, thisQQ, friendQQ, Convert.ToInt32(audio_type), audio_text, audio, audio.Length);
 			UploadFriendAudioAPI = null;
-			//gchUploadFriendAudio.Free();
 			return ret;
 		}
 		public byte[] SilkDecoding(string audio_path)
@@ -575,23 +544,18 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 上传群语音
-		//public static GCHandle gchUploadGroupAudio;
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public string UploadGroupAudio(long thisQQ, long groupQQ, AudioTypeEnum audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio)
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["上传群语音"];
-			UploadFriendAudio UploadFriendAudioAPI = (UploadFriendAudio)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendAudio));
-			//gchUploadGroupAudio = GCHandle.Alloc(UploadFriendAudioAPI);
-			//GC.Collect();
+			UploadFriendAudio UploadFriendAudioAPI = (UploadFriendAudio)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(UploadFriendAudio));		
 			var ret = UploadFriendAudioAPI(plugin_key, thisQQ, groupQQ, Convert.ToInt32(audio_type), audio_text, audio, audio.Length);
 			UploadFriendAudioAPI = null;
-			//gchUploadGroupAudio.Free();
 			return ret;
 		}
 		#endregion
 		#region 获取图片地址
-		//public static GCHandle gchGetImageDownloadLink;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string DelegateGetImageDownloadLink(string pkey, string guid, long thisQQ, long groupQQ);
@@ -599,9 +563,7 @@ namespace XiaolzCSharp
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["取图片下载地址"];
-			DelegateGetImageDownloadLink GetImageLink = (DelegateGetImageDownloadLink)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetImageDownloadLink));
-			//gchGetImageDownloadLink = GCHandle.Alloc(GetImageLink);
-			//GC.Collect();
+			DelegateGetImageDownloadLink GetImageLink = (DelegateGetImageDownloadLink)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetImageDownloadLink));		
 			var ImgUrl = GetImageLink(plugin_key, ImgGuid, thisQQ, groupQQ);
 			if (groupQQ == 0)
 			{
@@ -612,21 +574,17 @@ namespace XiaolzCSharp
 				SendGroupMessage(thisQQ, groupQQ, "图片地址为:" + ImgUrl + "\r\n");
 			}
 			GetImageLink = null;
-			//gchGetImageDownloadLink.Free();
 			return "1";
 		}
 		#endregion
 		#region 取好友列表
-		//public static GCHandle gchGetFriendList;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate int DelegateGetFriendList(string pkey, long thisQQ, ref DataArray[] DataInfo);
 		public static int GetFriendList(long thisQQ, long sendQQ)
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["取好友列表"];
-			DelegateGetFriendList GetFriendListAPI = (DelegateGetFriendList)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetFriendList));
-			//gchGetFriendList = GCHandle.Alloc(GetFriendListAPI);
-			//GC.Collect();
+			DelegateGetFriendList GetFriendListAPI = (DelegateGetFriendList)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetFriendList));		
 			DataArray[] ptrArray = new DataArray[2];
 			int count = GetFriendListAPI(plugin_key, thisQQ, ref ptrArray);
 			if (count > 0)
@@ -644,21 +602,17 @@ namespace XiaolzCSharp
 				SendPrivateMessage(thisQQ, sendQQ, "好友列表:" + "\r\n" + string.Join("\r\n", list));
 			}
 			GetFriendListAPI = null;
-			//gchGetFriendList.Free();
 			return count;
 		}
 		#endregion
 		#region 查询好友信息
-		//public static GCHandle gchGetFriendInfo;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate bool DelegateGetFriendInfo(string pkey, long thisQQ, long otherQQ, ref GetFriendDataInfo[] friendInfos);
 		public static void GetFriendData(long thisQQ, long otherQQ)
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["查询好友信息"];
-			DelegateGetFriendInfo GetFriendInfoAPI = (DelegateGetFriendInfo)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetFriendInfo));
-			//gchGetFriendInfo = GCHandle.Alloc(GetFriendInfoAPI);
-			//GC.Collect();
+			DelegateGetFriendInfo GetFriendInfoAPI = (DelegateGetFriendInfo)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetFriendInfo));		
 			GetFriendDataInfo[] pFriendInfo = new GetFriendDataInfo[2];
 			bool res = GetFriendInfoAPI(plugin_key, thisQQ, otherQQ, ref pFriendInfo);
 			if (res == true)
@@ -671,11 +625,9 @@ namespace XiaolzCSharp
 				SendPrivateMessage(thisQQ, otherQQ, "查询好友信息失败");
 			}
 			GetFriendInfoAPI = null;
-			//gchGetFriendInfo.Free();
 		}
 		#endregion
 		#region 取群成员列表
-		//public static GCHandle gchGetgroupMemberlist;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate int DelegateGetgroupMemberlist(string pkey, long thisQQ, long groupQQ, ref DataArray[] DataInfo);
 		public static int GetgroupMemberlist(long thisQQ, long groupQQ)
@@ -683,9 +635,7 @@ namespace XiaolzCSharp
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["取群成员列表"];
 			DataArray[] ptrArray = new DataArray[2];
-			DelegateGetgroupMemberlist GetgroupMemberlistAPI = (DelegateGetgroupMemberlist)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetgroupMemberlist));
-			//gchGetgroupMemberlist = GCHandle.Alloc(GetgroupMemberlistAPI);
-			//GC.Collect();
+			DelegateGetgroupMemberlist GetgroupMemberlistAPI = (DelegateGetgroupMemberlist)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetgroupMemberlist));		
 			int count = GetgroupMemberlistAPI(plugin_key, thisQQ, groupQQ, ref ptrArray);
 			if (count > 0)
 			{
@@ -702,21 +652,17 @@ namespace XiaolzCSharp
 				SendGroupMessage(thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list));
 			}
 			GetgroupMemberlistAPI = null;
-			//gchGetgroupMemberlist.Free();
 			return count;
 		}
 		#endregion
 		#region 取群列表
-		//public static GCHandle gchGetGroupList;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate int DelegateGetGroupList(string pkey, long thisQQ, ref DataArray[] DataInfo);
 		public static int GetGroupList(long thisQQ, long groupQQ)
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["取群列表"];
-			DelegateGetGroupList GetGroupListAPI = (DelegateGetGroupList)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetGroupList));
-			//gchGetGroupList = GCHandle.Alloc(GetGroupListAPI);
-			//GC.Collect();
+			DelegateGetGroupList GetGroupListAPI = (DelegateGetGroupList)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetGroupList));		
 			DataArray[] ptrArray = new DataArray[2];
 			int count = GetGroupListAPI(plugin_key, thisQQ, ref ptrArray);
 			if (count > 0)
@@ -734,12 +680,10 @@ namespace XiaolzCSharp
 				SendGroupMessage(thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list));
 			}
 			GetGroupListAPI = null;
-			//gchGetGroupList.Free();
 			return count;
 		}
 		#endregion
 		#region 取管理列表
-		//public static GCHandle gchGetadministratorList;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string DelegateGetadministratorList(string pkey, long thisQQ, long gruopNumber);
@@ -748,17 +692,13 @@ namespace XiaolzCSharp
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["取管理层列表"];
 			DelegateGetadministratorList GetAdministratorListAPI = (DelegateGetadministratorList)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(DelegateGetadministratorList));
-			//gchGetadministratorList = GCHandle.Alloc(GetAdministratorListAPI);
-			//GC.Collect();
 			var ret = GetAdministratorListAPI(plugin_key, thisQQ, gruopNumber);
 			string[] adminlist = ret.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 			GetAdministratorListAPI = null;
-			//gchGetadministratorList.Free();
 			return adminlist;
 		}
 		#endregion
 		#region 查询群信息
-		//public static GCHandle gchGetGroupInfo;
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate bool DelegateGetGroupInfo(string pkey, long thisQQ, long otherGroupQQ, ref GetGroupDataInfo[] GroupInfos);
 		public static void GetGroupData(long thisQQ, long otherGroupQQ)
@@ -766,8 +706,6 @@ namespace XiaolzCSharp
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["查询好友信息"];
 			DelegateGetGroupInfo GetGroupInfoAPI = (DelegateGetGroupInfo)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(DelegateGetGroupInfo));
-			//gchGetGroupInfo = GCHandle.Alloc(GetGroupInfoAPI);
-			//GC.Collect();
 			GetGroupDataInfo[] pGroupInfo = new GetGroupDataInfo[2];
 			bool res = GetGroupInfoAPI(plugin_key, thisQQ, otherGroupQQ, ref pGroupInfo);
 			if (res == true)
@@ -780,7 +718,6 @@ namespace XiaolzCSharp
 				SendPrivateMessage(thisQQ, otherGroupQQ, "查询好友信息失败");
 			}
 			GetGroupInfoAPI = null;
-			//gchGetGroupInfo.Free();
 		}
 		#endregion
 		#region 解散群

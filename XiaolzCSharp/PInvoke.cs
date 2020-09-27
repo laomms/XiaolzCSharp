@@ -27,7 +27,7 @@ namespace XiaolzCSharp
 			public long OperateQQ;
 			public long TriggerQQ;
 			public long MessageSeq;
-			public int MessageTimestamp;
+			public uint MessageTimestamp;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string SourceGroupName;
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -37,29 +37,29 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string MessageContent;
 			public EventTypeEnum EventType;
-			public int EventSubType;
+			public uint EventSubType;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct PrivateMessageEvent
 		{
 			public long SenderQQ;
 			public long ThisQQ;
-			public int MessageReq;
+			public uint MessageReq;
 			public long MessageSeq;
-			public int MessageReceiveTime;
+			public uint MessageReceiveTime;
 			public long MessageGroupQQ;
-			public int MessageSendTime;
+			public uint MessageSendTime;
 			public long MessageRandom;
-			public int MessageClip;
-			public int MessageClipCount;
+			public uint MessageClip;
+			public uint MessageClipCount;
 			public long MessageClipID;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string MessageContent;
-			public int BubbleID;
+			public uint BubbleID;
 			public MessageTypeEnum MessageType;
 			public MessageSubTypeEnum MessageSubType;
 			public MessageSubTypeEnum MessageSubTemporaryType;
-			public int RedEnvelopeType;
+			public uint RedEnvelopeType;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string SessionToken;
 			public long SourceEventQQ;
@@ -78,17 +78,17 @@ namespace XiaolzCSharp
 		{
 			public long SenderQQ;
 			public long ThisQQ;
-			public int MessageReq;
-			public int MessageReceiveTime;
+			public uint MessageReq;
+			public uint MessageReceiveTime;
 			public long MessageGroupQQ;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string SourceGroupName;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string SenderNickname;
-			public int MessageSendTime;
+			public uint MessageSendTime;
 			public long MessageRandom;
-			public int MessageClip;
-			public int MessageClipCount;
+			public uint MessageClip;
+			public uint MessageClipCount;
 			public long MessageClipID;
 			public MessageTypeEnum MessageType;
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -97,9 +97,9 @@ namespace XiaolzCSharp
 			public string MessageContent;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string ReplyMessageContent;
-			public int BubbleID;
-			public int ThisQQAnonymousID;
-			public int reserved_;
+			public uint BubbleID;
+			public uint ThisQQAnonymousID;
+			public uint reserved_;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string FileID;
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -107,12 +107,12 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string FileName;
 			public long FileSize;
-			public int MessageAppID;
+			public uint MessageAppID;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct FriendDataList
 		{
-			public int count;
+			public uint count;
 			public FriendInfo pFriendInfo;
 		}
 
@@ -120,7 +120,7 @@ namespace XiaolzCSharp
 		public struct ServiceInfo
 		{
 			public ServiceInformation ServiceList;
-			public int ServiceLevel;
+			public uint ServiceLevel;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GetFriendDataInfo //一维数组
@@ -135,8 +135,8 @@ namespace XiaolzCSharp
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct DataArray
 		{
-			public int index;
-			public int Amount;
+			public uint index;
+			public uint Amount;
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
 			public byte[] pAddrList;
 		}
@@ -152,12 +152,12 @@ namespace XiaolzCSharp
 			public string Note;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string Status;
-			public int Likes;
+			public uint Likes;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string Signature;
-			public int Gender;
-			public int Level;
-			public int Age;
+			public uint Gender;
+			public uint Level;
+			public uint Age;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string Nation;
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -165,19 +165,19 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string City;
 			public ServiceInfo serviceInfos;
-			public int ContinuousOnlineTime;
+			public uint ContinuousOnlineTime;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string QQTalent;
-			public int LikesToday;
-			public int LikesAvailableToday;
+			public uint LikesToday;
+			public uint LikesAvailableToday;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GroupMemberInfo
 		{
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string QQNumber;
-			public int Age;
-			public int Gender;
+			public uint Age;
+			public uint Gender;
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string Name;
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -233,20 +233,20 @@ namespace XiaolzCSharp
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GroupFileInfoDataList
 		{
-			public int index; //数组索引
-			public int Amount; //数组元素数量
+			public uint index; //数组索引
+			public uint Amount; //数组元素数量
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
 			public byte[] pAddrList; //每个元素的指针
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GroupFileInformation
 		{
-			public IntPtr FileID; //文件夹fileid或者文件fileid
-			public IntPtr FileName; // 文件夹名或文件名
+			public uintPtr FileID; //文件夹fileid或者文件fileid
+			public uintPtr FileName; // 文件夹名或文件名
 			public long FileSize; // 文件大小，文件夹时表示有多少个文件
-			public IntPtr FileMd5; // 文件md5，文件夹时为空，部分文件类型也可能是空
+			public uintPtr FileMd5; // 文件md5，文件夹时为空，部分文件类型也可能是空
 			public long FileFromUin; // 创建文件夹或上传文件的QQ
-			public IntPtr FileFromNick; // 创建文件夹或上传文件的QQ
+			public uintPtr FileFromNick; // 创建文件夹或上传文件的QQ
 			public FiletypeEnum FileType; // 文件类型 1: 文件, 2: 文件夹
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -810,10 +810,10 @@ namespace XiaolzCSharp
 
 		public struct MEMORY_BASIC_INFORMATION
 		{
-			public IntPtr BaseAddress;
-			public IntPtr AllocationBase;
+			public uintPtr BaseAddress;
+			public uintPtr AllocationBase;
 			public AllocationProtectEnum AllocationProtect;
-			public IntPtr RegionSize;
+			public uintPtr RegionSize;
 			public StateEnum State;
 			public AllocationProtectEnum Protect;
 			public TypeEnum Type;
