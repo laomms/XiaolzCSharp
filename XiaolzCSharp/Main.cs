@@ -13,34 +13,35 @@ namespace XiaolzCSharp
 {
 	public class Main
 	{
-		public string SendMessageCallBack(string szGroupID, string szQQID, string szContent) //dll回调函数
-		{
-			if (szGroupID == szQQID && !string.IsNullOrEmpty(szQQID) && !string.IsNullOrEmpty(szContent))
-			{
-				API.SendPrivateMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szQQID), szContent);
-			}
-			else if (string.IsNullOrEmpty(szGroupID) && string.IsNullOrEmpty(szQQID))
-			{
-				return "";
-			}
-			else
-			{
-				if (!string.IsNullOrEmpty(szGroupID) && szGroupID != szQQID && !string.IsNullOrEmpty(szContent))
-				{
-					if (!string.IsNullOrEmpty(szQQID))
-					{
-						API.SendGroupMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), "[@" + szQQID + "]" + szContent);
-					}
-					else
-					{
-						API.SendGroupMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), szContent);
-					}
-				}
-			}
-			return "";
-		}
+		//public string SendMessageCallBack(string szGroupID, string szQQID, string szContent) //dll回调函数
+		//{
+		//	if (szGroupID == szQQID && !string.IsNullOrEmpty(szQQID) && !string.IsNullOrEmpty(szContent))
+		//	{
+		//		API.SendPrivateMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szQQID), szContent);
+		//	}
+		//	else if (string.IsNullOrEmpty(szGroupID) && string.IsNullOrEmpty(szQQID))
+		//	{
+		//		return "";
+		//	}
+		//	else
+		//	{
+		//		if (!string.IsNullOrEmpty(szGroupID) && szGroupID != szQQID && !string.IsNullOrEmpty(szContent))
+		//		{
+		//			if (!string.IsNullOrEmpty(szQQID))
+		//			{
+		//				API.SendGroupMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), "[@" + szQQID + "]" + szContent);
+		//			}
+		//			else
+		//			{
+		//				API.SendGroupMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), szContent);
+		//			}
+		//		}
+		//	}
+		//	return "";
+		//}
 		public string GetImageCallBack(string szGroupID, string szQQID, string szContent)
 		{
+
 			if (szContent.Contains("[pic,hash="))
 			{
 				dynamic jsonkey = new JavaScriptSerializer().DeserializeObject(PInvoke.jsonstr);
@@ -70,6 +71,12 @@ namespace XiaolzCSharp
 		public delegate int RecvicePrivateMsg(ref PrivateMessageEvent sMsg);
 		public static int RecvicetPrivateMessage(ref PrivateMessageEvent sMsg)
 		{
+			if (SqliHelper.CheckDataExsit("中级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在中级权限里不反馈
+            {
+				if (sMsg.SenderQQ != sMsg.ThisQQ)
+					API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "抱歉!你的QQ号不在高级授权名单.");
+				return 0;
+			}	
 			if (sMsg.SenderQQ != sMsg.ThisQQ)
 			{
 
@@ -98,13 +105,6 @@ namespace XiaolzCSharp
 				else
 				{
 
-      //              for (int i = 0; i < 200; i++)  //强度测试,循环消息测试
-      //              {
-						//API.OutLog("发送了这样的消息:"+ i.ToString(), 16711680, 16777215);
-      //                  API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + "第1枚密钥:类别: Win 10 RTM ProfessionalEducation OEM: DM 密钥: VR72F - 6NJ39 - WJD82 - GKTBG - HFT4M 代码: 0x8007007A 时间: 2020 - 09 - 05 14:14:30 PM");
-      //                  API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, i.ToString());
-      //                  Thread.Sleep(200);
-      //              }
                     API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent);
 
 				}
@@ -119,20 +119,26 @@ namespace XiaolzCSharp
 		public delegate int RecviceGroupMsg(ref GroupMessageEvent sMsg);
 		public static int RecvicetGroupMessage(ref GroupMessageEvent sMsg)
 		{
+			if (SqliHelper.CheckDataExsit("授权群号", "GroupID", sMsg.MessageGroupQQ.ToString()) == false)//如果不在高级权限里不反馈
+				return 0;
+			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
+            {
+				if (sMsg.SenderQQ != sMsg.ThisQQ)
+					API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单." );
+				return 0;
+			}
+				
 			if (sMsg.SenderQQ != sMsg.ThisQQ)
 			{
-
 				if (sMsg.MessageContent.Contains("[pic,hash="))
 				{
 					MatchCollection matches = Regex.Matches(sMsg.MessageContent, "\\[pic,hash.*?\\]", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
 					foreach (Match match in matches)
 					{
-
 						API.GetImageDownloadLink(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.MessageGroupQQ, match.Value);
 
 					}
-
 				}
 				else if (sMsg.MessageContent.Contains("[file,fileId=")) //发送文件
 				{

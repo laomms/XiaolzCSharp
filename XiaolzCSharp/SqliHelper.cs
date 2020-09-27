@@ -1047,10 +1047,10 @@ namespace XiaolzCSharp
 		public extern static int sqlite3_extended_result_codes(IntPtr sqlite3, int OnOrOff);
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate int sqlite3_callback(IntPtr param, int size, string[] rec, string[] colName);
-
 		[DllImport("sqlite3.dll", CallingConvention = CallingConvention.Cdecl)]
 		public extern static int sqlite3_exec(IntPtr db, IntPtr sql, sqlite3_callback cb, IntPtr callBackParam, ref IntPtr errMsg);
-
+		[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		public static extern bool SetDllDirectory(string lpPathName);
 
 	}
 }

@@ -97,9 +97,17 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 		public delegate int DelegateAppEnable();
 		public static int appEnable()		{
-		
+
 			string res = GetLoginQQ();
-	
+			string sqlite3path = System.Environment.CurrentDirectory + "\\bin\\sqlite3.dll"; 
+			SqliHelper.SetDllDirectory(sqlite3path);
+			var tablevalue = new List<string[]>() {
+				new string[]{ "`GroupID` TEXT", "`time` TEXT" },
+				new string[]{ "`QQID` TEXT", "`time` TEXT" },
+				new string[]{ "`QQID` TEXT", "`time` TEXT" }
+			};
+
+			SqliHelper.CreateTable(new string[] { "授权群号", "高级权限", "中级权限" }, tablevalue);
 			return 0;
 		}
 		#endregion
@@ -175,11 +183,9 @@ namespace XiaolzCSharp
 			{
 				Console.WriteLine(ex.Message.ToString());
 			}
-			PluginStatus = true;
-			//appDisable()
-			//AppUnInstall()
+			//PluginStatus = false;
+			PluginStatus = true;//自己改下
 			GetLoginQQAPI = null;
-			//gchGetLoginQQ.Free();
 			return "";
 		}
 		#endregion
