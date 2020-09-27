@@ -81,9 +81,7 @@ namespace XiaolzCSharp
 					{
 
 						API.GetImageDownloadLink(sMsg.ThisQQ, sMsg.SenderQQ, 0, match.Value);
-
 					}
-
 				}
 				else if (sMsg.MessageContent.Contains("取好友列表"))
 				{

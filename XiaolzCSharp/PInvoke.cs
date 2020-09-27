@@ -241,12 +241,12 @@ namespace XiaolzCSharp
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GroupFileInformation
 		{
-			public uintPtr FileID; //文件夹fileid或者文件fileid
-			public uintPtr FileName; // 文件夹名或文件名
+			public IntPtr FileID; //文件夹fileid或者文件fileid
+			public IntPtr FileName; // 文件夹名或文件名
 			public long FileSize; // 文件大小，文件夹时表示有多少个文件
-			public uintPtr FileMd5; // 文件md5，文件夹时为空，部分文件类型也可能是空
+			public IntPtr FileMd5; // 文件md5，文件夹时为空，部分文件类型也可能是空
 			public long FileFromUin; // 创建文件夹或上传文件的QQ
-			public uintPtr FileFromNick; // 创建文件夹或上传文件的QQ
+			public IntPtr FileFromNick; // 创建文件夹或上传文件的QQ
 			public FiletypeEnum FileType; // 文件类型 1: 文件, 2: 文件夹
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -810,10 +810,10 @@ namespace XiaolzCSharp
 
 		public struct MEMORY_BASIC_INFORMATION
 		{
-			public uintPtr BaseAddress;
-			public uintPtr AllocationBase;
+			public IntPtr BaseAddress;
+			public IntPtr AllocationBase;
 			public AllocationProtectEnum AllocationProtect;
-			public uintPtr RegionSize;
+			public IntPtr RegionSize;
 			public StateEnum State;
 			public AllocationProtectEnum Protect;
 			public TypeEnum Type;
@@ -856,7 +856,7 @@ namespace XiaolzCSharp
 		public const uint GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS = 0x00000004;
 		public const uint GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT = 0x00000002;
 		[DllImport("kernel32.dll")]
-		public static extern int VirtualQuery(	ref UIntPtr lpAddress,	ref MEMORY_BASIC_INFORMATION lpBuffer,	int dwLength);
+		public static extern int VirtualQuery(	ref IntPtr lpAddress,	ref MEMORY_BASIC_INFORMATION lpBuffer,	int dwLength);
 		[DllImport("Kernel32.dll")]
 		public static extern void FreeLibraryAndExitThread(IntPtr hLibModule, int dwExitCode);
 		[DllImport("kernel32.dll", SetLastError = true)]
