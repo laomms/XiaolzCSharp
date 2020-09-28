@@ -46,7 +46,7 @@ namespace XiaolzCSharp
             if (SqliHelper.CheckDataExsit("高级权限", "QQID", textBox2.Text) == false)
             {
                 SqliHelper.InsertData("高级权限", new string[] { "QQID", "time" }, new string[] { textBox2.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
-                SqliHelper.CheckImporlistview(this.listView2, "授权群号", "");
+                SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
                 MessageBox.Show("添加成功.");
             }
         }
@@ -57,7 +57,7 @@ namespace XiaolzCSharp
             if (SqliHelper.CheckDataExsit("中级权限", "QQID", textBox2.Text) == false)
             {
                 SqliHelper.InsertData("中级权限", new string[] { "QQID", "time" }, new string[] { textBox2.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
-                SqliHelper.CheckImporlistview(this.listView3, "授权群号", "");
+                SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
                 MessageBox.Show("添加成功.");
             }
         }

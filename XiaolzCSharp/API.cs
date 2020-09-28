@@ -339,7 +339,7 @@ namespace XiaolzCSharp
 		#region 发送私聊消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, ref long MessageRandom, ref int MessageReq);
+		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] StringBuilder MessageContent, ref long MessageRandom, ref int MessageReq);
 		public static string SendPrivateMessage(long ThisQQ, long SenderQQ, string MessageContent)
 		{
 			if (PluginStatus == false)
@@ -354,7 +354,9 @@ namespace XiaolzCSharp
 				SendPivateMsg SendPrivateMsgAPI = (SendPivateMsg)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(SendPivateMsg));			
 				long MessageRandom = 0;
 				int MessageReq = 0;
-				res = SendPrivateMsgAPI(plugin_key, ThisQQ, SenderQQ, MessageContent, ref MessageRandom, ref MessageReq);
+				GC.KeepAlive(SendPrivateMsgAPI);
+				StringBuilder sb = new StringBuilder(MessageContent);
+				res = SendPrivateMsgAPI(plugin_key, ThisQQ, SenderQQ, sb, ref MessageRandom, ref MessageReq);
 				SendPrivateMsgAPI = null;
 			}
 			catch (Exception ex)
@@ -369,7 +371,7 @@ namespace XiaolzCSharp
 		#region 发送群聊消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, bool Anonymous);
+		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] StringBuilder MessageContent, bool Anonymous);
 		public static string SendGroupMessage(long ThisQQ, long GroupQQ, string MessageContent)
 		{
 			if (PluginStatus == false)
@@ -381,8 +383,9 @@ namespace XiaolzCSharp
 			{
 				dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 				int ptr = json["发送群消息"];
-				SendGroupMsg SendGroupMsgAPI = (SendGroupMsg)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(SendGroupMsg));			
-				res = SendGroupMsgAPI(plugin_key, ThisQQ, GroupQQ, MessageContent, false);				
+				SendGroupMsg SendGroupMsgAPI = (SendGroupMsg)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(SendGroupMsg));
+				StringBuilder sb = new StringBuilder(MessageContent);
+				res = SendGroupMsgAPI(plugin_key, ThisQQ, GroupQQ, sb, false);				
 				SendGroupMsgAPI = null;
 			}
 			catch (Exception ex)
