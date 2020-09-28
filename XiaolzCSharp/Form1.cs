@@ -6,8 +6,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace XiaolzCSharp
 {
@@ -92,7 +94,35 @@ namespace XiaolzCSharp
 
         private void 修改ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
+            Object myValue =Interaction.InputBox("是否要修改群号:"+ slectitem+"?", "修改群号", "");
+            Regex regex = new Regex("^[0-9]+$");
+            if (Convert.ToString(myValue) != "" && regex.IsMatch(Convert.ToString(myValue)) ==true)
+            {
+                SqliHelper.UpdateData("授权群号", "GroupID", slectitem, "GroupID='" + Convert.ToString(myValue) + "'");
+                SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
+            }
+           
+        }
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Object myValue = Interaction.InputBox("是否要修改高级权限QQ号:" + slectitem + "?", "高级权限", "");
+            Regex regex = new Regex("^[0-9]+$");
+            if (Convert.ToString(myValue) != "" && regex.IsMatch(Convert.ToString(myValue)) == true)
+            {
+                SqliHelper.UpdateData("高级权限", "GroupID", slectitem, "GroupID='" + Convert.ToString(myValue) + "'");
+                SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
+            }
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            Object myValue = Interaction.InputBox("是否要修改中级权限QQ号:" + slectitem + "?", "中级权限", "");
+            Regex regex = new Regex("^[0-9]+$");
+            if (Convert.ToString(myValue) != "" && regex.IsMatch(Convert.ToString(myValue)) == true)
+            {
+                SqliHelper.UpdateData("中级权限", "GroupID", slectitem, "GroupID='" + Convert.ToString(myValue) + "'");
+                SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
+            }
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -159,6 +189,44 @@ namespace XiaolzCSharp
             catch { }
         }
 
-       
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string actualdata = string.Empty;
+            char[] entereddata = textBox1.Text.ToCharArray();
+            foreach (char aChar in entereddata.AsEnumerable())
+            {
+                if (Char.IsDigit(aChar))
+                {
+                    actualdata = actualdata + aChar;
+                }
+                else
+                {                   
+                    actualdata.Replace(aChar, ' ');
+                    actualdata.Trim();
+                }
+            }
+            textBox1.Text = actualdata;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            string actualdata = string.Empty;
+            char[] entereddata = textBox2.Text.ToCharArray();
+            foreach (char aChar in entereddata.AsEnumerable())
+            {
+                if (Char.IsDigit(aChar))
+                {
+                    actualdata = actualdata + aChar;
+                }
+                else
+                {
+                                      actualdata.Replace(aChar, ' ');
+                    actualdata.Trim();
+                }
+            }
+            textBox2.Text = actualdata;
+        }
+
+   
     }
 }

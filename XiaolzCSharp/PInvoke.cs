@@ -19,7 +19,7 @@ namespace XiaolzCSharp
 
 
 		#region 结构体
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct EventTypeBase
 		{
 			public long ThisQQ;
@@ -39,7 +39,7 @@ namespace XiaolzCSharp
 			public EventTypeEnum EventType;
 			public uint EventSubType;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct PrivateMessageEvent
 		{
 			public long SenderQQ;
@@ -73,7 +73,7 @@ namespace XiaolzCSharp
 			public string FileName;
 			public long FileSize;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GroupMessageEvent
 		{
 			public long SenderQQ;
@@ -140,7 +140,7 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
 			public byte[] pAddrList;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct FriendInfo
 		{
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -171,7 +171,7 @@ namespace XiaolzCSharp
 			public uint LikesToday;
 			public uint LikesAvailableToday;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GroupMemberInfo
 		{
 			[MarshalAs(UnmanagedType.LPStr)]
@@ -196,7 +196,7 @@ namespace XiaolzCSharp
 			public long ChatTime;
 			public long Level;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GroupInfo
 		{
 			public long GroupID;
@@ -249,7 +249,7 @@ namespace XiaolzCSharp
 			public IntPtr FileFromNick; // 创建文件夹或上传文件的QQ
 			public FiletypeEnum FileType; // 文件类型 1: 文件, 2: 文件夹
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+
 		public struct AppInfo
 		{
 			public string sdkv;

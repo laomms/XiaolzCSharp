@@ -300,13 +300,22 @@ namespace XiaolzCSharp
 		}
 		public static bool UpdateData(string tableName, string itemName, string itemValue, params string[] columnAgr)
 		{
+			string sql;
+			string[] matches=null;
 			var setvalue = Regex.Replace(string.Join(",", columnAgr), "'.*?'", "?");
 			MatchCollection matchList = Regex.Matches(string.Join(",", columnAgr), "(?<==').*?(?=')");
 			Match[] matchArray = new Match[matchList.Count];
 			matchList.CopyTo(matchArray, 0);
-			string[] matches = Array.ConvertAll(matchArray, new Converter<Match, string>(MatchToString));
-			//Dim sql = "UPDATE " + tableName + " SET " + String.Join(",", columnAgr) + " WHERE " + itemName + " like '%" + itemValue + "%'"
-			var sql = "UPDATE " + tableName + " SET " + string.Join(",", setvalue) + " WHERE " + itemName + " Like '%" + itemValue + "%' ";
+			matches = Array.ConvertAll(matchArray, new Converter<Match, string>(MatchToString));
+			if (columnAgr.Length > 1)
+            {				
+				sql = "UPDATE " + tableName + " SET " + string.Join(",", setvalue) + " WHERE " + itemName + " Like '%" + itemValue + "%' ";		
+			}
+            else
+            {
+				sql = "UPDATE " + tableName + " SET " + columnAgr[0] + " WHERE " + itemName + " Like '%" + itemValue + "%' ";
+			}
+			
 			int num = System.Text.Encoding.Unicode.GetByteCount(sql);
 			IntPtr hSqlite = new IntPtr();
 			if (sqlite3_open(ConvertString2UTF8(Convert.ToString(DataPath)), ref hSqlite) == SQLITE_OK)
