@@ -166,7 +166,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("同意") && sMsg.MessageContent.Contains("入群"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^同意入群]")).IsMatch(output) == true)
+					if ((new Regex("(?i)[^同意入群]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.Length < 7)
@@ -187,7 +187,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("拒绝") && sMsg.MessageContent.Contains("入群"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^拒绝入群]")).IsMatch(output) == true)
+					if ((new Regex("(?i)[^拒绝入群]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.Length < 7)
@@ -208,7 +208,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("同意加") && sMsg.MessageContent.Contains("为好友"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^同意加为好友]")).IsMatch(output) == true)
+					if ((new Regex("(?i)[^同意加为好友]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.Length < 7)
@@ -229,7 +229,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("拒绝加") && sMsg.MessageContent.Contains("为好友"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d-]", string.Empty);
-					if (new Regex("(?i)[^拒绝加为好友]").IsMatch(output) == true)
+					if (new Regex("(?i)[^拒绝加为好友]").IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.ToString().Length < 7)
