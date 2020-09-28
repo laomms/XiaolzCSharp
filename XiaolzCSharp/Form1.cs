@@ -98,7 +98,7 @@ namespace XiaolzCSharp
             Regex regex = new Regex("^[0-9]+$");
             if (Convert.ToString(myValue) != "" && regex.IsMatch(Convert.ToString(myValue)) ==true)
             {
-                SqliHelper.UpdateData("授权群号", "GroupID", slectitem, "GroupID='" + Convert.ToString(myValue) + "'");
+                SqliHelper.UpdateData("授权群号", new string[] { "GroupID like'" + slectitem + "'" }, "GroupID='" + Convert.ToString(myValue) + "'");
                 SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
             }
            
@@ -109,7 +109,7 @@ namespace XiaolzCSharp
             Regex regex = new Regex("^[0-9]+$");
             if (Convert.ToString(myValue) != "" && regex.IsMatch(Convert.ToString(myValue)) == true)
             {
-                SqliHelper.UpdateData("高级权限", "GroupID", slectitem, "GroupID='" + Convert.ToString(myValue) + "'");
+                SqliHelper.UpdateData("高级权限", new string[] { "QQID like'" + slectitem + "'" }, "QQID='" + Convert.ToString(myValue) + "'");
                 SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
             }
         }
@@ -120,8 +120,8 @@ namespace XiaolzCSharp
             Regex regex = new Regex("^[0-9]+$");
             if (Convert.ToString(myValue) != "" && regex.IsMatch(Convert.ToString(myValue)) == true)
             {
-                SqliHelper.UpdateData("中级权限", "GroupID", slectitem, "GroupID='" + Convert.ToString(myValue) + "'");
-                SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
+                SqliHelper.UpdateData("中级权限", new string[] { "QQID like'" + slectitem + "'" }, "QQID='" + Convert.ToString(myValue) + "'");
+                SqliHelper.CheckImporlistview(this.listView2, "中级权限", "");
             }
         }
 

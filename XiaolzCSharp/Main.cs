@@ -67,7 +67,7 @@ namespace XiaolzCSharp
 
 		#region 收到私聊消息
 		public static Delegate funRecvicePrivateMsg = new RecvicePrivateMsg(RecvicetPrivateMessage);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		public delegate int RecvicePrivateMsg(ref PrivateMessageEvent sMsg);
 		public static int RecvicetPrivateMessage(ref PrivateMessageEvent sMsg)
 		{
@@ -115,7 +115,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 收到群聊消息
 		public static RecviceGroupMsg funRecviceGroupMsg = new RecviceGroupMsg(RecvicetGroupMessage);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		public delegate int RecviceGroupMsg(ref GroupMessageEvent sMsg);
 		public static int RecvicetGroupMessage(ref GroupMessageEvent sMsg)
 		{
