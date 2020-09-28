@@ -28,14 +28,10 @@ namespace XiaolzCSharp
 			public long TriggerQQ;
 			public long MessageSeq;
 			public uint MessageTimestamp;
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string SourceGroupName;
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OperateQQName;
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string TriggerQQName;
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string MessageContent;
+			[MarshalAs(UnmanagedType.LPStr)]			public string SourceGroupName;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OperateQQName;
+			[MarshalAs(UnmanagedType.LPStr)]			public string TriggerQQName;
+			[MarshalAs(UnmanagedType.LPStr)]			public string MessageContent;
 			public EventTypeEnum EventType;
 			public uint EventSubType;
 		}
@@ -302,6 +298,8 @@ namespace XiaolzCSharp
 			Friend_TagLiked = 26, // 好友事件_个性标签点赞
 			Friend_StickerLiked = 27, // 好友事件_随心贴回复
 			Friend_StickerAdded = 28, // 好友事件_随心贴增添
+			Friend_Blacklist = 64, // 好友事件_加入黑名单
+			Friend_Delete=100,
 			QZone_Related = 30, // 空间事件_与我相关
 			This_SignInSuccess = 32, // 框架事件_登录成功
 			Group_Invited = 1, // 群事件_我被邀请加入群
@@ -331,7 +329,9 @@ namespace XiaolzCSharp
 			Group_MemberInvited = 25, // 群事件_某人被邀请入群
 			Group_ShowMemberTitle = 27, // 群事件_展示成员群头衔
 			Group_HideMemberTitle = 28, // 群事件_隐藏成员群头衔
-			Group_MemberNotShutUp = 29 // 群事件_某人被解除禁言
+			Group_MemberNotShutUp = 29, // 群事件_某人被解除禁言
+			Member_Accepet = 104,
+			Member_Add=105
 		}
 		public enum PermissionEnum
 		{

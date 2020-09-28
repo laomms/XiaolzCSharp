@@ -18,6 +18,9 @@ namespace XiaolzCSharp
 {
 	public class API
 	{
+		public static Dictionary<long, Tuple<long, string, long, uint>> EventDics = new Dictionary<long, Tuple<long, string, long, uint>>();
+
+
 		#region 导出函数给框架并取到两个参数值
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
 		//[return: MarshalAs(UnmanagedType.LPStr)]
@@ -36,13 +39,14 @@ namespace XiaolzCSharp
 			json = AddPermission("取群成员列表", json);
 			json = AddPermission("取群列表", json);
 			json = AddPermission("取框架QQ", json);
-
+			json = AddPermission("处理好友验证事件", json);
+			json = AddPermission("处理群验证事件", json);
 
 			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
 			var resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 			var App_Info = new AppInfo();
 
-			App_Info.sdkv = "2.7.1";
+			App_Info.sdkv = "2.7.5";
 			App_Info.appname = "测试插件";
 			App_Info.author = "插件作者";
 			App_Info.describe = "这是一个测试插件" + "\r\n" + "可以用此空壳来开发插件" + "\r\n" + "官网地址：http://www.xiaolz.cn/";
@@ -284,6 +288,18 @@ namespace XiaolzCSharp
 					case EventTypeEnum.Friend_Removed:
 						Console.WriteLine("被好友删除");
 						break;
+					case EventTypeEnum.Friend_Blacklist:
+						//API.SendPrivateMessage(EvenType.ThisQQ, "12345678", EvenType.TriggerQQName+ "(" + EvenType.TriggerQQ.ToString() +" ) 将机器人加入黑名单");
+						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单");
+						break;
+					case EventTypeEnum.Friend_Delete:
+						Console.WriteLine("删除了好友");
+						break;
+					case EventTypeEnum.Group_MemberVerifying:
+						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群"+ EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )");
+						if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
+							EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
+						break;	
 					default:
 						Console.WriteLine(EvenType.EventType.ToString());
 						break;
@@ -326,16 +342,97 @@ namespace XiaolzCSharp
 					case EventTypeEnum.Group_ForbidUploadPicture:
 						Console.WriteLine("群事件_禁止上传相册");
 						break;
+					case EventTypeEnum.Member_Accepet:
+						Console.WriteLine("通过好友的请求");
+						break;
+					case EventTypeEnum.Member_Add:
+						Console.WriteLine("对方加你为好友");
+						break;
+					default:
+						Console.WriteLine(EvenType.EventType.ToString());
+						break;
+				}
+			}
+			else if (EvenType.EventSubType == 2)
+            {
+				switch (EvenType.EventType)
+				{
+					case EventTypeEnum.This_SignInSuccess:
+						Console.WriteLine("登录成功");
+						break;
+					case EventTypeEnum.Group_Invited:
+						Console.WriteLine("我被邀请加入群");
+						break;
+					case EventTypeEnum.Group_MemberJoined:
+						Console.WriteLine("某人加入了群");
+						break;
+					case EventTypeEnum.Group_MemberVerifying:
+						Console.WriteLine("某人申请加群");
+						break;
+					case EventTypeEnum.Group_MemberQuit:
+						Console.WriteLine("某人退出了群");
+						break;
+					case EventTypeEnum.Group_MemberUndid:
+						Console.WriteLine(EvenType.OperateQQName + "(" + EvenType.OperateQQ.ToString() + ")" + "删除了文件");
+						break;
+					case EventTypeEnum.Group_MemberInvited:
+						Console.WriteLine("某人被邀请入群");
+						break;
+					case EventTypeEnum.Group_AllowUploadFile:
+						Console.WriteLine("群事件_允许上传群文件");
+						break;
+					case EventTypeEnum.Group_ForbidUploadFile:
+						Console.WriteLine("群事件_禁止上传群文件");
+						break;
+					case EventTypeEnum.Group_AllowUploadPicture:
+						Console.WriteLine("群事件_允许上传相册");
+						break;
+					case EventTypeEnum.Group_ForbidUploadPicture:
+						Console.WriteLine("群事件_禁止上传相册");
+						break;
+					case EventTypeEnum.Member_Accepet:
+						Console.WriteLine("对方通过了你的好友的请求");
+						break;
+					case EventTypeEnum.Member_Add:
+						//API.SendPrivateMessage(EvenType.ThisQQ, "12345678",  EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")对方加机器人为好友,发送了这样的消息:" + EvenType.MessageContent);
+						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent +",是否同意?");
+					    if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
+							EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
+						break;
 					default:
 						Console.WriteLine(EvenType.EventType.ToString());
 						break;
 				}
 			}
 
-
 		}
 		#endregion
+		#region 处理好友验证事件
 
+		public delegate void DelegateDealFriendEvent(string pkey, long ThisQQ, long TriggerQQ, long MessageSeq, int dealtype);
+		public static void DealFriendEvent( long ThisQQ, long TriggerQQ, long MessageSeq,int dealtype)
+		{
+			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
+			int ptr = json["处理好友验证事件"];
+			DelegateDealFriendEvent DealFriendEventAPI = (DelegateDealFriendEvent)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(DelegateDealFriendEvent));
+			DealFriendEventAPI(plugin_key, ThisQQ,  TriggerQQ,  MessageSeq,  dealtype);
+			DealFriendEventAPI = null;
+			return;
+		}
+		#endregion
+		#region 处理群验证事件
+	
+		public delegate void DelegateDealGroupEvent(string pkey, long thisQQ, long senderQQ, long TriggerQQ, long MessageSeq, int dealtype, uint eventtype, string reason);
+		public static void DealGroupEvent( long thisQQ, long sourceGroup, long TriggerQQ,long MessageSeq, int dealtype, uint eventtype,string reason)
+		{
+			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
+			int ptr = json["处理群验证事件"];
+			DelegateDealGroupEvent DealGroupEventAPI = (DelegateDealGroupEvent)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(DelegateDealGroupEvent));
+			DealGroupEventAPI(plugin_key, thisQQ, sourceGroup, TriggerQQ, MessageSeq, dealtype, eventtype, reason);
+			DealGroupEventAPI = null;
+			return;
+		}
+		#endregion
 		#region 发送私聊消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
