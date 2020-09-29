@@ -266,6 +266,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 插件事件
 		public static DelegatefunEvent funEvent = new DelegatefunEvent(OnEvent);
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		public delegate void DelegatefunEvent(ref EventTypeBase EvenType);
 		public static void OnEvent(ref EventTypeBase EvenType)
 		{
@@ -411,7 +412,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 处理好友验证事件
-
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		public delegate void DelegateDealFriendEvent(string pkey, long ThisQQ, long TriggerQQ, long MessageSeq, int dealtype);
 		public static void DealFriendEvent( long ThisQQ, long TriggerQQ, long MessageSeq,int dealtype)
 		{
@@ -424,7 +425,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 处理群验证事件
-	
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		public delegate void DelegateDealGroupEvent(string pkey, long thisQQ, long senderQQ, long TriggerQQ, long MessageSeq, int dealtype, uint eventtype, string reason);
 		public static void DealGroupEvent( long thisQQ, long sourceGroup, long TriggerQQ,long MessageSeq, int dealtype, uint eventtype,string reason)
 		{
