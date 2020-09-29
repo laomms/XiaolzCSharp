@@ -292,9 +292,6 @@ namespace XiaolzCSharp
 						//API.SendPrivateMessage(EvenType.ThisQQ, "12345678", EvenType.TriggerQQName+ "(" + EvenType.TriggerQQ.ToString() +" ) 将机器人加入黑名单");
 						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单");
 						break;
-					case EventTypeEnum.Friend_Delete:
-						Console.WriteLine("删除了好友");
-						break;
 					case EventTypeEnum.Group_MemberVerifying:
 						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: "+ EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )");
 						if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
@@ -344,10 +341,10 @@ namespace XiaolzCSharp
 					case EventTypeEnum.Group_ForbidUploadPicture:
 						Console.WriteLine("群事件_禁止上传相册");
 						break;
-					case EventTypeEnum.Member_Accepet:
+					case EventTypeEnum.Friend_NewFriend:
 						Console.WriteLine("通过好友的请求");
 						break;
-					case EventTypeEnum.Member_Add:
+					case EventTypeEnum.Friend_FriendRequest:
 						Console.WriteLine("对方加你为好友");
 						break;
 					default:
@@ -392,10 +389,10 @@ namespace XiaolzCSharp
 					case EventTypeEnum.Group_ForbidUploadPicture:
 						Console.WriteLine("群事件_禁止上传相册");
 						break;
-					case EventTypeEnum.Member_Accepet:
+					case EventTypeEnum.Friend_NewFriend:
 						Console.WriteLine("对方通过了你的好友的请求");
 						break;
-					case EventTypeEnum.Member_Add:
+					case EventTypeEnum.Friend_FriendRequest:
 						//API.SendPrivateMessage(EvenType.ThisQQ, "12345678",  EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")对方加机器人为好友,发送了这样的消息:" + EvenType.MessageContent);
 						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent +",是否同意?");
 					    if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
