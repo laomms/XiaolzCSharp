@@ -190,7 +190,15 @@ namespace XiaolzCSharp
 							{
 								if (!(PointerToString(sqlite3_column_text(stmt, i)) == null))
 								{
-									ITM.SubItems.Add(Convert.ToDateTime(PointerToString(sqlite3_column_text(stmt, i))).ToString("yyyy-MM-dd hh:mm:ss"));
+									try
+                                    {
+										ITM.SubItems.Add(Convert.ToDateTime(PointerToString(sqlite3_column_text(stmt, i))).ToString("yyyy-MM-dd hh:mm:ss"));
+									}
+                                    catch 
+									{
+										ITM.SubItems.Add(PointerToString(sqlite3_column_text(stmt, i)));
+									}
+									
 								}
 							}
 							else
@@ -335,18 +343,19 @@ namespace XiaolzCSharp
 		/// <param name="condition">搜索的条件集合</param>
 		/// <param name="columnSearch">要读取的数组</param>
 		/// <returns>返回搜索结果集合</returns>
-		/// <sample>ReadMultiData("Activation", new string[] {"key2", "key5"}, "key1 like '" + value1 + "'", "key2 like 'value2'")</sample>
-		public static List<string> ReadData(string tableName, string[] columnSearch, params string[] condition)
+		/// <sample>ReadData("table1", new string[] {"key2", "key5"}, "key1 like '" + value1 + "'", "key2 like 'value2'")</sample>
+		public static List<List<string>> ReadData(string tableName, string[] columnSearch, string SortOrder, params string[] condition )
 		{
-			List<string> ItemList = new List<string>();
+			List<List<string>> ItemList = new List<List<string>>();
+			List<string> SubItemList = new List<string>();
 			string sql = "";
 			if (condition.Length>0)
             {
-				sql = "Select * from " + tableName + " where " + string.Join(" AND ", condition);
+				sql = "Select * from " + tableName + " where " + string.Join(" AND ", condition) + SortOrder;
 			}
 			else
             {
-				sql = "Select * from " + tableName + " where " + condition[0]; //+ " ORDER BY RANDOM() LIMIT 1 OFFSET 0";'
+				sql = "Select * from " + tableName + " where " + condition[0] + SortOrder; //+ " ORDER BY RANDOM() LIMIT 1 OFFSET 0";'
 			}
 			int num = System.Text.Encoding.Unicode.GetByteCount(sql);
 			IntPtr hSqlite = new IntPtr();
@@ -367,10 +376,11 @@ namespace XiaolzCSharp
 								{
 									if (!(PointerToString(sqlite3_column_text(stmt, i)) == null))
 									{
-										ItemList.Add(PointerToString(sqlite3_column_text(stmt, i)).Replace(":", "-").Replace("\r", ""));
+										SubItemList.Add(PointerToString(sqlite3_column_text(stmt, i)).Replace(":", "-").Replace("\r", ""));
 									}
 								}
 							}
+							ItemList.Add(SubItemList);
 						}
 					}
 				}
@@ -427,7 +437,44 @@ namespace XiaolzCSharp
 			sqlite3_close(hSqlite);
 			return false;
 		}
-	
+
+		/// <summary>
+		/// 清空某表
+		/// </summary>
+		/// <param name="tableNames">表名</param>		
+		/// <returns>返回是否成功</returns>
+		/// <sample>ClearTable("table1")</sample>
+		public static bool ClearTable(string tableName)
+		{
+			string sql = "DELETE FROM " + tableName ;
+			int num = System.Text.Encoding.Unicode.GetByteCount(sql);
+			IntPtr hSqlite = new IntPtr();
+			if (sqlite3_open(ConvertString2UTF8(Convert.ToString(DataPath)), ref hSqlite) == SQLITE_OK)
+			{
+				IntPtr stmt = new IntPtr();
+				IntPtr transient = new IntPtr();
+				if (sqlite3_prepare16_v2(hSqlite, sql, num, out stmt, transient) == SQLITE_OK)
+				{
+					int sql_step = sqlite3_step(stmt);
+					if (sql_step == SQLITE_DONE)
+					{
+						sqlite3_close(hSqlite);
+						return true;
+					}
+					else
+					{
+						Console.WriteLine(sqlite3_errcode(hSqlite));
+					}
+				}
+				else
+				{
+					Console.WriteLine(sqlite3_errcode(hSqlite));
+				}
+				sqlite3_finalize(stmt);
+			}
+			sqlite3_close(hSqlite);
+			return false;
+		}
 		/// <summary>
 		/// 单条件判断是否存在某键值
 		/// </summary>

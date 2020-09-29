@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -119,7 +120,10 @@ namespace XiaolzCSharp
 		public delegate int RecviceGroupMsg(ref GroupMessageEvent sMsg);
 		public static int RecvicetGroupMessage(ref GroupMessageEvent sMsg)
 		{
-			Console.WriteLine(sMsg.MessageType.ToString());
+		
+			if (API.MsgRecod==true)
+				SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture), sMsg.MessageContent }); ;
+			//SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), ((long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds).ToString(), sMsg.MessageContent }); ;
 			if (SqliHelper.CheckDataExsit("授权群号", "GroupID", sMsg.MessageGroupQQ.ToString()) == false)//如果不在高级权限里不反馈
 				return 0;
 			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈

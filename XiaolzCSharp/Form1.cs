@@ -86,6 +86,18 @@ namespace XiaolzCSharp
             this.listView3.Columns.Add("ID", 30, HorizontalAlignment.Center);
             this.listView3.Columns.Add("中级权限QQ号", listView3.Width - 30-5, HorizontalAlignment.Center);
 
+            this.listView4.Items.Clear();
+            this.listView4.GridLines = true;
+            this.listView4.View = View.Details;
+            this.listView4.FullRowSelect = true;
+            this.listView4.Columns.Add("ID", 30, HorizontalAlignment.Center);
+            this.listView4.Columns.Add("群号", 60, HorizontalAlignment.Center);
+            this.listView4.Columns.Add("QQ号", 60, HorizontalAlignment.Center);
+            this.listView4.Columns.Add("MessageReq", 60, HorizontalAlignment.Center);
+            this.listView4.Columns.Add("MessageRandom", 80, HorizontalAlignment.Center);
+            this.listView4.Columns.Add("时间", 150, HorizontalAlignment.Center);
+            this.listView4.Columns.Add("消息", 250, HorizontalAlignment.Left);
+
             SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
             SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
             SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
@@ -220,13 +232,84 @@ namespace XiaolzCSharp
                 }
                 else
                 {
-                                      actualdata.Replace(aChar, ' ');
+                    actualdata.Replace(aChar, ' ');
                     actualdata.Trim();
                 }
             }
             textBox2.Text = actualdata;
         }
 
-   
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+                API.MsgRecod = true;
+            else
+                API.MsgRecod = false;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (SqliHelper.ClearTable("消息记录") == true)
+                MessageBox.Show("已清空记录.");
+            listView4.Items.Clear();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            SqliHelper.CheckImporlistview(listView4, "消息记录", " where QQID like '" + textBox3.Text + "' " );
+            List <List<string>> MsgList = SqliHelper.ReadData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom" , "TimeStamp" }, "ORDER BY ID ASC", "QQID like '" + textBox3.Text + "'");
+
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listView4.SelectedItems.Count > 0)
+                {
+                    foreach (ListViewItem item in listView4.SelectedItems)
+                    {
+                        bool sucess = API.Undo_GroupEvent(long.Parse(API.MyQQ), long.Parse(item.SubItems[1].Text), long.Parse(item.SubItems[4].Text), int.Parse(item.SubItems[3].Text));
+                        if (sucess)
+                            MessageBox.Show("已撤回该消息.");
+
+                    }
+                }
+            }
+            catch(Exception ex)
+            { Console.WriteLine(ex.Message); }
+        }
+
+        private void toolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listView4.SelectedItems.Count > 0)
+                {
+                    foreach (ListViewItem item in listView4.SelectedItems)
+                    {
+                        SqliHelper.DeleteData("消息记录", "ID", item.SubItems[0].Text);
+                        listView4.Items.Remove(item);
+                    }
+                    MessageBox.Show("删除成功.");
+                }
+            }
+            catch (Exception ex)
+            { Console.WriteLine(ex.Message); }
+
+           
+        }
+
+        private void listView4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listView4.SelectedItems.Count > 0)
+                {
+                                
+                }
+            }
+            catch { }
+        }
     }
 }

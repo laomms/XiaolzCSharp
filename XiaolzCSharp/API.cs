@@ -19,7 +19,8 @@ namespace XiaolzCSharp
 	public class API
 	{
 		public static Dictionary<long, Tuple<long, string, long, uint>> EventDics = new Dictionary<long, Tuple<long, string, long, uint>>();
-
+		public static bool MsgRecod=false;
+		public static string MyQQ = "";
 
 		#region 导出函数给框架并取到两个参数值
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
@@ -41,6 +42,8 @@ namespace XiaolzCSharp
 			json = AddPermission("取框架QQ", json);
 			json = AddPermission("处理好友验证事件", json);
 			json = AddPermission("处理群验证事件", json);
+			json = AddPermission("撤回消息_群聊", json);
+			json = AddPermission("撤回消息_私聊本身", json);
 
 			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
 			var resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
@@ -108,10 +111,10 @@ namespace XiaolzCSharp
 			var tablevalue = new List<string[]>() {
 				new string[]{ "`GroupID` TEXT", "`time` TEXT" },
 				new string[]{ "`QQID` TEXT", "`time` TEXT" },
-				new string[]{ "`QQID` TEXT", "`time` TEXT" }
+				new string[]{ "`QQID` TEXT", "`time` TEXT" },
+				new string[]{ "`GroupID` TEXT", "`QQID` TEXT", "`MessageReq` NUMERIC", "`MessageRandom` NUMERIC", "`TimeStamp` NUMERIC" , "`Msg` TEXT" }
 			};
-
-			SqliHelper.CreateTable(new string[] { "授权群号", "高级权限", "中级权限" }, tablevalue);
+			SqliHelper.CreateTable(new string[] { "授权群号", "高级权限", "中级权限","消息记录" }, tablevalue);
 			return 0;
 		}
 		#endregion
@@ -272,6 +275,7 @@ namespace XiaolzCSharp
 				{
 					case EventTypeEnum.This_SignInSuccess:
 						Console.WriteLine("登录成功");
+						MyQQ = EvenType.ThisQQ.ToString();
 						break;
 					case EventTypeEnum.Friend_NewFriend:
 						Console.WriteLine("有新好友");
@@ -324,7 +328,7 @@ namespace XiaolzCSharp
 						API.SendGroupMessage(EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!");
 						break;
 					case EventTypeEnum.Group_MemberUndid:
-						Console.WriteLine(EvenType.OperateQQName + "(" + EvenType.OperateQQ.ToString() + ")" + "删除了文件");
+						API.SendGroupMessage(EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 撤回了一条消息,内容如下:" + EvenType.MessageContent);
 						break;
 					case EventTypeEnum.Group_MemberInvited:
 						Console.WriteLine("某人被邀请入群");
@@ -463,7 +467,6 @@ namespace XiaolzCSharp
 			return res;
 		}
 		#endregion
-
 		#region 发送群聊消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
@@ -491,6 +494,7 @@ namespace XiaolzCSharp
 			return res;
 		}
 		#endregion
+	
 		#region 发送好友图片
 		public string SendFriendImage(long thisQQ, long friendQQ, string picpath, bool is_flash)
 		{
@@ -821,7 +825,7 @@ namespace XiaolzCSharp
 		#region 撤回消息_群聊
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		private delegate bool DelegateUndoGroup(string pkey, long thisQQ, long groupQQ, long message_random, int message_req);
-		public bool Undo_GroupEvent(long thisQQ, long groupQQ, long message_random, int message_req)
+		public static bool Undo_GroupEvent(long thisQQ, long groupQQ, long message_random, int message_req)
 		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			int ptr = json["撤回消息_群聊"];
