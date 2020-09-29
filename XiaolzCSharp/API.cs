@@ -103,8 +103,8 @@ namespace XiaolzCSharp
 		public static DelegateAppEnable appEnableFunc = new DelegateAppEnable(appEnable);
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		public delegate int DelegateAppEnable();
-		public static int appEnable()		{
-
+		public static int appEnable()		
+		{
 			string res = GetLoginQQ();
 			string sqlite3path = System.Environment.CurrentDirectory + "\\bin\\sqlite3.dll"; 
 			SqliHelper.SetDllDirectory(sqlite3path);
