@@ -296,9 +296,9 @@ namespace XiaolzCSharp
 						Console.WriteLine("删除了好友");
 						break;
 					case EventTypeEnum.Group_MemberVerifying:
-						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群"+ EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )");
+						API.SendGroupMessage(EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: "+ EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )");
 						if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
-							EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
+							EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, (uint)EvenType.EventType));
 						break;	
 					default:
 						Console.WriteLine(EvenType.EventType.ToString());
@@ -317,12 +317,14 @@ namespace XiaolzCSharp
 						break;
 					case EventTypeEnum.Group_MemberJoined:
 						Console.WriteLine("某人加入了群");
+						API.SendGroupMessage(EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" +  EvenType.TriggerQQName + ",欢迎你加入本群!");
 						break;
 					case EventTypeEnum.Group_MemberVerifying:
 						Console.WriteLine("某人申请加群");
 						break;
 					case EventTypeEnum.Group_MemberQuit:
 						Console.WriteLine("某人退出了群");
+						API.SendGroupMessage(EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!");
 						break;
 					case EventTypeEnum.Group_MemberUndid:
 						Console.WriteLine(EvenType.OperateQQName + "(" + EvenType.OperateQQ.ToString() + ")" + "删除了文件");
