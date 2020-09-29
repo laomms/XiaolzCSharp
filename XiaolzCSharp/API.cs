@@ -435,7 +435,7 @@ namespace XiaolzCSharp
 		#region 发送私聊消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] StringBuilder MessageContent, ref long MessageRandom, ref int MessageReq);
+		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, IntPtr MessageContent, ref long MessageRandom, ref int MessageReq);
 		public static string SendPrivateMessage(long ThisQQ, long SenderQQ, string MessageContent)
 		{
 			if (PluginStatus == false)
@@ -451,8 +451,8 @@ namespace XiaolzCSharp
 				long MessageRandom = 0;
 				int MessageReq = 0;
 				GC.KeepAlive(SendPrivateMsgAPI);
-				StringBuilder sb = new StringBuilder(MessageContent);
-				res = SendPrivateMsgAPI(plugin_key, ThisQQ, SenderQQ, sb, ref MessageRandom, ref MessageReq);
+				//StringBuilder sb = new StringBuilder(MessageContent);
+				res = SendPrivateMsgAPI(plugin_key, ThisQQ, SenderQQ, Marshal.StringToHGlobalAnsi(MessageContent), ref MessageRandom, ref MessageReq);
 				SendPrivateMsgAPI = null;
 			}
 			catch (Exception ex)
@@ -467,7 +467,7 @@ namespace XiaolzCSharp
 		#region 发送群聊消息
 		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] StringBuilder MessageContent, bool Anonymous);
+		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, IntPtr MessageContent, bool Anonymous);
 		public static string SendGroupMessage(long ThisQQ, long GroupQQ, string MessageContent)
 		{
 			if (PluginStatus == false)
@@ -480,8 +480,8 @@ namespace XiaolzCSharp
 				dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 				int ptr = json["发送群消息"];
 				SendGroupMsg SendGroupMsgAPI = (SendGroupMsg)Marshal.GetDelegateForFunctionPointer((System.IntPtr)ptr, typeof(SendGroupMsg));
-				StringBuilder sb = new StringBuilder(MessageContent);
-				res = SendGroupMsgAPI(plugin_key, ThisQQ, GroupQQ, sb, false);				
+				//StringBuilder sb = new StringBuilder(MessageContent);
+				res = SendGroupMsgAPI(plugin_key, ThisQQ, GroupQQ, Marshal.StringToHGlobalAnsi(MessageContent), false);				
 				SendGroupMsgAPI = null;
 			}
 			catch (Exception ex)
