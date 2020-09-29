@@ -179,6 +179,7 @@ namespace XiaolzCSharp
 						{
 							API.DealGroupEvent(sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 11, API.EventDics[long.Parse(m.Value)].Item4, "同意入群");
 							API.EventDics.Remove(long.Parse(m.Value));
+							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
 						}
 						catch { }
 					}
@@ -200,6 +201,7 @@ namespace XiaolzCSharp
 						{
 							API.DealGroupEvent(sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 12, API.EventDics[long.Parse(m.Value)].Item4, "拒绝入群");
 							API.EventDics.Remove(long.Parse(m.Value));
+							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
 						}
 						catch { }
 					}
@@ -221,6 +223,7 @@ namespace XiaolzCSharp
 						{
 							API.DealFriendEvent(sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 1);
 							API.EventDics.Remove(long.Parse(m.Value));
+							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
 						}
 						catch { }
 
@@ -242,6 +245,7 @@ namespace XiaolzCSharp
 						{
 							API.DealFriendEvent(sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 2);
 							API.EventDics.Remove(long.Parse(m.Value.ToString()));
+							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
 						}
 						catch (Exception ex)
 						{
