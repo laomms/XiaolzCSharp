@@ -101,7 +101,7 @@ namespace XiaolzCSharp
 
 		#region 插件启动	
 		public static DelegateAppEnable appEnableFunc = new DelegateAppEnable(appEnable);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int DelegateAppEnable();
 		public static int appEnable()		
 		{
@@ -119,7 +119,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 框架重启		
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate void DelegateRestart(string pkey);
 		public int ReStart()
 		{
@@ -132,7 +132,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 插件卸载		
 		public static DelegateAppUnInstall AppUninstallEvent = new DelegateAppUnInstall(AppUnInstall);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int DelegateAppUnInstall();
 		public static int AppUnInstall()
 		{
@@ -143,7 +143,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 插件禁用
 		public static DelegateAppDisabled AppDisabledEvent = new DelegateAppDisabled(appDisable);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int DelegateAppDisabled();
 		public static int appDisable()
 		{
@@ -151,7 +151,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取框架QQ
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string DelegateGetLoginQQ(string pkey);
 		public static string GetLoginQQ()
@@ -197,7 +197,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 获取clientkey
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate string GetClientKey(string pkey, long thisQQ);
 		public string GetClientKeyEvent(long thisQQ)
 		{
@@ -210,7 +210,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 获取pskey
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string GetPSKey(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
 		public string GetPSKeyEvent(long thisQQ, string domain)
@@ -225,7 +225,7 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 获取skey
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string GetSKey(string pkey, long thisQQ);
 		public string GetSKeyEvent(long thisQQ, string domain)
@@ -240,7 +240,7 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 输出日志
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string OutputLog(string pkey, [MarshalAs(UnmanagedType.LPStr)] string message, int text_color, int background_color);
 		public static string OutLog(string message, int text_color = 16711680, int background_color = 16777215)
@@ -256,7 +256,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 插件设置
 		public static DelegateAppSetting AppSettingEvent = new DelegateAppSetting(AppSetting);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void DelegateAppSetting();
 		public static void AppSetting()
 		{
@@ -266,7 +266,7 @@ namespace XiaolzCSharp
 		#endregion
 		#region 插件事件
 		public static DelegatefunEvent funEvent = new DelegatefunEvent(OnEvent);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void DelegatefunEvent(ref EventTypeBase EvenType);
 		public static void OnEvent(ref EventTypeBase EvenType)
 		{
@@ -412,7 +412,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 处理好友验证事件
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void DelegateDealFriendEvent(string pkey, long ThisQQ, long TriggerQQ, long MessageSeq, int dealtype);
 		public static void DealFriendEvent( long ThisQQ, long TriggerQQ, long MessageSeq,int dealtype)
 		{
@@ -425,7 +425,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 处理群验证事件
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void DelegateDealGroupEvent(string pkey, long thisQQ, long senderQQ, long TriggerQQ, long MessageSeq, int dealtype, uint eventtype, string reason);
 		public static void DealGroupEvent( long thisQQ, long sourceGroup, long TriggerQQ,long MessageSeq, int dealtype, uint eventtype,string reason)
 		{
@@ -438,7 +438,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 发送私聊消息
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string SendPivateMsg(string pkey, long ThisQQ, long SenderQQ, IntPtr MessageContent, ref long MessageRandom, ref int MessageReq);
 		public static string SendPrivateMessage(long ThisQQ, long SenderQQ, string MessageContent)
@@ -469,7 +469,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 发送群聊消息
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string SendGroupMsg(string pkey, long ThisQQ, long GroupQQ, IntPtr MessageContent, bool Anonymous);
 		public static string SendGroupMessage(long ThisQQ, long GroupQQ, string MessageContent)
@@ -502,7 +502,7 @@ namespace XiaolzCSharp
 			string piccode = UploadFriendImageEvent(thisQQ, friendQQ, picpath, is_flash);
 			return SendPrivateMessage(thisQQ, friendQQ, piccode);
 		}
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadFriendImage(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 		public string UploadFriendImageEvent(long thisQQ, long friendQQ, string picpath, bool is_flash)
@@ -561,7 +561,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 上传头像
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadAvatar(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 		public string UploadAvatarEvent(long thisQQ, string picpath)
@@ -578,7 +578,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 上传群头像
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool UploadGroupAvatar(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 		public bool UploadGroupAvatarEvent(long thisQQ, long groupQQ, string picpath)
 		{
@@ -595,7 +595,7 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 上传好友语音
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadFriendAudio(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
 		public string UploadFriendAudioEvent(long thisQQ, long friendQQ, AudioTypeEnum audio_type, string audio_text, byte[] audio)
@@ -632,7 +632,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 获取图片地址
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string DelegateGetImageDownloadLink(string pkey, string guid, long thisQQ, long groupQQ);
 		public static string GetImageDownloadLink(long thisQQ, long sendQQ, long groupQQ, string ImgGuid)
@@ -654,7 +654,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取好友列表
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int DelegateGetFriendList(string pkey, long thisQQ, ref DataArray[] DataInfo);
 		public static int GetFriendList(long thisQQ, long sendQQ)
 		{
@@ -682,7 +682,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 查询好友信息
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool DelegateGetFriendInfo(string pkey, long thisQQ, long otherQQ, ref GetFriendDataInfo[] friendInfos);
 		public static void GetFriendData(long thisQQ, long otherQQ)
 		{
@@ -704,7 +704,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取群成员列表
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int DelegateGetgroupMemberlist(string pkey, long thisQQ, long groupQQ, ref DataArray[] DataInfo);
 		public static int GetgroupMemberlist(long thisQQ, long groupQQ)
 		{
@@ -732,7 +732,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取群列表
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int DelegateGetGroupList(string pkey, long thisQQ, ref DataArray[] DataInfo);
 		public static int GetGroupList(long thisQQ, long groupQQ)
 		{
@@ -760,7 +760,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取管理列表
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string DelegateGetadministratorList(string pkey, long thisQQ, long gruopNumber);
 		public string[] GetAdministratorList(long thisQQ, long gruopNumber)
@@ -775,7 +775,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 查询群信息
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool DelegateGetGroupInfo(string pkey, long thisQQ, long otherGroupQQ, ref GetGroupDataInfo[] GroupInfos);
 		public static void GetGroupData(long thisQQ, long otherGroupQQ)
 		{
@@ -797,7 +797,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 解散群
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool DissolveGroup(string pkey, long thisQQ, long gruopNumber);
 		public bool DissolveGroupEvent(long thisQQ, long groupQQ)
 		{
@@ -811,7 +811,7 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 撤回消息_私聊本身
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool DelegateUndoPrivate(string pkey, long thisQQ, long otherQQ, long message_random, int message_req, int time);
 		public bool Undo_PrivateEvent(long thisQQ, long otherQQ, long message_random, int message_req, int time)
 		{
@@ -824,7 +824,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 撤回消息_群聊
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool DelegateUndoGroup(string pkey, long thisQQ, long groupQQ, long message_random, int message_req);
 		public static bool Undo_GroupEvent(long thisQQ, long groupQQ, long message_random, int message_req)
 		{
@@ -837,7 +837,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 发送群临时消息
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string SendGroupTemporaryMessage(string pkey, long thisQQ, long groupQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string content, ref long random, ref int req);
 		public string SendGroupTemporaryMessageEvent(long thisQQ, long groupQQ, long otherQQ, string content, long random = 0, int req = 0)
@@ -851,7 +851,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 发送好友json消息
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string SendFriendJSONMessage(string pkey, long thisQQ, long friendQQ, [MarshalAs(UnmanagedType.LPStr)] string json_content);
 		public string SendFriendJSONMessageEvent(long thisQQ, long friendQQ, string json_content)
@@ -865,7 +865,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 更改私聊消息内容
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool ModifyPrivateMessageContent(string pkey, [MarshalAs(UnmanagedType.LPStr)] string data_pointer, [MarshalAs(UnmanagedType.LPStr)] string new_message_content);
 		public bool ModifyPrivateMessageContentEvent(string data_pointer, string new_message_content)
 		{
@@ -879,7 +879,7 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 更改群聊消息内容
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool ModifyGroupMessageContent(string pkey, [MarshalAs(UnmanagedType.LPStr)] string data_pointer, [MarshalAs(UnmanagedType.LPStr)] string new_message_content);
 		public bool ModifyGroupMessageContentEvent(string data_pointer, string new_message_content)
 		{
@@ -893,7 +893,7 @@ namespace XiaolzCSharp
 
 		#endregion
 		#region 处理好友验证事件
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate void DelegateFriendVerificationEvent(string pkey, long thisQQ, long triggerQQ, long message_seq, FriendVerificationOperateEnum operate_type);
 		public void FriendVerificationEvent(long thisQQ, long triggerQQ, long message_seq, FriendVerificationOperateEnum operate_type)
 		{
@@ -905,7 +905,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 处理好友验证事件
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate void DelegateGroupVerificationEvent(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
 		public void GroupVerificationEvent(long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, string refuse_reason = "")
 		{
@@ -922,7 +922,7 @@ namespace XiaolzCSharp
 
 		#region 文件处理
 		#region 好友文件转发至好友
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool FriendFileToFriend(string pkey, long thisQQ, long sourceQQ, long targetQQ, [MarshalAs(UnmanagedType.LPStr)] string fileID, [MarshalAs(UnmanagedType.LPStr)] string file_name, long file_size, ref int msgReq, ref long Random, ref int time);
 		public bool FriendFileToFriendEvent(long thisQQ, long sourceQQ, long targetQQ, string fileID, string file_name, long file_size, int msgReq = 0, long Random = 0, int time = 0)
 		{
@@ -935,7 +935,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 保存文件到微云
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string DelegateSaveFileToWeiYun(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string file_id);
 		public string SaveFileToWeiYunEvent(long thisQQ, long groupQQ, string file_id)
@@ -949,7 +949,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 查看转发聊天记录内容
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate void DelegateReadForwardedChatHistory(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string resID, [MarshalAs(UnmanagedType.LPStr)] ref string retPtr);
 		public void ReadForwardedChatHistoryEvent(long thisQQ, string resID)
 		{
@@ -962,7 +962,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 上传群文件
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string UploadGroupFile(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string path, [MarshalAs(UnmanagedType.LPStr)] string folder);
 		public string UploadGroupFileEvent(long thisQQ, long groupQQ, string path, string folder)
@@ -976,7 +976,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 群文件转发至群
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		private delegate bool ForwardGroupFileToGroup(string pkey, long thisQQ, long source_groupQQ, long target_groupQQ, [MarshalAs(UnmanagedType.LPStr)] string fileID);
 		public bool ForwardGroupFileToGroupEvent(long thisQQ, long source_groupQQ, long target_groupQQ, string fileID)
 		{
@@ -989,7 +989,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取群文件列表
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string GetGroupFileList(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref GroupFileInfoDataList[] groupFileInfoDataLists);
 		public List<GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
@@ -1020,7 +1020,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 创建群文件夹
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		private delegate string CreateGroupFolder(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder);
 		public string CreateGroupFolderEvent(long thisQQ, long groupQQ, string folder)
@@ -1039,7 +1039,7 @@ namespace XiaolzCSharp
 
 
 		//#region 分享音乐
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate bool ShareMusic(string pkey, long thisQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string music_name, [MarshalAs(UnmanagedType.LPStr)] string artist_name, [MarshalAs(UnmanagedType.LPStr)] string redirect_link, [MarshalAs(UnmanagedType.LPStr)] string cover_link, [MarshalAs(UnmanagedType.LPStr)] string file_path, MusicAppTypeEnum app_type, MusicShare_Type share_type);
 		//public bool ShareMusicEvent(long thisQQ, long otherQQ, string music_name, string artist_name, string redirect_link, string cover_link, string file_path, MusicAppTypeEnum app_type = MusicAppTypeEnum.QQMusic, MusicShare_Type share_type = MusicShare_Type.GroupMsg)
 		//{
@@ -1052,7 +1052,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 发送免费礼物
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string SendFreeGift(string pkey, long thisQQ, long groupQQ, long otherQQ, int gift);
 		//public string SendFreeGiftEvent(long thisQQ, long groupQQ, long otherQQ, FreeGiftEnum gift)
 		//{
@@ -1069,7 +1069,7 @@ namespace XiaolzCSharp
 
 		//#region 以下为红包事件
 		//#region 好友接龙红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string FriendFollowRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long otherQQ, string follow_content, string payment_password, int card_serial);
 		//public string FriendFollowRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long otherQQ, string follow_content, string payment_password, int card_serial)
 		//{
@@ -1082,7 +1082,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 好友画图红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string FriendDrawRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long otherQQ, string question, string payment_password, int card_serial);
 		//public string FriendDrawRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long otherQQ, string question, string payment_password, int card_serial)
 		//{
@@ -1095,7 +1095,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 好友口令红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string FriendPasswordRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long otherQQ, string kouling, string payment_password, int card_serial);
 		//public string FriendPasswordRedEnvelopeeEvent(long thisQQ, int total_number, int total_amount, long otherQQ, string kouling, string payment_password, int card_serial)
 		//{
@@ -1108,7 +1108,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 好友普通红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string FriendNormalRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, int skinID, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial);
 		//public string FriendNormalRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long otherQQ, string blessing, int skinID, string payment_password, int card_serial)
 		//{
@@ -1121,7 +1121,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 好友语音红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string FriendAudioRedEnvelope(long thisQQ, int total_number, int total_amount, long otherQQ, string blessing, int skinID, string payment_password, int card_serial);
 		//public string FriendAudioRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long otherQQ, string blessing, int skinID, string payment_password, int card_serial)
 		//{
@@ -1134,7 +1134,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupDrawRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, string question, string payment_password, int card_serial);
 		//public string GroupDrawRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long groupQQ, string question, string payment_password, int card_serial)
 		//{
@@ -1147,7 +1147,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊口令红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupPasswordRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, string password, string payment_password, int card_serial);
 		//public string GroupPasswordRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long groupQQ, string password, string payment_password, int card_serial)
 		//{
@@ -1160,7 +1160,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊接龙红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupFollowRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, string follow_content, string payment_password, int card_serial);
 		//public string GroupFollowRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long groupQQ, string follow_content, string payment_password, int card_serial)
 		//{
@@ -1173,7 +1173,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊拼手气红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupRandomRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, int skinID, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial);
 		//public string GroupRandomRedEnvelopeEvet(long thisQQ, int total_number, int total_amount, long groupQQ, string blessing, int skinID, string payment_password, int card_serial)
 		//{
@@ -1186,7 +1186,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊普通红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupNormalRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, int skinID, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial);
 		//public string GroupNormalRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long groupQQ, string blessing, int skinID, string payment_password, int card_serial)
 		//{
@@ -1199,7 +1199,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊语音红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupAudioRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, string audio_password, string payment_password, int card_serial);
 		//public string GroupAudioRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long groupQQ, string audio_password, string payment_password, int card_serial)
 		//{
@@ -1212,7 +1212,7 @@ namespace XiaolzCSharp
 		//}
 		//#endregion
 		//#region 群聊专属红包
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		//[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		//private delegate string GroupExclusiveRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long otherQQ, string blessing, string payment_password, int card_serial);
 		//public string GroupExclusiveRedEnvelopeEvent(long thisQQ, int total_number, int total_amount, long otherQQ, string blessing, string payment_password, int card_serial)
 		//{
