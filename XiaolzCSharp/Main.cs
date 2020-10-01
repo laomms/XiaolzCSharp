@@ -14,7 +14,8 @@ namespace XiaolzCSharp
 {
 	public class Main
 	{
-
+		public static CancellationTokenSource cts = new CancellationTokenSource();
+		public static CancellationToken token = CancellationToken.None;
 
 		//public string SendMessageCallBack(string szGroupID, string szQQID, string szContent) //dll回调函数
 		//{
@@ -32,11 +33,11 @@ namespace XiaolzCSharp
 		//		{
 		//			if (!string.IsNullOrEmpty(szQQID))
 		//			{
-		//				API.SendGroupMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), "[@" + szQQID + "]" + szContent);
+		//				API.SendGroupMsg(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), "[@" + szQQID + "]" + szContent);
 		//			}
 		//			else
 		//			{
-		//				API.SendGroupMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), szContent);
+		//				API.SendGroupMsg(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), szContent);
 		//			}
 		//		}
 		//	}
@@ -44,23 +45,19 @@ namespace XiaolzCSharp
 		//}
 		public string GetImageCallBack(string szGroupID, string szQQID, string szContent)
 		{
-
 			if (szContent.Contains("[pic,hash="))
-			{
-				dynamic jsonkey = new JavaScriptSerializer().DeserializeObject(PInvoke.jsonstr);
-				int ptr = jsonkey("取图片下载地址");
-				API.DelegateGetImageDownloadLink GetImageLink = (API.DelegateGetImageDownloadLink)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(API.DelegateGetImageDownloadLink));
+			{				
 				MatchCollection matches = Regex.Matches(szContent, "\\[pic,hash.*?\\]", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 				foreach (Match match in matches)
 				{
 					if (szGroupID == szQQID)
 					{
-						var ImgUrl = GetImageLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), 0);
+						var ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), 0);
 						return ImgUrl;
 					}
 					else
 					{
-						var ImgUrl = GetImageLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID));
+						var ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID));
 						return ImgUrl;
 					}
 				}
@@ -74,12 +71,12 @@ namespace XiaolzCSharp
 		public delegate int RecvicePrivateMsg(ref PrivateMessageEvent sMsg);
 		public static int RecvicetPrivateMessage(ref PrivateMessageEvent sMsg)
 		{
-			Console.WriteLine(sMsg.MessageType.ToString());
-			Console.WriteLine(sMsg.MessageSubType.ToString());
+			long MessageRandom = 0;
+			uint MessageReq = 0;
 			if (SqliHelper.CheckDataExsit("中级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在中级权限里不反馈
 			{
 				if (sMsg.SenderQQ != sMsg.ThisQQ)
-					API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "抱歉!你的QQ号不在高级授权名单.");
+					API.SendPrivateMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "抱歉!你的QQ号不在高级授权名单.", ref MessageRandom, ref MessageReq);
 				return 0;
 			}
 			if (sMsg.SenderQQ != sMsg.ThisQQ)
@@ -92,13 +89,13 @@ namespace XiaolzCSharp
 					foreach (Match match in matches)
 					{
 
-						API.GetImageDownloadLink(sMsg.ThisQQ, sMsg.SenderQQ, 0, match.Value);
+						API.GetImageLink(sMsg.ThisQQ, sMsg.SenderQQ, 0, match.Value);
 					}
 				}
 				else if (sMsg.MessageContent.Contains("取好友列表"))
 				{
 
-					API.GetFriendList(sMsg.ThisQQ, sMsg.SenderQQ);
+					API.GetFriendLists(sMsg.ThisQQ, sMsg.SenderQQ);
 
 				}
 				else if (sMsg.MessageContent.Contains("查询好友信息"))
@@ -107,7 +104,7 @@ namespace XiaolzCSharp
 				}
 				else
 				{
-					API.SendPrivateMessage(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent);
+					API.SendPrivateMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent, ref MessageRandom, ref MessageReq);
 				}
 
 			}
@@ -129,7 +126,7 @@ namespace XiaolzCSharp
 			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
 			{
 				if (sMsg.SenderQQ != sMsg.ThisQQ)
-					API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.");
+					API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.",false);
 				return 0;
 			}
 
@@ -141,7 +138,7 @@ namespace XiaolzCSharp
 
 					foreach (Match match in matches)
 					{
-						API.GetImageDownloadLink(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.MessageGroupQQ, match.Value);
+						API.GetImageLink(sMsg.ThisQQ, sMsg.SenderQQ, sMsg.MessageGroupQQ, match.Value);
 
 					}
 				}
@@ -158,13 +155,13 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("取群列表"))
 				{
 
-					API.GetGroupList(sMsg.ThisQQ, sMsg.MessageGroupQQ);
+					API.GetGroupLists(sMsg.ThisQQ, sMsg.MessageGroupQQ);
 
 				}
 				else if (sMsg.MessageContent.Contains("取群成员列表"))
 				{
 
-					API.GetgroupMemberlist(sMsg.ThisQQ, sMsg.MessageGroupQQ);
+					API.GetGroupMemberlists(sMsg.ThisQQ, sMsg.MessageGroupQQ);
 
 				}
 				else if (sMsg.MessageContent.Contains("同意") && sMsg.MessageContent.Contains("入群"))
@@ -180,10 +177,10 @@ namespace XiaolzCSharp
 					if (m.Success)
 					{
 						try
-						{
-							API.DealGroupEvent(sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 11, API.EventDics[long.Parse(m.Value)].Item4, "同意入群");
+						{							
+							API.GroupVerificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Friend_FriendRequest, "同意入群");
 							API.EventDics.Remove(long.Parse(m.Value));
-							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
+							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
 						catch { }
 					}
@@ -203,9 +200,9 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.DealGroupEvent(sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 12, API.EventDics[long.Parse(m.Value)].Item4, "拒绝入群");
+							API.GroupVerificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Deny, PInvoke.EventTypeEnum.Friend_FriendRequest, "拒绝入群");
 							API.EventDics.Remove(long.Parse(m.Value));
-							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
+							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
 						catch { }
 					}
@@ -225,9 +222,9 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.DealFriendEvent(sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 1);
+							API.FriendverificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, FriendVerificationOperateEnum.Agree);
 							API.EventDics.Remove(long.Parse(m.Value));
-							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
+							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
 						catch { }
 
@@ -247,9 +244,9 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.DealFriendEvent(sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, 2);
+							API.FriendverificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, FriendVerificationOperateEnum.Deny);
 							API.EventDics.Remove(long.Parse(m.Value.ToString()));
-							API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.");
+							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
 						catch (Exception ex)
 						{
@@ -258,12 +255,39 @@ namespace XiaolzCSharp
 
 					}
 				}
+				else if (sMsg.MessageContent=="压力测试")
+                {
+					token = cts.Token;
+					Task.Factory.StartNew(() =>
+					{
+						int i = 0;
+						while (!token.IsCancellationRequested)
+						{
+							i = i + 1;
+							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" + DateTime.Now.ToString(), false);
+							//API.SendGroupMsg(API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" +DateTime.Now.ToString());
+							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, i.ToString(),false);
+							Thread.Sleep(200);
+						}
+					}, token);
+
+				}
+				else if (sMsg.MessageContent == "停止压力测试")
+				{
+					if (cts != null)
+					{
+						cts.Cancel();
+						cts.Dispose();
+						cts = new CancellationTokenSource();
+					}
+
+				}
 				else
 				{
 					if (sMsg.ThisQQ != sMsg.SenderQQ)
 					{
 
-						string res = API.SendGroupMessage(sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "你发送了这样的消息:" + sMsg.MessageContent);
+						string res = API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "你发送了这样的消息:" + sMsg.MessageContent,false);
 
 					}
 

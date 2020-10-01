@@ -227,12 +227,160 @@ namespace XiaolzCSharp
 			public string GroupMemo;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct GroupCardInfoDatList
+		{
+			public GroupCardInfo groupCardInfo;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct GroupCardInfo
+		{
+			// 群名称
+			[MarshalAs(UnmanagedType.LPTStr)]
+			public string GroupName;
+			// 群地点
+			[MarshalAs(UnmanagedType.LPTStr)]
+			public string GroupLocation;
+			// 群分类
+			[MarshalAs(UnmanagedType.LPTStr)]
+			public string GroupClassification;
+			// 群标签 以|分割
+			[MarshalAs(UnmanagedType.LPTStr)]
+			public string GroupTags;
+			// 群介绍
+			[MarshalAs(UnmanagedType.LPTStr)]
+			public string GroupDescription;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GroupFileInfoDataList
 		{
 			public uint index; //数组索引
 			public uint Amount; //数组元素数量
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
 			public byte[] pAddrList; //每个元素的指针
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct OrderDetaildDataList
+		{
+			public OrderDetail orderDetail;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct OrderDetail
+		{
+			// 订单时间
+				[MarshalAs(UnmanagedType.LPStr)]
+			public string OrderTime;
+			// 订单说明			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OrderDescription;
+			// 订单类名			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OrderClassification;
+			// 订单类型			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OrderType;
+			// 订单手续费			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OrderCommission;
+			// 操作人QQ			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OperatorQQ;
+			// 操作人昵称			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OperatorName;
+			// 接收人QQ			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string ReceiverQQ;
+			// 接收人昵称			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string ReceiverName;
+			// 操作金额			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string OperateAmount;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct QQWalletInfoDataList
+		{
+			public QQWalletInformation qQWalletInformation;
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct QQWalletInformation
+		{
+			// 余额
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string Balance;
+			// 身份证号
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string ID;
+			// 实名
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string RealName;
+			// 银行卡列表
+			public CardInfoDataList[] CardList;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct CardInfoDataList
+		{
+			public int index;//数组索引
+			public int Amount;//数组元素数量
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]//5000人群 5000/4+8 =1258
+			public byte[] pAddrList;//每个元素的指针
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct CardInformation
+		{
+			// 序列
+			public int Serial;
+			// 尾号
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string TailNumber;
+			// 银行
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string Bank;
+			// 绑定手机
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string BindPhone;
+			// bind_serial
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string BindSerial;
+			// bank_type
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string BankType;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct RetQQWalletInformation
+		{
+			// 余额
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string Balance;
+			// 身份证号
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string ID;
+			// 实名
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string RealName;
+			// 银行卡列表
+			public List<CardInformation> CardList;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct RedEnvelopesDataList
+		{
+			//public int index;
+			public NotReRedEnvelopes notReRedEnvelopes;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct NotReRedEnvelopes
+		{
+			public long SourceQQ;
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string listid;
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string authkey;
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string title;
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string channel;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GroupFileInformation
@@ -245,7 +393,79 @@ namespace XiaolzCSharp
 			public IntPtr FileFromNick; // 创建文件夹或上传文件的QQ
 			public FiletypeEnum FileType; // 文件类型 1: 文件, 2: 文件夹
 		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct GMBriefDataList
+		{
+			public GMBriefInfo groupMemberBriefInfo;
+		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct GMBriefInfo
+		{
+			public uint GroupMAax;
+			public uint GruoupNum;
+			public long GroupOwner;
+			public IntPtr AdminiList;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct AdminListDataList
+		{
+			public int index;//数组索引
+			public int Amount;//数组元素数量
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
+			//public byte[] pdatalist;
+			public long[] pdatalist;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public class GroupMemberBriefInfo
+		{
+			public uint GroupMAax;
+			public uint GruoupNum;
+			public long GroupOwner;
+			public long[] AdminiList;
+		}
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct GetCaptchaInfoDataList
+		{
+			//public int index;
+			public CaptchaInformation CaptchaInfo;
+		}
+		/// <summary>
+		/// 验证码信息
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct CaptchaInformation
+		{
+			// token_id			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string TokenID;
+			// skey		
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string SKey;
+			// bank_type			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string BankType;
+			// mobile			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string Mobile;
+			// business_type			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string BusinessType;
+			// random			
+			public int Random;
+			// transaction_id			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string TransactionID;
+			// purchaser_id			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string PurchaserID;
+			// token			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string Token;
+			// auth_params			
+			[MarshalAs(UnmanagedType.LPStr)]
+			public string AuthParams;
+		}
 		public struct AppInfo
 		{
 			public string sdkv;
