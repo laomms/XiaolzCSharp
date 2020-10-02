@@ -521,147 +521,76 @@ namespace XiaolzCSharp
 		public delegate void DelegatefunEvent(ref EventTypeBase EvenType);
 		public static void OnEvent(ref EventTypeBase EvenType)
 		{
-			if (EvenType.EventSubType == 0)
+			switch (EvenType.EventType)
 			{
-				switch (EvenType.EventType)
-				{
-					case EventTypeEnum.This_SignInSuccess:
-						Console.WriteLine("登录成功");
-						MyQQ = EvenType.ThisQQ;						
-						break;
-					case EventTypeEnum.Friend_NewFriend:
-						Console.WriteLine("有新好友");
-						break;
-					case EventTypeEnum.Friend_FriendRequest:
-						Console.WriteLine("好友请求");
-						break;
-					case EventTypeEnum.Friend_FriendRequestAccepted:
-						Console.WriteLine("对方同意了您的好友请求");
-						break;
-					case EventTypeEnum.Friend_FriendRequestRefused:
-						Console.WriteLine("对方拒绝了您的好友请求");
-						break;
-					case EventTypeEnum.Friend_Removed:
-						Console.WriteLine("被好友删除");
-						break;
-					case EventTypeEnum.Friend_Blacklist:
-						//API.SendPrivateMsg(EvenType.ThisQQ, "12345678", EvenType.TriggerQQName+ "(" + EvenType.TriggerQQ.ToString() +" ) 将机器人加入黑名单");
-						API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单",false);
-						break;
-					case EventTypeEnum.Group_MemberVerifying:
-						API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: "+ EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )",false);
-						if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
-							EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, (uint)EvenType.EventType));
-						break;	
-					default:
-						Console.WriteLine(EvenType.EventType.ToString());
-						break;
-				}
-			}
-			else if (EvenType.EventSubType == 1)
-			{
-				switch (EvenType.EventType)
-				{
-					case EventTypeEnum.This_SignInSuccess:
-						Console.WriteLine("登录成功");
-						break;
-					case EventTypeEnum.Group_Invited:
-						Console.WriteLine("我被邀请加入群");
-						break;
-					case EventTypeEnum.Group_MemberJoined:
-						Console.WriteLine("某人加入了群");
-						API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" +  EvenType.TriggerQQName + ",欢迎你加入本群!",false);
-						break;
-					case EventTypeEnum.Group_MemberVerifying:
-						Console.WriteLine("某人申请加群");
-						break;
-					case EventTypeEnum.Group_MemberQuit:
-						Console.WriteLine("某人退出了群");
-						API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!",false);
-						break;
-					case EventTypeEnum.Group_MemberUndid:
-						API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 撤回了一条消息,内容如下:" + EvenType.MessageContent,false);
-						break;
-					case EventTypeEnum.Group_MemberInvited:
-						Console.WriteLine("某人被邀请入群");
-						break;
-					case EventTypeEnum.Group_AllowUploadFile:
-						Console.WriteLine("群事件_允许上传群文件");
-						break;
-					case EventTypeEnum.Group_ForbidUploadFile:
-						Console.WriteLine("群事件_禁止上传群文件");
-						break;
-					case EventTypeEnum.Group_AllowUploadPicture:
-						Console.WriteLine("群事件_允许上传相册");
-						break;
-					case EventTypeEnum.Group_ForbidUploadPicture:
-						Console.WriteLine("群事件_禁止上传相册");
-						break;
-					case EventTypeEnum.Friend_NewFriend:
-						Console.WriteLine("通过好友的请求");
-						break;
-					case EventTypeEnum.Friend_FriendRequest:
-						Console.WriteLine("对方加你为好友");
-						break;
-					default:
-						Console.WriteLine(EvenType.EventType.ToString());
-						break;
-				}
-			}
-			else if (EvenType.EventSubType == 2)
-            {
-				switch (EvenType.EventType)
-				{
-					case EventTypeEnum.This_SignInSuccess:
-						Console.WriteLine("登录成功");
-						break;
-					case EventTypeEnum.Group_Invited:
-						Console.WriteLine("我被邀请加入群");
-						break;
-					case EventTypeEnum.Group_MemberJoined:
-						Console.WriteLine("某人加入了群");
-						break;
-					case EventTypeEnum.Group_MemberVerifying:
-						Console.WriteLine("某人申请加群");
-						break;
-					case EventTypeEnum.Group_MemberQuit:
-						Console.WriteLine("某人退出了群");
-						break;
-					case EventTypeEnum.Group_MemberUndid:
-						Console.WriteLine(EvenType.OperateQQName + "(" + EvenType.OperateQQ.ToString() + ")" + "删除了文件");
-						break;
-					case EventTypeEnum.Group_MemberInvited:
-						Console.WriteLine("某人被邀请入群");
-						break;
-					case EventTypeEnum.Group_AllowUploadFile:
-						Console.WriteLine("群事件_允许上传群文件");
-						break;
-					case EventTypeEnum.Group_ForbidUploadFile:
-						Console.WriteLine("群事件_禁止上传群文件");
-						break;
-					case EventTypeEnum.Group_AllowUploadPicture:
-						Console.WriteLine("群事件_允许上传相册");
-						break;
-					case EventTypeEnum.Group_ForbidUploadPicture:
-						Console.WriteLine("群事件_禁止上传相册");
-						break;
-					case EventTypeEnum.Friend_NewFriend:
-						Console.WriteLine("对方通过了你的好友的请求");
-						break;
-					case EventTypeEnum.Friend_FriendRequest:
-						//API.SendPrivateMsg(EvenType.ThisQQ, "12345678",  EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")对方加机器人为好友,发送了这样的消息:" + EvenType.MessageContent);
-						API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent +",是否同意?",false);
-					    if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
-							EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
-						break;
-					default:
-						Console.WriteLine(EvenType.EventType.ToString());
-						break;
-				}
+				case EventTypeEnum.This_SignInSuccess:
+					Console.WriteLine("登录成功");
+					MyQQ = EvenType.ThisQQ;
+					break;
+				case EventTypeEnum.Friend_NewFriend:
+					Console.WriteLine("有新好友");
+					break;
+				case EventTypeEnum.Friend_FriendRequest:
+					Console.WriteLine("好友请求");
+					//API.SendPrivateMsg(EvenType.ThisQQ, "12345678",  EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")对方加机器人为好友,发送了这样的消息:" + EvenType.MessageContent);
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent + ",是否同意?", false);
+					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
+						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
+					break;
+				case EventTypeEnum.Friend_FriendRequestAccepted:
+					Console.WriteLine("对方同意了您的好友请求");
+					break;
+				case EventTypeEnum.Friend_FriendRequestRefused:
+					Console.WriteLine("对方拒绝了您的好友请求");
+					break;
+				case EventTypeEnum.Friend_Removed:
+					Console.WriteLine("被好友删除");
+					break;
+				case EventTypeEnum.Friend_Blacklist:
+					//API.SendPrivateMsg(EvenType.ThisQQ, "12345678", EvenType.TriggerQQName+ "(" + EvenType.TriggerQQ.ToString() +" ) 将机器人加入黑名单");
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单", false);
+					break;
+				case EventTypeEnum.Group_MemberVerifying:
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
+					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
+						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, (uint)EvenType.EventType));
+					break;
+				case EventTypeEnum.Group_Invited:
+					Console.WriteLine("我被邀请加入群");
+					break;
+				case EventTypeEnum.Group_MemberJoined:
+					Console.WriteLine("某人加入了群");
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" + EvenType.TriggerQQName + ",欢迎你加入本群!", false);
+					break;
+				case EventTypeEnum.Group_MemberQuit:
+					Console.WriteLine("某人退出了群");
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!", false);
+					break;
+				case EventTypeEnum.Group_MemberUndid:
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 撤回了一条消息,内容如下:" + EvenType.MessageContent, false);
+					break;
+				case EventTypeEnum.Group_MemberInvited:
+					Console.WriteLine("某人被邀请入群");
+					break;
+				case EventTypeEnum.Group_AllowUploadFile:
+					Console.WriteLine("群事件_允许上传群文件");
+					break;
+				case EventTypeEnum.Group_ForbidUploadFile:
+					Console.WriteLine("群事件_禁止上传群文件");
+					break;
+				case EventTypeEnum.Group_AllowUploadPicture:
+					Console.WriteLine("群事件_允许上传相册");
+					break;
+				case EventTypeEnum.Group_ForbidUploadPicture:
+					Console.WriteLine("群事件_禁止上传相册");
+					break;
+				default:
+					Console.WriteLine(EvenType.EventType.ToString());
+					break;
 			}
 
 		}
-		#endregion				
+		#endregion
 		#region 发送好友图片
 		public string SendFriendImage(long thisQQ, long friendQQ, string picpath, bool is_flash)
 		{
