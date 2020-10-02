@@ -17,32 +17,6 @@ namespace XiaolzCSharp
 		public static CancellationTokenSource cts = new CancellationTokenSource();
 		public static CancellationToken token = CancellationToken.None;
 
-		//public string SendMessageCallBack(string szGroupID, string szQQID, string szContent) //dll回调函数
-		//{
-		//	if (szGroupID == szQQID && !string.IsNullOrEmpty(szQQID) && !string.IsNullOrEmpty(szContent))
-		//	{
-		//		API.SendPrivateMessage(long.Parse(PInvoke.RobotQQ), long.Parse(szQQID), szContent);
-		//	}
-		//	else if (string.IsNullOrEmpty(szGroupID) && string.IsNullOrEmpty(szQQID))
-		//	{
-		//		return "";
-		//	}
-		//	else
-		//	{
-		//		if (!string.IsNullOrEmpty(szGroupID) && szGroupID != szQQID && !string.IsNullOrEmpty(szContent))
-		//		{
-		//			if (!string.IsNullOrEmpty(szQQID))
-		//			{
-		//				API.SendGroupMsg(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), "[@" + szQQID + "]" + szContent);
-		//			}
-		//			else
-		//			{
-		//				API.SendGroupMsg(long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID), szContent);
-		//			}
-		//		}
-		//	}
-		//	return "";
-		//}
 		public string GetImageCallBack(string szGroupID, string szQQID, string szContent)
 		{
 			if (szContent.Contains("[pic,hash="))
@@ -254,6 +228,38 @@ namespace XiaolzCSharp
 						}
 
 					}
+				}
+				else if (sMsg.MessageContent.Contains("撤回") && sMsg.MessageContent.Contains("最近消息") && sMsg.MessageContent.Contains("条"))
+                {
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d-]", string.Empty);
+					if (new Regex("(?i)[^撤回最近消息条]").IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					string szQQID="123";
+					int Number=0;
+					MatchCollection matches = new Regex("\\d+").Matches(sMsg.MessageContent);
+					if (matches.Count > 2) return 0;
+					foreach (Match match in matches)
+					{
+						if (match.Value.ToString().Length >=6 )
+						{
+							szQQID= match.Value;
+						}
+						else if(match.Value.ToString().Length < 3)
+                        {
+							Number= int.Parse(match.Value);
+						}
+					}
+					List<List<string>> MsgList = SqliHelper.ReadData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp" }, "ORDER BY ID DESC LIMIT " + Number, "QQID like '" + szQQID + "'");
+					int n = 0;
+					foreach (List<string> list in MsgList)
+					{
+						n = n + 1;
+						bool sucess = API.Undo_GroupEvent(PInvoke.plugin_key, API.MyQQ, long.Parse(list[0]), long.Parse(list[3]), int.Parse(list[2]));
+						if (sucess)
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已撤回" + szQQID + "最近消息" + n.ToString() + "条", false);
+					}
+					
+
 				}
 				else if (sMsg.MessageContent=="压力测试")
                 {
