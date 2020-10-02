@@ -186,6 +186,48 @@ namespace XiaolzCSharp
 					}
 
 				}
+				else if (sMsg.MessageContent.Contains("同意加入群"))
+                {
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^同意加入群]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
+					if (m.Value.Length < 6)
+					{
+						return 0;
+					}
+					if (m.Success)
+					{
+						try
+						{
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberInvited, "同意入群");
+							API.EventDics.Remove(long.Parse(m.Value));
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已加入群:" + m.Value, false);
+						}
+						catch { }
+					}
+				}
+				else if (sMsg.MessageContent.Contains("拒绝加入群"))
+                {
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^拒绝加入群]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
+					if (m.Value.Length < 6)
+					{
+						return 0;
+					}
+					if (m.Success)
+					{
+						try
+						{
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberInvited, "同意入群");
+							API.EventDics.Remove(long.Parse(m.Value));
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已拒绝邀请.", false);
+						}
+						catch { }
+					}
+				}
 				else if (sMsg.MessageContent.Contains("同意加") && sMsg.MessageContent.Contains("为好友"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);

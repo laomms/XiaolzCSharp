@@ -34,6 +34,7 @@ namespace XiaolzCSharp
 			json = AddPermission("输出日志", json);
 			json = AddPermission("发送好友消息", json);
 			json = AddPermission("查询好友信息", json);
+			json = AddPermission("查询群信息", json);
 			json = AddPermission("发送群消息", json);
 			json = AddPermission("取图片下载地址", json);
 			json = AddPermission("取好友列表", json);
@@ -44,7 +45,7 @@ namespace XiaolzCSharp
 			json = AddPermission("处理群验证事件", json);
 			json = AddPermission("撤回消息_群聊", json);
 			json = AddPermission("撤回消息_私聊本身", json);
-
+			json = AddPermission("取管理列表", json);
 			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
 			var resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 			var App_Info = new AppInfo();
@@ -161,13 +162,14 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GetFriendInfoDelegate(string pkey, long thisQQ, long otherQQ, ref GetFriendDataInfo[] friendInfos);
 
+		public static GetGroupInfoDelegate GetGroupInfo = null;
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate bool GetGroupInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GroupCardInfoDatList[] GroupInfos);
+
 		public static GroupVerificationDelegate GroupVerification = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void GroupVerificationDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
 
-		public static GetGroupInfoDelegate GetGroupInfo = null;
-		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate bool GetGroupInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GetGroupDataInfo[] GroupInfos);
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GetGroupCardInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GroupCardInfoDatList[] groupCardInfo);
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
@@ -531,8 +533,7 @@ namespace XiaolzCSharp
 					Console.WriteLine("有新好友");
 					break;
 				case EventTypeEnum.Friend_FriendRequest:
-					Console.WriteLine("好友请求");
-					//API.SendPrivateMsg(EvenType.ThisQQ, "12345678",  EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")对方加机器人为好友,发送了这样的消息:" + EvenType.MessageContent);
+					Console.WriteLine("好友请求");					
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent + ",是否同意?", false);
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
@@ -546,9 +547,9 @@ namespace XiaolzCSharp
 					break;
 				case EventTypeEnum.Friend_Removed:
 					Console.WriteLine("被好友删除");
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人删除", false);
 					break;
 				case EventTypeEnum.Friend_Blacklist:
-					//API.SendPrivateMsg(EvenType.ThisQQ, "12345678", EvenType.TriggerQQName+ "(" + EvenType.TriggerQQ.ToString() +" ) 将机器人加入黑名单");
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单", false);
 					break;
 				case EventTypeEnum.Group_MemberVerifying:
@@ -559,6 +560,10 @@ namespace XiaolzCSharp
 					break;
 				case EventTypeEnum.Group_Invited:
 					Console.WriteLine("我被邀请加入群");
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + EvenType.OperateQQName+ "(" + EvenType.OperateQQ.ToString() + " ) 想邀请机器人进群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + GetGroupData(EvenType.ThisQQ, EvenType.SourceGroupQQ), false);
+					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
+						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
 				case EventTypeEnum.Group_MemberJoined:
 					Console.WriteLine("某人加入了群");
@@ -692,10 +697,9 @@ namespace XiaolzCSharp
 		{
 			string res = "";
 			GetFriendDataInfo[] pFriendInfo = new GetFriendDataInfo[2];
-			bool ret = GetFriendInfo(plugin_key, thisQQ, otherQQ, ref pFriendInfo);
-			if (ret == true)
+			if (GetFriendInfo(plugin_key, thisQQ, otherQQ, ref pFriendInfo) == true)
 			{
-				res= (new JavaScriptSerializer()).Serialize(pFriendInfo[0].friendInfo);
+				res= new JavaScriptSerializer().Serialize(pFriendInfo[0].friendInfo);
 				dynamic result = new JavaScriptSerializer().DeserializeObject(res);
 				string Gender = "";
 				if (result["Gender"] == 1)
@@ -707,7 +711,7 @@ namespace XiaolzCSharp
 				return "QQ资料信息: " + Environment.NewLine + "昵称: " + result["Name"] + Environment.NewLine + "年龄: " + Gender + Environment.NewLine + "等级: " + result["Level"] + Environment.NewLine + "国籍: " + result["Nation"] + Environment.NewLine + "签名: " + result["Signature"];
 					
 			}
-			return "";
+			return res;
 		}
 		#endregion
 		#region 取群成员列表
@@ -755,7 +759,7 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取管理列表
-		public string[] GetAdministratorLists(long thisQQ, long gruopNumber)
+		public static string[] GetAdministratorLists(long thisQQ, long gruopNumber)
 		{		
 			string ret =Marshal.PtrToStringAnsi(GetAdministratorList(plugin_key, thisQQ, gruopNumber));
 			string[] adminlist = ret.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -763,21 +767,16 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 查询群信息
-		public static void GetGroupData(long thisQQ, long otherGroupQQ)
+		public static string GetGroupData(long thisQQ, long otherGroupQQ)
 		{
-			long MessageRandom = 0;
-			uint MessageReq = 0;
-			GetGroupDataInfo[] pGroupInfo = new GetGroupDataInfo[2];
-			bool res = GetGroupInfo(plugin_key, thisQQ, otherGroupQQ, ref pGroupInfo);
-			if (res == true)
+			string res = "";
+			GroupCardInfoDatList[] pGroupInfo = new GroupCardInfoDatList[2];
+			if (GetGroupInfo(plugin_key, thisQQ, otherGroupQQ, ref pGroupInfo))
 			{
-				var result = (new JavaScriptSerializer()).Serialize(pGroupInfo[0].GroupInfo);
-				SendPrivateMsg(plugin_key, thisQQ, otherGroupQQ, result, ref MessageRandom, ref MessageReq);
+				GroupCardInfo groupinfo = pGroupInfo[0].groupCardInfo;
+				return "该群信息: " + Environment.NewLine + "群名称: " + groupinfo.GroupName + Environment.NewLine + "群介绍: " + groupinfo.GroupDescription ;
 			}
-			else
-			{
-				SendPrivateMsg(plugin_key, thisQQ, otherGroupQQ, "查询好友信息失败", ref MessageRandom, ref MessageReq);
-			}
+			return res;
 		}
 		#endregion			
 		#region 取群文件列表	

@@ -105,30 +105,25 @@ namespace XiaolzCSharp
 			public long FileSize;
 			public uint MessageAppID;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct FriendDataList
 		{
 			public uint count;
 			public FriendInfo pFriendInfo;
 		}
 
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct ServiceInfo
 		{
 			public ServiceInformation ServiceList;
 			public uint ServiceLevel;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GetFriendDataInfo //一维数组
 		{
 			public FriendInfo friendInfo;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
-		public struct GetGroupDataInfo //一维数组
-		{
-			public GroupInfo GroupInfo;
-		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct DataArray
 		{
 			public uint index;
@@ -226,84 +221,68 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string GroupMemo;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
-		public struct GroupCardInfoDatList
+
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+        public struct GroupCardInfoDatList
 		{
+			//public uint index; //数组索引
+			//public uint Amount; //数组元素数量
+			//[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)] public byte[] groupCardInfo;// 
 			public GroupCardInfo groupCardInfo;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GroupCardInfo
-		{
-			// 群名称
-			[MarshalAs(UnmanagedType.LPTStr)]
-			public string GroupName;
-			// 群地点
-			[MarshalAs(UnmanagedType.LPTStr)]
-			public string GroupLocation;
-			// 群分类
-			[MarshalAs(UnmanagedType.LPTStr)]
-			public string GroupClassification;
-			// 群标签 以|分割
-			[MarshalAs(UnmanagedType.LPTStr)]
-			public string GroupTags;
-			// 群介绍
-			[MarshalAs(UnmanagedType.LPTStr)]
-			public string GroupDescription;
+		{			
+			[MarshalAs(UnmanagedType.LPStr)]			public string GroupName;// 群名称																				
+			[MarshalAs(UnmanagedType.LPStr)]			public string GroupLocation;// 群地点
+			[MarshalAs(UnmanagedType.LPStr)]			public string GroupClassification;// 群分类																						  
+			[MarshalAs(UnmanagedType.LPStr)]			public string GroupTags;// 群标签 以|分割
+			[MarshalAs(UnmanagedType.LPStr)]			public string GroupDescription;// 群介绍
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GroupFileInfoDataList
 		{
 			public uint index; //数组索引
 			public uint Amount; //数组元素数量
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
-			public byte[] pAddrList; //每个元素的指针
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]			public byte[] pAddrList; //每个元素的指针
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct OrderDetaildDataList
 		{
 			public OrderDetail orderDetail;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct OrderDetail
 		{
 			// 订单时间
-				[MarshalAs(UnmanagedType.LPStr)]
-			public string OrderTime;
+				[MarshalAs(UnmanagedType.LPStr)]			public string OrderTime;
 			// 订单说明			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OrderDescription;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OrderDescription;
 			// 订单类名			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OrderClassification;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OrderClassification;
 			// 订单类型			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OrderType;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OrderType;
 			// 订单手续费			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OrderCommission;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OrderCommission;
 			// 操作人QQ			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OperatorQQ;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OperatorQQ;
 			// 操作人昵称			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OperatorName;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OperatorName;
 			// 接收人QQ			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string ReceiverQQ;
+			[MarshalAs(UnmanagedType.LPStr)]			public string ReceiverQQ;
 			// 接收人昵称			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string ReceiverName;
+			[MarshalAs(UnmanagedType.LPStr)]			public string ReceiverName;
 			// 操作金额			
-			[MarshalAs(UnmanagedType.LPStr)]
-			public string OperateAmount;
+			[MarshalAs(UnmanagedType.LPStr)]			public string OperateAmount;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct QQWalletInfoDataList
 		{
 			public QQWalletInformation qQWalletInformation;
 		}
 
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct QQWalletInformation
 		{
 			// 余额
@@ -318,16 +297,15 @@ namespace XiaolzCSharp
 			// 银行卡列表
 			public CardInfoDataList[] CardList;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct CardInfoDataList
 		{
 			public int index;//数组索引
 			public int Amount;//数组元素数量
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]//5000人群 5000/4+8 =1258
-			public byte[] pAddrList;//每个元素的指针
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]			public byte[] pAddrList;//每个元素的指针
 		}
 
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct CardInformation
 		{
 			// 序列
@@ -348,7 +326,7 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string BankType;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct RetQQWalletInformation
 		{
 			// 余额
@@ -363,13 +341,13 @@ namespace XiaolzCSharp
 			// 银行卡列表
 			public List<CardInformation> CardList;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct RedEnvelopesDataList
 		{
 			//public int index;
 			public NotReRedEnvelopes notReRedEnvelopes;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct NotReRedEnvelopes
 		{
 			public long SourceQQ;
@@ -382,7 +360,7 @@ namespace XiaolzCSharp
 			[MarshalAs(UnmanagedType.LPStr)]
 			public string channel;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GroupFileInformation
 		{
 			public IntPtr FileID; //文件夹fileid或者文件fileid
@@ -393,13 +371,13 @@ namespace XiaolzCSharp
 			public IntPtr FileFromNick; // 创建文件夹或上传文件的QQ
 			public FiletypeEnum FileType; // 文件类型 1: 文件, 2: 文件夹
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GMBriefDataList
 		{
 			public GMBriefInfo groupMemberBriefInfo;
 		}
 
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GMBriefInfo
 		{
 			public uint GroupMAax;
@@ -407,7 +385,7 @@ namespace XiaolzCSharp
 			public long GroupOwner;
 			public IntPtr AdminiList;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct AdminListDataList
 		{
 			public int index;//数组索引
@@ -416,7 +394,7 @@ namespace XiaolzCSharp
 			//public byte[] pdatalist;
 			public long[] pdatalist;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public class GroupMemberBriefInfo
 		{
 			public uint GroupMAax;
@@ -424,7 +402,7 @@ namespace XiaolzCSharp
 			public long GroupOwner;
 			public long[] AdminiList;
 		}
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct GetCaptchaInfoDataList
 		{
 			//public int index;
@@ -433,7 +411,7 @@ namespace XiaolzCSharp
 		/// <summary>
 		/// 验证码信息
 		/// </summary>
-		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct CaptchaInformation
 		{
 			// token_id			
