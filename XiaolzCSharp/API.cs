@@ -534,6 +534,7 @@ namespace XiaolzCSharp
 					Console.WriteLine("好友请求");
 					//API.SendPrivateMsg(EvenType.ThisQQ, "12345678",  EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")对方加机器人为好友,发送了这样的消息:" + EvenType.MessageContent);
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent + ",是否同意?", false);
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
@@ -551,7 +552,8 @@ namespace XiaolzCSharp
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单", false);
 					break;
 				case EventTypeEnum.Group_MemberVerifying:
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, (uint)EvenType.EventType));
 					break;
@@ -561,6 +563,7 @@ namespace XiaolzCSharp
 				case EventTypeEnum.Group_MemberJoined:
 					Console.WriteLine("某人加入了群");
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" + EvenType.TriggerQQName + ",欢迎你加入本群!", false);
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					break;
 				case EventTypeEnum.Group_MemberQuit:
 					Console.WriteLine("某人退出了群");
@@ -685,21 +688,26 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 查询好友信息
-		public static void GetFriendData(long thisQQ, long otherQQ)
+		public static string GetFriendData(long thisQQ, long otherQQ)
 		{
-			long MessageRandom = 0;
-			uint MessageReq = 0;
+			string res = "";
 			GetFriendDataInfo[] pFriendInfo = new GetFriendDataInfo[2];
-			bool res = GetFriendInfo(plugin_key, thisQQ, otherQQ, ref pFriendInfo);
-			if (res == true)
+			bool ret = GetFriendInfo(plugin_key, thisQQ, otherQQ, ref pFriendInfo);
+			if (ret == true)
 			{
-				var result = (new JavaScriptSerializer()).Serialize(pFriendInfo[0].friendInfo);
-				SendPrivateMsg(plugin_key, thisQQ, otherQQ, result, ref MessageRandom, ref MessageReq);
+				res= (new JavaScriptSerializer()).Serialize(pFriendInfo[0].friendInfo);
+				dynamic result = new JavaScriptSerializer().DeserializeObject(res);
+				string Gender = "";
+				if (result["Gender"] == 1)
+					Gender = "男";
+				else if (result["Gender"] == 2)
+					Gender = "女";
+				else
+					Gender = "未知";
+				return "QQ资料信息: " + Environment.NewLine + "昵称: " + result["Name"] + Environment.NewLine + "年龄: " + Gender + Environment.NewLine + "等级: " + result["Level"] + Environment.NewLine + "国籍: " + result["Nation"] + Environment.NewLine + "签名: " + result["Signature"];
+					
 			}
-			else
-			{
-				SendPrivateMsg(plugin_key, thisQQ, otherQQ, "查询好友信息失败", ref MessageRandom, ref MessageReq);
-			}
+			return "";
 		}
 		#endregion
 		#region 取群成员列表
