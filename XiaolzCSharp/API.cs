@@ -98,20 +98,17 @@ namespace XiaolzCSharp
 			}
 		}
 		#endregion
-
 		#region 函数委托指针
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr OutputLog(string pkey, [MarshalAs(UnmanagedType.LPStr)] string message, int text_color, int background_color);
 
 		public static SendPrivateMsgDelegate SendPrivateMsg = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SendPrivateMsgDelegate(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, ref long MessageRandom, ref uint MessageReq);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr SendPrivateMsgDelegate(string pkey, long ThisQQ, long SenderQQ, [MarshalAs(UnmanagedType.LPStr)] string MessageContent, ref long MessageRandom, ref uint MessageReq);
 
 		public static SendGroupMsgDelegate SendGroupMsg = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SendGroupMsgDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string msgcontent, bool anonymous);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr SendGroupMsgDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string msgcontent, bool anonymous);
 
 		public static PrivateUndoDelegate Undo_PrivateEvent = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
@@ -121,301 +118,317 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool UndoGroupDelegate(string pkey, long thisQQ, long groupQQ, long message_random, int message_req);
 
-
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr RecviceimageDelegate(string pkey, string guid, long thisQQ, long groupQQ);
 
 		public static GetFriendListDelegate GetFriendList = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]		
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int GetFriendListDelegate(string pkey, long thisQQ, ref DataArray[] DataInfo);
 
 		public static GetGroupListDelegate GetGroupList = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]		
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int GetGroupListDelegate(string pkey, long thisQQ, ref DataArray[] DataInfo);
 
 		public static GetGroupMemberlistDelegate GetGroupMemberlist = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate int GetGroupMemberlistDelegate(string pkey, long thisQQ, long groupQQ, ref DataArray[] DataInfo);
 
 		public static GetAdministratorListDelegate GetAdministratorList = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string GetAdministratorListDelegate(string pkey, long thisQQ, long gruopQQ);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr GetAdministratorListDelegate(string pkey, long thisQQ, long gruopQQ);
 
 		public static RestartDelegate restart = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void RestartDelegate(string pkey);
 
-		//public static GetLoginQQDelegate GetLoginQQ = null;
-		//[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		//[return: MarshalAs(UnmanagedType.LPStr)]
-		//public delegate string GetLoginQQDelegate(string pkey);
+		public static GetLoginQQDelegate GetLoginQQ = null;
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr GetLoginQQDelegate(string pkey);
 
 		public static FriendverificationEventDelegate FriendverificationEvent = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void FriendverificationEventDelegate(string pkey, long thisQQ, long triggerQQ, long message_seq, FriendVerificationOperateEnum operate_type);
 
 		public static GroupVerificationEventDelegate GroupVerificationEvent = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void GroupVerificationEventDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
 
 		public static GetImageDownloadLinkDelegate GetImageDownloadLink = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string GetImageDownloadLinkDelegate(string pkey, string guid, long thisQQ, long groupQQ);
+		public delegate IntPtr GetImageDownloadLinkDelegate(string pkey, string guid, long thisQQ, long groupQQ);
 
 		public static GetFriendInfoDelegate GetFriendInfo = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GetFriendInfoDelegate(string pkey, long thisQQ, long otherQQ, ref GetFriendDataInfo[] friendInfos);
 
 		public static GroupVerificationDelegate GroupVerification = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void GroupVerificationDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
 
 		public static GetGroupInfoDelegate GetGroupInfo = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GetGroupInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GetGroupDataInfo[] GroupInfos);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GetGroupCardInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GroupCardInfoDatList[] groupCardInfo);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool Undo_GroupDelegate(string pkey, long thisQQ, long groupQQ, long message_random, int message_req);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool Undo_PrivateDelegate(string pkey, long thisQQ, long otherQQ, long message_random, int message_req, int time);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr CreateGroupFolderDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder);
 
 		public static SendFriendJSONMessageDelegate SendFriendJSONMessage = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SendFriendJSONMessageDelegate(string pkey, long thisQQ, long friendQQ, [MarshalAs(UnmanagedType.LPStr)] string json_content);
 
 		public static SendGroupJSONMessageDelegate SendGroupJSONMessage = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SendGroupJSONMessageDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string json_content, bool anonymous);
 
 
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SendFreeGiftDelegate(string pkey, long thisQQ, long groupQQ, long otherQQ, int gift);
-		
 
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SendGroupTemporaryMessage(string pkey, long thisQQ, long groupQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string content, ref long random, ref int req);
 
 		public static ReadForwardedChatHistoryDelegate ReadForwardedChatHistory = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void ReadForwardedChatHistoryDelegate(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string resID, [MarshalAs(UnmanagedType.LPStr)] ref string retPtr);
 
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ShareMusic(string pkey, long thisQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string music_name, [MarshalAs(UnmanagedType.LPStr)] string artist_name, [MarshalAs(UnmanagedType.LPStr)] string redirect_link, [MarshalAs(UnmanagedType.LPStr)] string cover_link, [MarshalAs(UnmanagedType.LPStr)] string file_path, int app_type, int share_type);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ModifyGroupMessageContent(string pkey, [MarshalAs(UnmanagedType.SysInt)] int data_pointer, [MarshalAs(UnmanagedType.LPStr)] string new_message_content);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ModifyPrivateMessageContent(string pkey, [MarshalAs(UnmanagedType.SysInt)] int data_pointer, [MarshalAs(UnmanagedType.LPStr)] string new_message_content);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GroupDrawRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial, ref GetCaptchaInfoDataList[] captchaInfo);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr FriendNormalRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, int skinID, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial, ref GetCaptchaInfoDataList[] ciDataLists);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool FriendFileToFriend(string pkey, long thisQQ, long sourceQQ, long targetQQ, [MarshalAs(UnmanagedType.LPStr)] string fileID, [MarshalAs(UnmanagedType.LPStr)] string file_name, long file_size, ref int msgReq, ref long Random, ref int time);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetPluginDataDirectory(string pkey);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetClientKey(string pkey, long thisQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetPSKey(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetOrderDetail(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string orderID, ref OrderDetaildDataList[] data);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool DissolveGroup(string pkey, long thisQQ, long gruopNumber);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ShutUpGroupMember(string pkey, long thisQQ, long groupQQ, long otherQQ, int time);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetNameForce(string pkey, long thisQQ, long otherQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetQQWalletPersonalInformation(string pkey, long thisQQ, ref QQWalletInfoDataList[] qQWalletInfoDataLists);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetNameFromCache(string pkey, long otherQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetGroupNickname(string pkey, long thisQQ, long groupQQ, long otherQQ);
 
 		public static GetGroupFileListDelegate GetGroupFileList = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		[return: MarshalAs(UnmanagedType.LPStr)]
 		public delegate string GetGroupFileListDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref GroupFileInfoDataList[] groupFileInfoDataLists);
-		
-		
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ShutUpAll(string pkey, long thisQQ, long groupQQ, bool is_shut_up_all);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GroupPermission_SetInviteMethod(string pkey, long thisQQ, long groupQQ, int method);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ForwardGroupFileToFriend(string pkey, long thisQQ, long source_groupQQ, long target_groupQQ, [MarshalAs(UnmanagedType.LPStr)] string fileID, [MarshalAs(UnmanagedType.LPStr)] string filename, long filesize, ref int msgReq, ref long Random, ref int time);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ForwardGroupFileToGroup(string pkey, long thisQQ, long source_groupQQ, long target_groupQQ, [MarshalAs(UnmanagedType.LPStr)] string fileID);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool RemoveGroupMember(string pkey, long thisQQ, long groupQQ, long otherQQ, bool is_verification_refused);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr DeleteGroupFile(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string file_id, [MarshalAs(UnmanagedType.LPStr)] string folder);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr DeleteGroupFolder(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr RenameGroupFolder(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string old_folder, [MarshalAs(UnmanagedType.LPStr)] string new_folder);
 
 		public static UploadGroupFileDelegate UploadGroupFile = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr UploadGroupFileDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string path, [MarshalAs(UnmanagedType.LPStr)] string folder);
-		
-		
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+
+
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr MoveGroupFile(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string file_id, [MarshalAs(UnmanagedType.LPStr)] string old_folder, [MarshalAs(UnmanagedType.LPStr)] string new_folder);
 
 		public static UploadFriendImageDelegate UploadFriendImage = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string UploadFriendImageDelegate(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr UploadFriendImageDelegate(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 
 		public static UploadGroupImageDelegate UploadGroupImage = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string UploadGroupImageDelegate(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr UploadGroupImageDelegate(string pkey, long thisQQ, long friendQQ, bool is_flash, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool UploadGroupAvatar(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr UploadAvatar(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPArray)] byte[] pic, int picsize);
 
 		public static UploadFriendAudioDelegate UploadFriendAudio = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string UploadFriendAudioDelegate(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr UploadFriendAudioDelegate(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
 
 		public static UploadGroupAudioDelegate UploadGroupAudio = null;
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string UploadGroupAudioDelegate(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr UploadGroupAudioDelegate(string pkey, long thisQQ, long friendQQ, int audio_type, [MarshalAs(UnmanagedType.LPStr)] string audio_text, [MarshalAs(UnmanagedType.LPArray)] byte[] audio, int audiosize);
 
 		public static SaveFileToWeiYunDelegate SaveFileToWeiYun = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string SaveFileToWeiYunDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string file_id);
+		public delegate IntPtr SaveFileToWeiYunDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string file_id);
 
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]		
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ReportCurrent(string pkey, long thisQQ, long groupQQ, double Longitude, double Latitude);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SetGroupNickname(string pkey, long thisQQ, long groupQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string nickname);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetLocationShare(string pkey, long thisQQ, long groupQQ, double Longitude, double Latitude, bool is_enabled);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetStatus(string pkey, long thisQQ, int main, int sun, int battery);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool Setexclusivetitle(string pkey, long thisQQ, long groupQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string name);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate long IsShuttedUp(string pkey, long thisQQ, long groupQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr AddFriend(string pkey, long thisQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string verification, [MarshalAs(UnmanagedType.LPStr)] string comment);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr AddGroup(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string verification);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool QuitGroup(string pkey, long thisQQ, long groupQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetSignature(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string signature, [MarshalAs(UnmanagedType.LPStr)] string location);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetName(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string name);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SetBlockFriend(string pkey, long thisQQ, long otherQQ, bool is_blocked);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetGroupMessageReceive(string pkey, long thisQQ, long groupQQ, int set_type);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SetSpecialFriend(string pkey, long thisQQ, long otherQQ, bool is_special);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr SubmitPaymentCaptcha(string pkey, long thisQQ, IntPtr captcha_information, [MarshalAs(UnmanagedType.LPStr)] string captcha, [MarshalAs(UnmanagedType.LPStr)] string payment_password);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool LoginSpecifyQQ(string pkey, long otherQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SendIMEStatus(string pkey, long thisQQ, long ohterQQ, int iMEStatus);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool CheckPermission(string pkey, int permission);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr QQLike(string pkey, long thisQQ, long otherQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool Modifyinformation(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string json);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetRedEnvelope(string pkey, long thisQQ, long GroupQQ, ref RedEnvelopesDataList[] reDataList);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void CallPhone(string pkey, long thisQQ, long otherQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GroupFileDownloadLink(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPTStr)] string FileID, [MarshalAs(UnmanagedType.LPTStr)] string FileName);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool DoubleclickGroupFace(string pkey, long thisQQ, long otherQQ, long groupQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GroupTop(string pkey, long thisQQ, long GroupQQ, bool istop);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetEssence(string pkey, long thisQQ, long groupQQ, int message_req, long message_random);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetGroupNickRules(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPWStr)] string rules);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetGroupLimitNumber(string pkey, long thisQQ, long GroupQQ, int LimitNumber);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool FriendjoinGroup(string pkey, long thisQQ, long GroupQQ, long otherQQ, long otherGroupQQ);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GroupNoticeMethod(string pkey, long thisQQ, long GroupQQ, long otherQQ, int metohd);
 		public delegate IntPtr GetGroupMemberBriefInfo(string pkey, long thisQQ, long GroupQQ, ref GMBriefDataList[] gMBriefDataLists);
-		[UnmanagedFunctionPointer(CallingConvention.StdCall)]
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool UpdataGroupName(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string NewGroupName);
 		#endregion
 		#region 初始化传入的函数指针
 		public static void InitFunction()
-        {
+		{
 			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
 			RestartDelegate ReStartAPI = (RestartDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["框架重启"]), typeof(RestartDelegate));
 			restart = ReStartAPI;
-			//GetLoginQQDelegate GetLoginQQAPI = (GetLoginQQDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取框架QQ"]), typeof(GetLoginQQDelegate));
-			//GetLoginQQ = GetLoginQQAPI;
+			GC.KeepAlive(restart);
+			GetLoginQQDelegate GetLoginQQAPI = (GetLoginQQDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取框架QQ"]), typeof(GetLoginQQDelegate));
+			GetLoginQQ = GetLoginQQAPI;
+			GC.KeepAlive(GetLoginQQ);
 			SendPrivateMsgDelegate SendPrivateMsgAPI = (SendPrivateMsgDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["发送好友消息"]), typeof(SendPrivateMsgDelegate));
 			SendPrivateMsg = SendPrivateMsgAPI;
+			GC.KeepAlive(SendPrivateMsg);
 			SendGroupMsgDelegate SendGroupMsgAPI = (SendGroupMsgDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["发送群消息"]), typeof(SendGroupMsgDelegate));
 			SendGroupMsg = SendGroupMsgAPI;
+			GC.KeepAlive(SendGroupMsg);
 			FriendverificationEventDelegate FriendverificationEventAPI = (FriendverificationEventDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["处理好友验证事件"]), typeof(FriendverificationEventDelegate));
 			FriendverificationEvent = FriendverificationEventAPI;
+			GC.KeepAlive(FriendverificationEvent);
 			GroupVerificationEventDelegate GroupVerificationEventAPI = (GroupVerificationEventDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["处理群验证事件"]), typeof(GroupVerificationEventDelegate));
 			GroupVerificationEvent = GroupVerificationEventAPI;
+			GC.KeepAlive(GroupVerificationEvent);
 			UploadFriendImageDelegate UploadFriendImageAPI = (UploadFriendImageDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["上传好友图片"]), typeof(UploadFriendImageDelegate));
 			UploadFriendImage = UploadFriendImageAPI;
+			GC.KeepAlive(UploadFriendImage);
 			UploadGroupImageDelegate UploadGroupImageAPI = (UploadGroupImageDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["上传群图片"]), typeof(UploadGroupImageDelegate));
 			UploadGroupImage = UploadGroupImageAPI;
+			GC.KeepAlive(UploadGroupImage);
 			UploadFriendAudioDelegate UploadFriendAudioAPI = (UploadFriendAudioDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["上传好友语音"]), typeof(UploadFriendAudioDelegate));
-			UploadFriendAudio=UploadFriendAudioAPI ;
+			UploadFriendAudio = UploadFriendAudioAPI;
+			GC.KeepAlive(UploadFriendAudio);
 			UploadGroupAudioDelegate UploadGroupAudioAPI = (UploadGroupAudioDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["上传群语音"]), typeof(UploadGroupAudioDelegate));
-			UploadGroupAudio=UploadGroupAudioAPI ;
+			UploadGroupAudio = UploadGroupAudioAPI;
+			GC.KeepAlive(UploadGroupAudio);
 			GetImageDownloadLinkDelegate GetImageDownloadLinkAPI = (GetImageDownloadLinkDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取图片下载地址"]), typeof(GetImageDownloadLinkDelegate));
 			GetImageDownloadLink = GetImageDownloadLinkAPI;
+			GC.KeepAlive(GetImageDownloadLink);
 			GetFriendListDelegate GetFriendListAPI = (GetFriendListDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取好友列表"]), typeof(GetFriendListDelegate));
 			GetFriendList = GetFriendListAPI;
+			GC.KeepAlive(GetFriendList);
 			GetFriendInfoDelegate GetFriendInfoAPI = (GetFriendInfoDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["查询好友信息"]), typeof(GetFriendInfoDelegate));
 			GetFriendInfo = GetFriendInfoAPI;
+			GC.KeepAlive(GetFriendInfo);
 			GetGroupMemberlistDelegate GetGroupMemberlistAPI = (GetGroupMemberlistDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取群成员列表"]), typeof(GetGroupMemberlistDelegate));
 			GetGroupMemberlist = GetGroupMemberlistAPI;
+			GC.KeepAlive(GetGroupMemberlist);
 			GetGroupListDelegate GetGroupListAPI = (GetGroupListDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取群列表"]), typeof(GetGroupListDelegate));
 			GetGroupList = GetGroupListAPI;
+			GC.KeepAlive(GetGroupList);
 			GetGroupInfoDelegate GetGroupInfoAPI = (GetGroupInfoDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["查询群信息"]), typeof(GetGroupInfoDelegate));
 			GetGroupInfo = GetGroupInfoAPI;
+			GC.KeepAlive(GetGroupInfo);
 			PrivateUndoDelegate UndoPrivateAPI = (PrivateUndoDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["撤回消息_私聊本身"]), typeof(PrivateUndoDelegate));
 			Undo_PrivateEvent = UndoPrivateAPI;
+			GC.KeepAlive(Undo_PrivateEvent);
 			UndoGroupDelegate UndoGroupApi = (UndoGroupDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["撤回消息_群聊"]), typeof(UndoGroupDelegate));
 			Undo_GroupEvent = UndoGroupApi;
+			GC.KeepAlive(Undo_GroupEvent);
 			GetAdministratorListDelegate GetAdministratorListAPI = (GetAdministratorListDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取管理层列表"]), typeof(GetAdministratorListDelegate));
 			GetAdministratorList = GetAdministratorListAPI;
+			GC.KeepAlive(GetAdministratorList);
 			SendFriendJSONMessageDelegate SendFriendJSONMessageAPI = (SendFriendJSONMessageDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["发送好友json消息"]), typeof(SendFriendJSONMessageDelegate));
 			SendFriendJSONMessage = SendFriendJSONMessageAPI;
+			GC.KeepAlive(SendFriendJSONMessage);
 			SendGroupJSONMessageDelegate SendGroupJSONMessageAPI = (SendGroupJSONMessageDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["发送群json消息"]), typeof(SendGroupJSONMessageDelegate));
 			SendGroupJSONMessage = SendGroupJSONMessageAPI;
+			GC.KeepAlive(SendGroupJSONMessage);
 			SaveFileToWeiYunDelegate SaveFileToWeiYunAPI = (SaveFileToWeiYunDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["保存文件到微云"]), typeof(SaveFileToWeiYunDelegate));
 			SaveFileToWeiYun = SaveFileToWeiYunAPI;
+			GC.KeepAlive(SaveFileToWeiYun);
 			ReadForwardedChatHistoryDelegate ReadForwardedChatHistoryAPI = (ReadForwardedChatHistoryDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["查看转发聊天记录内容"]), typeof(ReadForwardedChatHistoryDelegate));
 			ReadForwardedChatHistory = ReadForwardedChatHistoryAPI;
+			GC.KeepAlive(ReadForwardedChatHistory);
 			UploadGroupFileDelegate UploadGroupFileAPI = (UploadGroupFileDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["上传群文件"]), typeof(UploadGroupFileDelegate));
 			UploadGroupFile = UploadGroupFileAPI;
+			GC.KeepAlive(UploadGroupFile);
 			GetGroupFileListDelegate GetGroupFileListAPI = (GetGroupFileListDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取群文件列表"]), typeof(GetGroupFileListDelegate));
 			GetGroupFileList = GetGroupFileListAPI;
+			GC.KeepAlive(GetGroupFileList);
 		}
 		#endregion
 		#region 插件启动	
@@ -423,6 +436,7 @@ namespace XiaolzCSharp
 		public delegate int DelegateAppEnable();
 		public static int appEnable()		
 		{
+			InitFunction();
 			string res = CallGetLoginQQ();
 			string sqlite3path = System.Environment.CurrentDirectory + "\\bin\\sqlite3.dll"; 
 			SqliHelper.SetDllDirectory(sqlite3path);
@@ -455,15 +469,9 @@ namespace XiaolzCSharp
 		}
 		#endregion
 		#region 取框架QQ
-		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public delegate string DelegateGetLoginQQ(string pkey);
 		public static string CallGetLoginQQ()
 		{
-			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
-			int ptr = json["取框架QQ"];
-			DelegateGetLoginQQ GetLoginQQAPI = (DelegateGetLoginQQ)Marshal.GetDelegateForFunctionPointer(new IntPtr(ptr), typeof(DelegateGetLoginQQ));
-			var RetJson = GetLoginQQAPI(plugin_key);
+			string RetJson =Marshal.PtrToStringAnsi( GetLoginQQ(plugin_key));
 			try
 			{
 				dynamic root = new JavaScriptSerializer().Deserialize<Dictionary<string, Dictionary<string, object>>>(RetJson);
@@ -496,12 +504,9 @@ namespace XiaolzCSharp
 			}
 			//PluginStatus = false;
 			PluginStatus = true;//自己改下
-			GetLoginQQAPI = null;
 			return "";
 		}
 		#endregion
-	
-
 		#region 插件设置
 		public static DelegateAppSetting AppSettingEvent = new DelegateAppSetting(AppSetting);
 		public delegate void DelegateAppSetting();
@@ -522,8 +527,7 @@ namespace XiaolzCSharp
 				{
 					case EventTypeEnum.This_SignInSuccess:
 						Console.WriteLine("登录成功");
-						MyQQ = EvenType.ThisQQ;
-						InitFunction();
+						MyQQ = EvenType.ThisQQ;						
 						break;
 					case EventTypeEnum.Friend_NewFriend:
 						Console.WriteLine("有新好友");
@@ -657,17 +661,17 @@ namespace XiaolzCSharp
 			}
 
 		}
-		#endregion			
-	
+		#endregion				
 		#region 发送好友图片
 		public string SendFriendImage(long thisQQ, long friendQQ, string picpath, bool is_flash)
 		{
 			Bitmap bitmap = new Bitmap(picpath);
 			byte[] picture = GetByteArrayByImage(bitmap);
-			string piccode = UploadFriendImage(plugin_key, thisQQ, friendQQ, is_flash, picture, picture.Length);
+			IntPtr piccode = UploadFriendImage(plugin_key, thisQQ, friendQQ, is_flash, picture, picture.Length);
 			long MessageRandom = 0;
 			uint MessageReq = 0;
-			return SendPrivateMsg(plugin_key,thisQQ, friendQQ,piccode,ref MessageRandom, ref MessageReq);
+			IntPtr res= SendPrivateMsg(plugin_key, thisQQ, friendQQ, Marshal.PtrToStringAnsi(piccode), ref MessageRandom, ref MessageReq);
+			return Marshal.PtrToStringAnsi(res);
 		}	
 		private byte[] GetByteArrayByImage(Bitmap bitmap)
 		{
@@ -695,11 +699,11 @@ namespace XiaolzCSharp
 		{
 			Bitmap bitmap = new Bitmap(picpath);
 			byte[] picture = GetByteArrayByImage(bitmap);
-			string piccode = UploadGroupImage(plugin_key, thisQQ, groupQQ, is_flash, picture, picture.Length);
-			return SendGroupMsg(plugin_key, thisQQ, groupQQ, piccode, false);
+			IntPtr piccode = UploadGroupImage(plugin_key, thisQQ, groupQQ, is_flash, picture, picture.Length);
+			IntPtr res=SendGroupMsg(plugin_key, thisQQ, groupQQ, Marshal.PtrToStringAnsi(piccode), false);
+			return Marshal.PtrToStringAnsi(res);
 		}
 		#endregion
-
 		public byte[] SilkDecoding(string audio_path)
 		{
 			SilkHelp silkHelp = new SilkHelp();
@@ -710,7 +714,6 @@ namespace XiaolzCSharp
 			SilkHelp silkHelp = new SilkHelp();
 			return silkHelp.SilkEncoding(audio_path);
 		}
-
 		#region 获取图片地址		
 		public static string GetImageLink(long thisQQ, long sendQQ, long groupQQ, string ImgGuid)
 		{
@@ -817,7 +820,7 @@ namespace XiaolzCSharp
 		#region 取管理列表
 		public string[] GetAdministratorLists(long thisQQ, long gruopNumber)
 		{		
-			var ret = GetAdministratorList(plugin_key, thisQQ, gruopNumber);
+			string ret =Marshal.PtrToStringAnsi(GetAdministratorList(plugin_key, thisQQ, gruopNumber));
 			string[] adminlist = ret.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 			return adminlist;
 		}
@@ -840,8 +843,6 @@ namespace XiaolzCSharp
 			}
 		}
 		#endregion			
-	
-			
 		#region 取群文件列表	
 		public delegate string GetGroupFileLists(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref GroupFileInfoDataList[] groupFileInfoDataLists);
 		public List<GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
@@ -867,9 +868,6 @@ namespace XiaolzCSharp
 			return null;
 		}
 		#endregion
-	
-
-
 
 	}
 }

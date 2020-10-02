@@ -52,13 +52,13 @@ namespace XiaolzCSharp
 				{
 					if (szGroupID == szQQID)
 					{
-						var ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), 0);
-						return ImgUrl;
+						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), 0);
+						return Marshal.PtrToStringAnsi( ImgUrl);
 					}
 					else
 					{
-						var ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID));
-						return ImgUrl;
+						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID));
+						return Marshal.PtrToStringAnsi(ImgUrl);
 					}
 				}
 			}
@@ -267,7 +267,7 @@ namespace XiaolzCSharp
 							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" + DateTime.Now.ToString(), false);
 							//API.SendGroupMsg(API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" +DateTime.Now.ToString());
 							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, i.ToString(),false);
-							Thread.Sleep(200);
+							Thread.Sleep(500);
 						}
 					}, token);
 
@@ -287,7 +287,7 @@ namespace XiaolzCSharp
 					if (sMsg.ThisQQ != sMsg.SenderQQ)
 					{
 
-						string res = API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "你发送了这样的消息:" + sMsg.MessageContent,false);
+						API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "你发送了这样的消息:" + sMsg.MessageContent,false);
 
 					}
 
