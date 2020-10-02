@@ -126,6 +126,10 @@ namespace XiaolzCSharp
 
 
 				}
+				else if (sMsg.MessageContent=="开启消息记录")
+                {
+					API.MsgRecod = true;
+				}
 				else if (sMsg.MessageContent.Contains("取群列表"))
 				{
 
