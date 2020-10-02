@@ -160,7 +160,10 @@ namespace XiaolzCSharp
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
-						catch { }
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message.ToString());
+						}
 					}
 
 				}
@@ -182,14 +185,17 @@ namespace XiaolzCSharp
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
-						catch { }
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message.ToString());
+						}
 					}
 
 				}
-				else if (sMsg.MessageContent.Contains("同意加入群"))
+				else if (sMsg.MessageContent.Contains("同意进群"))
                 {
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^同意加入群]")).IsMatch(output.Replace(" ", "")) == true)
+					if ((new Regex("(?i)[^同意进群]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.Length < 6)
@@ -200,17 +206,20 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberInvited, "同意入群");
+							var ret= API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_Invited, "同意入群");
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已加入群:" + m.Value, false);
 						}
-						catch { }
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message.ToString());
+						}
 					}
 				}
-				else if (sMsg.MessageContent.Contains("拒绝加入群"))
+				else if (sMsg.MessageContent.Contains("拒绝进群"))
                 {
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^拒绝加入群]")).IsMatch(output.Replace(" ", "")) == true)
+					if ((new Regex("(?i)[^拒绝进群]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.Length < 6)
@@ -225,7 +234,10 @@ namespace XiaolzCSharp
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已拒绝邀请.", false);
 						}
-						catch { }
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message.ToString());
+						}
 					}
 				}
 				else if (sMsg.MessageContent.Contains("同意加") && sMsg.MessageContent.Contains("为好友"))
@@ -246,7 +258,10 @@ namespace XiaolzCSharp
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
 						}
-						catch { }
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message.ToString());
+						}
 
 					}
 				}

@@ -152,7 +152,7 @@ namespace XiaolzCSharp
 
 		public static GroupVerificationEventDelegate GroupVerificationEvent = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate void GroupVerificationEventDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
+		public delegate bool GroupVerificationEventDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
 
 		public static GetImageDownloadLinkDelegate GetImageDownloadLink = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
@@ -563,7 +563,7 @@ namespace XiaolzCSharp
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + EvenType.OperateQQName+ "(" + EvenType.OperateQQ.ToString() + " ) 想邀请机器人进群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
 					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, 64596829, "[@37476230]" + Environment.NewLine + GetGroupData(EvenType.ThisQQ, EvenType.SourceGroupQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
-						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
+						EventDics.Add(EvenType.SourceGroupQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.OperateQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
 				case EventTypeEnum.Group_MemberJoined:
 					Console.WriteLine("某人加入了群");
@@ -591,6 +591,9 @@ namespace XiaolzCSharp
 					break;
 				case EventTypeEnum.Group_ForbidUploadPicture:
 					Console.WriteLine("群事件_禁止上传相册");
+					break;
+				case EventTypeEnum.Group_MemberKickOut:
+					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "你已被提出了群:" + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " ), false);
 					break;
 				default:
 					Console.WriteLine(EvenType.EventType.ToString());
