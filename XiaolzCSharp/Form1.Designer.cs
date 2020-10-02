@@ -71,6 +71,11 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip3.SuspendLayout();
@@ -161,6 +166,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button7);
+            this.tabPage1.Controls.Add(this.textBox5);
+            this.tabPage1.Controls.Add(this.label13);
+            this.tabPage1.Controls.Add(this.textBox4);
+            this.tabPage1.Controls.Add(this.label12);
             this.tabPage1.Controls.Add(this.listView3);
             this.tabPage1.Controls.Add(this.listView2);
             this.tabPage1.Controls.Add(this.listView1);
@@ -189,7 +199,7 @@
             this.listView3.HideSelection = false;
             this.listView3.Location = new System.Drawing.Point(324, 92);
             this.listView3.Name = "listView3";
-            this.listView3.Size = new System.Drawing.Size(145, 221);
+            this.listView3.Size = new System.Drawing.Size(145, 191);
             this.listView3.TabIndex = 21;
             this.listView3.UseCompatibleStateImageBehavior = false;
             this.listView3.SelectedIndexChanged += new System.EventHandler(this.listView3_SelectedIndexChanged);
@@ -203,7 +213,7 @@
             this.listView2.HideSelection = false;
             this.listView2.Location = new System.Drawing.Point(171, 92);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(145, 221);
+            this.listView2.Size = new System.Drawing.Size(145, 191);
             this.listView2.TabIndex = 20;
             this.listView2.UseCompatibleStateImageBehavior = false;
             this.listView2.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
@@ -217,7 +227,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(17, 92);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(145, 221);
+            this.listView1.Size = new System.Drawing.Size(145, 191);
             this.listView1.TabIndex = 19;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
@@ -500,6 +510,48 @@
             this.label11.TabIndex = 7;
             this.label11.Text = "拒绝进群666666";
             // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(83, 299);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(126, 20);
+            this.textBox4.TabIndex = 23;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(19, 302);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(58, 13);
+            this.label12.TabIndex = 22;
+            this.label12.Text = "反馈群号:";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(285, 299);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(126, 20);
+            this.textBox5.TabIndex = 25;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(217, 302);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 13);
+            this.label13.TabIndex = 24;
+            this.label13.Text = "主人QQ号:";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(417, 294);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(52, 29);
+            this.button7.TabIndex = 26;
+            this.button7.Text = "设置";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -570,5 +622,10 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label12;
     }
 }

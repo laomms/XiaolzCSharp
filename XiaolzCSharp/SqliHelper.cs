@@ -229,9 +229,8 @@ namespace XiaolzCSharp
 			if (columnName.Length != columnValue.Length) return false;
 			List<string> strList = new List<string>();
 			string sql = "";
-			if (columnName.Length>1)
-            {
-				
+			if (columnName.Length > 1)
+            {				
 				for (int i = 0; i < columnValue.Count(); i++)
 				{
 					strList.Add("?");
@@ -286,6 +285,7 @@ namespace XiaolzCSharp
 		/// <sample>UpdateData("tabl1", new string[] { "key3 like'" + condition1 + "'", "key4 like'" + condition2 + "'"}, "key1='" + value1 + "'", "key2='value2'" )</sample>
 		public static bool UpdateData(string tableName, string[] condition, params string[] setAgr)
 		{
+			if (condition.Length == 0 || setAgr.Length == 0) return false;
 			string sql;
 			string[] matches=null;
 			var setvalue = Regex.Replace(string.Join(",", setAgr), "'.*?'", "?");
@@ -293,11 +293,19 @@ namespace XiaolzCSharp
 			Match[] matchArray = new Match[matchList.Count];
 			matchList.CopyTo(matchArray, 0);
 			matches = Array.ConvertAll(matchArray, new Converter<Match, string>(MatchToString));
-			if (setAgr.Length > 1)
+			if (setAgr.Length > 1 && condition.Length > 1 )
             {				
 				sql = "UPDATE " + tableName + " SET " + string.Join(",", setvalue) + "' WHERE " + string.Join(" AND ", condition);
 			}
-            else
+			else if (setAgr.Length == 1 && condition.Length > 1)
+            {
+				sql = "UPDATE " + tableName + " SET " + setAgr[0] + "' WHERE " + string.Join(" AND ", condition);
+			}
+			else if (setAgr.Length > 1 && condition.Length == 1)
+            {
+				sql = "UPDATE " + tableName + " SET " + string.Join(",", setvalue) + " WHERE " + condition[0];
+			}
+			else
             {
 				sql = "UPDATE " + tableName + " SET " + setAgr[0] + " WHERE " + condition[0];
 			}
@@ -346,12 +354,22 @@ namespace XiaolzCSharp
 		/// <sample>ReadData("table1", new string[] {"key2", "key5"}, "key1 like '" + value1 + "'", "key2 like 'value2'")</sample>
 		public static List<List<string>> ReadData(string tableName, string[] columnSearch, string SortOrder, params string[] condition )
 		{
+			
 			List<List<string>> ItemList = new List<List<string>>();
+			if (condition.Length == 0 || columnSearch.Length == 0) return ItemList;
 			List<string> SubItemList = new List<string>();
 			string sql = "";
-			if (condition.Length>0)
+			if (condition.Length > 1 && columnSearch.Length > 1 )
             {
 				sql = "Select " + string.Join(",", columnSearch) + " from " + tableName + " where " + string.Join(" AND ", condition) + SortOrder;
+			}
+			else if (condition.Length > 1 && columnSearch.Length == 1)
+            {
+				sql = "Select " + columnSearch[0] + " from " + tableName + " where " + string.Join(" AND ", condition) + SortOrder;
+			}
+			else if (condition.Length == 1 && columnSearch.Length > 1)
+			{
+				sql = "Select " + string.Join(",", columnSearch)  + " from " + tableName + " where " + condition[0] + SortOrder;
 			}
 			else
             {
@@ -396,6 +414,7 @@ namespace XiaolzCSharp
 		/// <sample>DeleteData("table1", "key1 Like '" + value1 + "'", "key2 like 'value2'")</sample>
 		public static bool DeleteData(string tableName, params string[] condition)
 		{
+			if (condition.Length == 0) return false;
 			string sql = "";
 			if (condition.Length > 0)
             {

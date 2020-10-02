@@ -23,6 +23,7 @@ namespace XiaolzCSharp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (textBox1.Text == "") return;
             if (SqliHelper.CheckDataExsit("授权群号", "GroupID", textBox1.Text) == false)
             {
                 SqliHelper.InsertData("授权群号", new string[] { "GroupID", "time" }, new string[] { textBox1.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
@@ -33,6 +34,7 @@ namespace XiaolzCSharp
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (textBox1.Text == "") return;
             if (SqliHelper.CheckDataExsit("授权群号", "GroupID", textBox1.Text) == true)
             {
                 SqliHelper.DeleteData("授权群号", "GroupID", textBox1.Text);
@@ -43,6 +45,7 @@ namespace XiaolzCSharp
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (textBox2.Text == "") return;
             if (SqliHelper.CheckDataExsit("高级权限", "QQID", textBox2.Text) == false)
             {
                 SqliHelper.InsertData("高级权限", new string[] { "QQID", "time" }, new string[] { textBox2.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
@@ -54,6 +57,7 @@ namespace XiaolzCSharp
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (textBox2.Text == "") return;
             if (SqliHelper.CheckDataExsit("中级权限", "QQID", textBox2.Text) == false)
             {
                 SqliHelper.InsertData("中级权限", new string[] { "QQID", "time" }, new string[] { textBox2.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
@@ -101,7 +105,14 @@ namespace XiaolzCSharp
             SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
             SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
             SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
-   
+
+            List<List<string>> MasterInfo = SqliHelper.ReadData("主人信息", new string[] { "FeedbackGroup", "MasterQQ", }, "", "FeedbackGroup like '%%'");
+            if (MasterInfo.Count > 0)
+            {
+                textBox4.Text = MasterInfo[0][0];
+                textBox5.Text = MasterInfo[0][1];
+            }
+
         }
 
         private void 修改ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -256,8 +267,8 @@ namespace XiaolzCSharp
 
         private void button6_Click(object sender, EventArgs e)
         {
-            SqliHelper.CheckImporlistview(listView4, "消息记录", " where QQID like '" + textBox3.Text + "' " );
-            List <List<string>> MsgList = SqliHelper.ReadData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom" , "TimeStamp" }, "ORDER BY ID ASC", "QQID like '" + textBox3.Text + "'");
+            if (textBox3.Text == "") return;
+            SqliHelper.CheckImporlistview(listView4, "消息记录", " where QQID like '" + textBox3.Text + "' " );          
 
         }
 
@@ -307,6 +318,36 @@ namespace XiaolzCSharp
                 }
             }
             catch { }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (textBox4.Text == "" || textBox5.Text == "")
+                return;
+            if (SqliHelper.CheckDataExsit("主人信息", "FeedbackGroup", textBox4.Text) == false)
+            {
+                if (SqliHelper.CheckDataExsit("主人信息", "MasterQQ", textBox5.Text) == false)
+                {
+                    SqliHelper.ClearTable("主人信息");
+                    SqliHelper.InsertData("主人信息", new string[] { "FeedbackGroup", "MasterQQ" }, new string[] { textBox4.Text, textBox5.Text });
+                    MessageBox.Show("添加成功.");
+                }
+                else
+                {
+                    SqliHelper.UpdateData("主人信息", new string[] { "MasterQQ like'" + textBox5.Text + "'" }, "FeedbackGroup='" + textBox4.Text + "'");
+                    MessageBox.Show("修改成功.");
+                }
+            }
+            else
+            {
+                if (SqliHelper.CheckDataExsit("主人信息", "MasterQQ", textBox5.Text) == false)
+                {
+                    SqliHelper.UpdateData("主人信息", new string[] { "FeedbackGroup like'%" + textBox4.Text + "%''" }, "MasterQQ='" + textBox5.Text + "'");
+                    MessageBox.Show("修改成功.");
+                }
+            }
+            PInvoke.FeedbackGroup = long.Parse(textBox4.Text);
+            PInvoke.MasterQQ = textBox5.Text;
         }
     }
 }

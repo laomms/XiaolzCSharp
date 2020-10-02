@@ -14,7 +14,9 @@ namespace XiaolzCSharp
 		public static string jsonstr;
 		public static string plugin_key;
 		public static bool PluginStatus;
-		public static string RobotQQ;
+		public static string RobotQQ="";
+		public static string MasterQQ ="";
+		public static long FeedbackGroup =0;
 		#endregion
 
 
