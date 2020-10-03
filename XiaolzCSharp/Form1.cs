@@ -329,7 +329,7 @@ namespace XiaolzCSharp
                 if (SqliHelper.CheckDataExsit("主人信息", "MasterQQ", textBox5.Text) == false)
                 {
                     SqliHelper.ClearTable("主人信息");
-                    SqliHelper.InsertData("主人信息", new string[] { "FeedbackGroup", "MasterQQ" }, new string[] { textBox4.Text, textBox5.Text });
+                    SqliHelper.InsertData("主人信息", new string[] { "FeedbackGroup", "MasterQQ" }, new string[] { textBox4.Text, textBox5.Text });                   
                     MessageBox.Show("添加成功.");
                 }
                 else
@@ -348,6 +348,21 @@ namespace XiaolzCSharp
             }
             PInvoke.FeedbackGroup = long.Parse(textBox4.Text);
             PInvoke.MasterQQ = textBox5.Text;
+            if (SqliHelper.CheckDataExsit("授权群号", "GroupID", textBox4.Text) == false)
+            {
+                SqliHelper.InsertData("授权群号", new string[] { "GroupID", "time" }, new string[] { textBox4.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
+                SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
+            }
+            if (SqliHelper.CheckDataExsit("高级权限", "QQID", textBox5.Text) == false)
+            {
+                SqliHelper.InsertData("高级权限", new string[] { "QQID", "time" }, new string[] { textBox5.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
+                SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
+            }
+            if (SqliHelper.CheckDataExsit("中级权限", "QQID", textBox5.Text) == false)
+            {
+                SqliHelper.InsertData("中级权限", new string[] { "QQID", "time" }, new string[] { textBox2.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
+                SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
+            }
         }
     }
 }
