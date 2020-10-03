@@ -37,7 +37,7 @@ namespace XiaolzCSharp
             if (textBox1.Text == "") return;
             if (SqliHelper.CheckDataExsit("授权群号", "GroupID", textBox1.Text) == true)
             {
-                SqliHelper.DeleteData("授权群号", "GroupID", textBox1.Text);
+                SqliHelper.DeleteData("授权群号", "GroupID", "QQID like'" + textBox1.Text + "'");
                 SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
                 MessageBox.Show("删除成功.");
             }
@@ -152,27 +152,27 @@ namespace XiaolzCSharp
         {
             if (SqliHelper.CheckDataExsit("授权群号", "GroupID", textBox1.Text) == true)
             {
-                SqliHelper.DeleteData("授权群号", "GroupID", slectitem);
+                SqliHelper.DeleteData("授权群号", "GroupID", "GroupID like'" + slectitem + "'");
                 SqliHelper.CheckImporlistview(this.listView1, "授权群号", "");
                 MessageBox.Show("删除成功.");
             }
         }
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            if (SqliHelper.CheckDataExsit("高级权限", "GroupID", textBox1.Text) == true)
+            if (SqliHelper.CheckDataExsit("高级权限", "QQID", slectitem) == true)
             {
-                SqliHelper.DeleteData("高级权限", "GroupID", slectitem);
-                SqliHelper.CheckImporlistview(this.listView1, "高级权限", "");
+                SqliHelper.DeleteData("高级权限", "QQID", "QQID like'" + slectitem + "'");
+                SqliHelper.CheckImporlistview(this.listView2, "高级权限", "");
                 MessageBox.Show("删除成功.");
             }
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            if (SqliHelper.CheckDataExsit("中级权限", "GroupID", textBox1.Text) == true)
+            if (SqliHelper.CheckDataExsit("中级权限", "QQID", slectitem) == true)
             {
-                SqliHelper.DeleteData("中级权限", "GroupID", slectitem);
-                SqliHelper.CheckImporlistview(this.listView1, "中级权限", "");
+                SqliHelper.DeleteData("中级权限", "QQID", "QQID like'" + slectitem + "'");
+                SqliHelper.CheckImporlistview(this.listView3, "中级权限", "");
                 MessageBox.Show("删除成功.");
             }
         }
@@ -298,7 +298,7 @@ namespace XiaolzCSharp
                 {
                     foreach (ListViewItem item in listView4.SelectedItems)
                     {
-                        SqliHelper.DeleteData("消息记录", "ID", item.SubItems[0].Text);
+                        SqliHelper.DeleteData("消息记录", "ID", "ID like'" + item.SubItems[0].Text + "'");
                         listView4.Items.Remove(item);
                     }
                     MessageBox.Show("删除成功.");

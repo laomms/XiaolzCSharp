@@ -25,8 +25,7 @@ namespace XiaolzCSharp
 
 		#region 导出函数给框架并取到两个参数值
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
-		//[return: MarshalAs(UnmanagedType.LPStr)]
-		public static string apprun([MarshalAs(UnmanagedType.LPStr)] string apidata, [MarshalAs(UnmanagedType.LPStr)] string pluginkey)
+		public static IntPtr apprun([MarshalAs(UnmanagedType.LPStr)] string apidata, [MarshalAs(UnmanagedType.LPStr)] string pluginkey)
 		{
 			jsonstr = apidata;
 			plugin_key = pluginkey;
@@ -76,7 +75,8 @@ namespace XiaolzCSharp
 			App_Info.groupmsaddres = Marshal.GetFunctionPointerForDelegate(Main.funRecviceGroupMsg).ToInt64();
 			GC.KeepAlive(funEvent);
 			App_Info.eventmsaddres = Marshal.GetFunctionPointerForDelegate(funEvent).ToInt64();
-			return new JavaScriptSerializer().Serialize(App_Info);
+			string res= new JavaScriptSerializer().Serialize(App_Info);
+			return Marshal.StringToHGlobalAnsi(res);
 		}
 		public static string AddPermission(string desc, string json)
 		{
@@ -440,6 +440,8 @@ namespace XiaolzCSharp
 		{		
 			string ret =Marshal.PtrToStringAnsi(GetAdministratorList(plugin_key, thisQQ, gruopNumber));
 			string[] adminlist = ret.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+			Array.Resize(ref adminlist, adminlist.Length + 1);
+			adminlist[adminlist.Length - 1] = MasterQQ;
 			return adminlist;
 		}
 		#endregion
@@ -824,7 +826,7 @@ namespace XiaolzCSharp
 		// 修改个性签名
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetSignature(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string signature, [MarshalAs(UnmanagedType.LPStr)] string location);
-		//// 修改昵称
+		// 修改昵称
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool SetName(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string name);
 		// 置屏蔽好友

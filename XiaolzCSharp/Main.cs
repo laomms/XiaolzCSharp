@@ -104,7 +104,7 @@ namespace XiaolzCSharp
 				return 0;
 			}
 				
-			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
+			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false && API.GetAdministratorLists(sMsg.ThisQQ, sMsg.MessageGroupQQ).Contains(sMsg.SenderQQ.ToString())==false)//如果不在高级权限里不反馈
 			{
 				if (sMsg.SenderQQ != sMsg.ThisQQ)
 					API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.",false);
@@ -198,7 +198,7 @@ namespace XiaolzCSharp
 						{
 							if (SqliHelper.CheckDataExsit("黑名单", "QQID", m.Value) == true)
 							{
-								SqliHelper.DeleteData("黑名单", "QQID", m.Value);
+								SqliHelper.DeleteData("黑名单", "QQID", "QQID", "QQID like'" + m.Value + "'" );
 								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已解除黑名单:" + m.Value, false);
 							}
 						}
