@@ -334,7 +334,7 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void CallPhone(string pkey, long thisQQ, long otherQQ);
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GroupFileDownloadLink(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPTStr)] string FileID, [MarshalAs(UnmanagedType.LPTStr)] string FileName);
+		public delegate IntPtr GroupFileDownloadLink(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string FileID, [MarshalAs(UnmanagedType.LPStr)] string FileName);
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool DoubleclickGroupFace(string pkey, long thisQQ, long otherQQ, long groupQQ);
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
