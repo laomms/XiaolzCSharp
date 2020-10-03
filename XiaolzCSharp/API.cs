@@ -29,23 +29,28 @@ namespace XiaolzCSharp
 		{
 			jsonstr = apidata;
 			plugin_key = pluginkey;
-
-			var json = "";
-			json = AddPermission("输出日志", json);
-			json = AddPermission("发送好友消息", json);
-			json = AddPermission("查询好友信息", json);
-			json = AddPermission("查询群信息", json);
-			json = AddPermission("发送群消息", json);
-			json = AddPermission("取图片下载地址", json);
-			json = AddPermission("取好友列表", json);
-			json = AddPermission("取群成员列表", json);
-			json = AddPermission("取群列表", json);
-			json = AddPermission("取框架QQ", json);
-			json = AddPermission("处理好友验证事件", json);
-			json = AddPermission("处理群验证事件", json);
-			json = AddPermission("撤回消息_群聊", json);
-			json = AddPermission("撤回消息_私聊本身", json);
-			json = AddPermission("取管理列表", json);
+			string json = "";
+			Dictionary<string, string> JosnDict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(apidata);
+			foreach (KeyValuePair<string, string> KeyList in JosnDict)
+			{
+				json= AddPermission(KeyList.Key, json);
+			}
+			//如果要指定权限:	
+			//json = AddPermission("输出日志", json);
+			//json = AddPermission("发送好友消息", json);
+			//json = AddPermission("查询好友信息", json);
+			//json = AddPermission("查询群信息", json);
+			//json = AddPermission("发送群消息", json);
+			//json = AddPermission("取图片下载地址", json);
+			//json = AddPermission("取好友列表", json);
+			//json = AddPermission("取群成员列表", json);
+			//json = AddPermission("取群列表", json);
+			//json = AddPermission("取框架QQ", json);
+			//json = AddPermission("处理好友验证事件", json);
+			//json = AddPermission("处理群验证事件", json);
+			//json = AddPermission("撤回消息_群聊", json);
+			//json = AddPermission("撤回消息_私聊本身", json);
+			//json = AddPermission("取管理列表", json);
 			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
 			var resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 			var App_Info = new AppInfo();
@@ -523,8 +528,7 @@ namespace XiaolzCSharp
 		public static DelegatefunEvent funEvent = new DelegatefunEvent(OnEvent);
 		public delegate void DelegatefunEvent(ref EventTypeBase EvenType);
 		public static void OnEvent(ref EventTypeBase EvenType)
-		{
-			
+		{			
 			switch (EvenType.EventType)
 			{
 				case EventTypeEnum.This_SignInSuccess:
@@ -594,6 +598,7 @@ namespace XiaolzCSharp
 					break;
 				case EventTypeEnum.Group_MemberInvited:
 					Console.WriteLine("某人被邀请入群");
+
 					break;
 				case EventTypeEnum.Group_AllowUploadFile:
 					Console.WriteLine("群事件_允许上传群文件");
@@ -614,7 +619,6 @@ namespace XiaolzCSharp
 					Console.WriteLine(EvenType.EventType.ToString());
 					break;
 			}
-
 		}
 		#endregion
 		#region 发送好友图片
@@ -822,6 +826,5 @@ namespace XiaolzCSharp
 			return null;
 		}
 		#endregion
-
 	}
 }

@@ -80,7 +80,8 @@ namespace XiaolzCSharp
 				}
 				else
 				{
-					API.SendPrivateMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent, ref MessageRandom, ref MessageReq);
+					//复读机
+					//API.SendPrivateMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.SenderQQ, sMsg.SenderQQ.ToString() + "发送了这样的消息:" + sMsg.MessageContent, ref MessageRandom, ref MessageReq);
 				}
 
 			}
@@ -357,14 +358,9 @@ namespace XiaolzCSharp
 				}
 				else
 				{
-					if (sMsg.ThisQQ != sMsg.SenderQQ)
-					{
-
-						API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "你发送了这样的消息:" + sMsg.MessageContent,false);
-
-					}
-
-				}				
+					//复读机
+					//API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "你发送了这样的消息:" + sMsg.MessageContent,false);
+				}
 			}
 			return 0;
 		}
