@@ -936,6 +936,18 @@ namespace XiaolzCSharp
 			public string desc { get; set; }
 
 		}
+
+		public byte[] SilkDecoding(string audio_path)
+		{
+			SilkHelp silkHelp = new SilkHelp();
+			return silkHelp.SilkDecoding(audio_path);
+		}
+		public byte[] SilkEncoding(string audio_path)
+		{
+			SilkHelp silkHelp = new SilkHelp();
+			return silkHelp.SilkEncoding(audio_path);
+		}
+
 		[DllImport("KERNEL32.DLL", EntryPoint = "GetCurrentProcess", SetLastError = true, CallingConvention = CallingConvention.StdCall)]
 		internal extern static IntPtr GetCurrentProcess();
 
