@@ -462,7 +462,7 @@ namespace XiaolzCSharp
 		{
 		
 			GroupFileInfoDataList[] pdatalist = new GroupFileInfoDataList[2];
-			string ret = GetGroupFileList(plugin_key, thisQQ, groupQQ, folder, ref pdatalist);
+			GetGroupFileList(plugin_key, thisQQ, groupQQ, folder, ref pdatalist);
 			if (pdatalist[0].Amount > 0)
 			{
 				List<GroupFileInformation> list = new List<GroupFileInformation>();
@@ -567,6 +567,15 @@ namespace XiaolzCSharp
 			DeleteFriendDelegate DeleteFriendAPI = (DeleteFriendDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["删除好友"]), typeof(DeleteFriendDelegate));
 			DeleteFriend = DeleteFriendAPI;
 			GC.KeepAlive(DeleteFriend);
+			MuteGroupMemberDelegate MuteGroupMemberAPI = (MuteGroupMemberDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["禁言群成员"]), typeof(MuteGroupMemberDelegate));
+			MuteGroupMember = MuteGroupMemberAPI;
+			GC.KeepAlive(MuteGroupMember);
+			MuteGroupAllDelegate MuteGroupAllAPI = (MuteGroupAllDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["全员禁言"]), typeof(MuteGroupAllDelegate));
+			MuteGroupAll = MuteGroupAllAPI;
+			GC.KeepAlive(MuteGroupAll);
+			SetupAdministratorDelegate SetupAdministratorAPI = (SetupAdministratorDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["设置管理员"]), typeof(SetupAdministratorDelegate));
+			SetupAdministrator = SetupAdministratorAPI;
+			GC.KeepAlive(SetupAdministrator);
 		}
 		#endregion
 		#region 函数委托指针

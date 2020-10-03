@@ -138,13 +138,118 @@ namespace XiaolzCSharp
 					API.MsgRecod = true;
 					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已开始消息记录.", false);
 				}
-				else if (sMsg.MessageContent.Contains("取群列表"))
+				else if (sMsg.MessageContent.Contains("添加黑名单"))
+                {
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^添加黑名单]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
+					if (m.Value.Length < 7)
+					{
+						return 0;
+					}
+					if (m.Success)
+					{
+						if (API.DeleteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ,sMsg.MessageGroupQQ,long.Parse( m.Value), true))
+                        {
+							if (SqliHelper.CheckDataExsit("黑名单", "QQID", m.Value) == false)
+							{
+								SqliHelper.InsertData("黑名单", new string[] { "QQID", "time" }, new string[] { m.Value, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
+								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已将"+ m.Value+ "移除群并添加到黑名单!", false);
+							}
+						}
+					}
+				}
+				else if (sMsg.MessageContent.Contains("添加全局黑名单"))
+				{
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^添加全局黑名单]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
+					if (m.Value.Length < 7)
+					{
+						return 0;
+					}
+					if (m.Success)
+					{
+						if (API.DeleteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(m.Value), false))
+						{
+							if (SqliHelper.CheckDataExsit("黑名单", "QQID", m.Value) == false)
+							{
+								SqliHelper.InsertData("黑名单", new string[] { "QQID", "time" }, new string[] { m.Value, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
+								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已将" + m.Value + "移除群并添加到黑名单!", false);
+							}
+						}
+					}
+				}
+				else if (sMsg.MessageContent.Contains("解除黑名单"))
+				{
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^解除黑名单]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
+					if (m.Value.Length < 7)
+					{
+						return 0;
+					}
+					if (m.Success)
+					{
+						if (API.DeleteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(m.Value), false))
+						{
+							if (SqliHelper.CheckDataExsit("黑名单", "QQID", m.Value) == true)
+							{
+								SqliHelper.DeleteData("黑名单", "QQID", m.Value);
+								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已解除黑名单:" + m.Value, false);
+							}
+						}
+					}
+				}
+				else if (sMsg.MessageContent.Contains("禁言") && sMsg.MessageContent.Contains("时间") && sMsg.MessageContent.Contains("分钟") )
+                {
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^禁言时间分钟]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					string szQQID = "123";
+					uint minute = 0;
+					MatchCollection matches = new Regex("\\d+").Matches(sMsg.MessageContent);
+					if (matches.Count > 2) return 0;
+					foreach (Match match in matches)
+					{
+						if (match.Value.ToString().Length >= 6)
+						{
+							szQQID = match.Value;
+						}
+						else if (match.Value.ToString().Length < 3)
+						{
+							minute = uint.Parse(match.Value);
+						}
+					}
+					if (API.MuteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(szQQID), minute * 60))
+						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, szQQID +  "已被禁言" + minute.ToString() + "分钟!", false);
+				}
+				else if (sMsg.MessageContent.Contains("解除禁言"))
+				{
+					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
+					if ((new Regex("(?i)[^解除禁言]")).IsMatch(output.Replace(" ", "")) == true)
+						return 0;
+					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
+					if (m.Value.Length < 7)
+					{
+						return 0;
+					}
+					if (m.Success)
+					{
+						if (API.MuteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(m.Value),0))
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "已解除" + m.Value + "的禁言", false);
+					}					
+				}
+				else if (sMsg.MessageContent=="取群列表")
 				{
 
 					API.GetGroupLists(sMsg.ThisQQ, sMsg.MessageGroupQQ);
 
 				}
-				else if (sMsg.MessageContent.Contains("取群成员列表"))
+				else if (sMsg.MessageContent=="取群成员列表")
 				{
 
 					API.GetGroupMemberlists(sMsg.ThisQQ, sMsg.MessageGroupQQ);
