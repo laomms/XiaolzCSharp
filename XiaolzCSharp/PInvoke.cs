@@ -460,7 +460,7 @@ namespace XiaolzCSharp
 			public long setproaddres;
 			public long useproaddres;
 			public long banproaddres;
-			public string data;
+			public object data;
 		}
 		#endregion
 

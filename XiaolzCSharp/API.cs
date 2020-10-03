@@ -52,9 +52,10 @@ namespace XiaolzCSharp
 			//json = AddPermission("撤回消息_私聊本身", json);
 			//json = AddPermission("取管理列表", json);
 			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
-			var resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
-			var App_Info = new AppInfo();
+			string resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 
+			var App_Info = new AppInfo();
+			App_Info.data = new JavaScriptSerializer().Deserialize<Object>(resultJson);
 			App_Info.sdkv = "2.7.5";
 			App_Info.appname = "测试插件";
 			App_Info.author = "插件作者";
@@ -74,12 +75,7 @@ namespace XiaolzCSharp
 			App_Info.groupmsaddres = Marshal.GetFunctionPointerForDelegate(Main.funRecviceGroupMsg).ToInt64();
 			GC.KeepAlive(funEvent);
 			App_Info.eventmsaddres = Marshal.GetFunctionPointerForDelegate(funEvent).ToInt64();
-
-			App_Info.data = "\\\\" + resultJson + "\\\\";
-			string jsonstring = (new JavaScriptSerializer()).Serialize(App_Info);
-			jsonstring = jsonstring.Replace("\"\\\\", "").Replace("\\\\\"", "").Replace("\\", "");
-
-			return jsonstring;
+			return new JavaScriptSerializer().Serialize(App_Info);
 		}
 		public static string AddPermission(string desc, string json)
 		{

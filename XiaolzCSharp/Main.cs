@@ -136,6 +136,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent=="开启消息记录")
                 {
 					API.MsgRecod = true;
+					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已开始消息记录.", false);
 				}
 				else if (sMsg.MessageContent.Contains("取群列表"))
 				{
