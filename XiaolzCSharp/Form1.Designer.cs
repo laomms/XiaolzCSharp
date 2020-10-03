@@ -81,6 +81,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip3.SuspendLayout();
@@ -462,6 +464,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label20);
+            this.tabPage3.Controls.Add(this.label19);
             this.tabPage3.Controls.Add(this.label18);
             this.tabPage3.Controls.Add(this.label17);
             this.tabPage3.Controls.Add(this.label16);
@@ -486,7 +490,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label11.Location = new System.Drawing.Point(18, 219);
+            this.label11.Location = new System.Drawing.Point(18, 220);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(91, 13);
             this.label11.TabIndex = 7;
@@ -496,7 +500,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label10.Location = new System.Drawing.Point(18, 193);
+            this.label10.Location = new System.Drawing.Point(18, 190);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(91, 13);
             this.label10.TabIndex = 6;
@@ -506,7 +510,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label9.Location = new System.Drawing.Point(18, 166);
+            this.label9.Location = new System.Drawing.Point(18, 160);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(79, 13);
             this.label9.TabIndex = 5;
@@ -516,7 +520,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label8.Location = new System.Drawing.Point(18, 135);
+            this.label8.Location = new System.Drawing.Point(18, 130);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(121, 13);
             this.label8.TabIndex = 4;
@@ -526,7 +530,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label7.Location = new System.Drawing.Point(18, 105);
+            this.label7.Location = new System.Drawing.Point(18, 100);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(121, 13);
             this.label7.TabIndex = 3;
@@ -536,7 +540,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label6.Location = new System.Drawing.Point(18, 75);
+            this.label6.Location = new System.Drawing.Point(18, 70);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(97, 13);
             this.label6.TabIndex = 2;
@@ -546,7 +550,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label5.Location = new System.Drawing.Point(18, 47);
+            this.label5.Location = new System.Drawing.Point(18, 40);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(97, 13);
             this.label5.TabIndex = 1;
@@ -556,7 +560,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label4.Location = new System.Drawing.Point(18, 17);
+            this.label4.Location = new System.Drawing.Point(18, 10);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(139, 13);
             this.label4.TabIndex = 0;
@@ -566,7 +570,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label14.Location = new System.Drawing.Point(18, 247);
+            this.label14.Location = new System.Drawing.Point(18, 250);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(109, 13);
             this.label14.TabIndex = 8;
@@ -576,7 +580,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label15.Location = new System.Drawing.Point(258, 17);
+            this.label15.Location = new System.Drawing.Point(258, 10);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(127, 13);
             this.label15.TabIndex = 9;
@@ -586,7 +590,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label16.Location = new System.Drawing.Point(18, 277);
+            this.label16.Location = new System.Drawing.Point(18, 280);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(133, 13);
             this.label16.TabIndex = 10;
@@ -596,7 +600,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label17.Location = new System.Drawing.Point(258, 47);
+            this.label17.Location = new System.Drawing.Point(258, 40);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(97, 13);
             this.label17.TabIndex = 11;
@@ -606,11 +610,31 @@
             // 
             this.label18.AutoSize = true;
             this.label18.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label18.Location = new System.Drawing.Point(18, 306);
+            this.label18.Location = new System.Drawing.Point(18, 310);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(109, 13);
             this.label18.TabIndex = 12;
             this.label18.Text = "删除黑名单1234567";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label19.Location = new System.Drawing.Point(258, 70);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(55, 13);
+            this.label19.TabIndex = 13;
+            this.label19.Text = "全员禁言";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label20.Location = new System.Drawing.Point(258, 100);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(79, 13);
+            this.label20.TabIndex = 14;
+            this.label20.Text = "解除全员禁言";
             // 
             // Form1
             // 
@@ -692,5 +716,7 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
     }
 }

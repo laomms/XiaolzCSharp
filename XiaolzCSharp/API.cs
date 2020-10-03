@@ -57,9 +57,9 @@ namespace XiaolzCSharp
 			var App_Info = new AppInfo();
 			App_Info.data = new JavaScriptSerializer().Deserialize<Object>(resultJson);
 			App_Info.sdkv = "2.7.5";
-			App_Info.appname = "测试插件";
-			App_Info.author = "插件作者";
-			App_Info.describe = "这是一个测试插件" + "\r\n" + "可以用此空壳来开发插件" + "\r\n" + "官网地址：http://www.xiaolz.cn/";
+			App_Info.appname = "群管1.0";
+			App_Info.author = "网中行";
+			App_Info.describe = "这是一个群管插件,具体菜单下[机器人菜单]命令获取.";
 			App_Info.appv = "1.0.0";
 			GC.KeepAlive(appEnableFunc);
 			App_Info.useproaddres = Marshal.GetFunctionPointerForDelegate(appEnableFunc).ToInt64();

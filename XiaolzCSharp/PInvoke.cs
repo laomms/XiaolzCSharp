@@ -17,6 +17,23 @@ namespace XiaolzCSharp
 		public static string RobotQQ="";
 		public static string MasterQQ ="";
 		public static long FeedbackGroup =0;
+		public static string RobotMenu = "机器人命令大全:" + Environment.NewLine +
+			"撤回 + QQ号 + 最近消息5条" + Environment.NewLine +
+			"同意入群 + QQ号" + Environment.NewLine +
+			"拒绝入群 + QQ号" + Environment.NewLine +
+			"同意加为好友 ++ QQ号" + Environment.NewLine +
+			"拒绝加为好友 + QQ号" + Environment.NewLine +
+			"开启消息记录" + Environment.NewLine +
+			"同意进群 + 群号" + Environment.NewLine +
+			"拒绝进群 + 群号" + Environment.NewLine +
+			"添加黑名单+ QQ号" + Environment.NewLine +
+			"添加全局黑名单+ QQ号" + Environment.NewLine +
+			"删除黑名单 + QQ号" + Environment.NewLine +
+			"禁言+ QQ号 + 时间1分钟" + Environment.NewLine +
+			"解除禁言+ QQ号" + Environment.NewLine +
+			"全员禁言" + Environment.NewLine +
+			"解除全员禁言";
+
 		#endregion
 
 

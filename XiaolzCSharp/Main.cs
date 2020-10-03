@@ -204,6 +204,20 @@ namespace XiaolzCSharp
 						}
 					}
 				}
+				else if (sMsg.MessageContent == "机器人菜单")
+                {
+					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + Environment.NewLine + PInvoke.RobotMenu, false);
+				}
+				else if (sMsg.MessageContent=="全员禁言")
+				{					
+					if (API.MuteGroupAll(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ,true))
+						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "已开启全员禁言!", false);
+				}
+				else if (sMsg.MessageContent == "解除全员禁言")
+				{
+					if (API.MuteGroupAll(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, true))
+						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "已解除全员禁言!", false);
+				}
 				else if (sMsg.MessageContent.Contains("禁言") && sMsg.MessageContent.Contains("时间") && sMsg.MessageContent.Contains("分钟") )
                 {
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
