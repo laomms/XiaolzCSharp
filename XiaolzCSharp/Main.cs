@@ -220,18 +220,9 @@ namespace XiaolzCSharp
 					long GroupQQ = sMsg.MessageGroupQQ;
 					new Thread(() =>
 					{
-						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.GetMemoryUsage());
-						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
-					}).Start();
-				}
-				else if (sMsg.MessageContent == "查询内存占用")
-				{
-					string SendQQ = sMsg.SenderQQ.ToString();
-					long GroupQQ = sMsg.MessageGroupQQ;
-					new Thread(() =>
-					{
-						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.GetMemoryUsage());
-						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
+						string[] strArray = CpuMemoryCapacity.GetMemoryUsage().ToArray(); ;
+						strArray = strArray.Select(s => s.TrimStart('0')).ToArray();
+						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + string.Join(Environment.NewLine, strArray), false);
 					}).Start();
 				}
 				else if (sMsg.MessageContent == "查询资源占用")
