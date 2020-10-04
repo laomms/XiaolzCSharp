@@ -68,6 +68,13 @@
             this.button5 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -76,13 +83,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip3.SuspendLayout();
@@ -486,6 +487,76 @@
             this.tabPage3.Text = "命令大全";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label20.Location = new System.Drawing.Point(258, 100);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(79, 13);
+            this.label20.TabIndex = 14;
+            this.label20.Text = "解除全员禁言";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label19.Location = new System.Drawing.Point(258, 70);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(55, 13);
+            this.label19.TabIndex = 13;
+            this.label19.Text = "全员禁言";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label18.Location = new System.Drawing.Point(18, 310);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(109, 13);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "删除黑名单1234567";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label17.Location = new System.Drawing.Point(258, 40);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(97, 13);
+            this.label17.TabIndex = 11;
+            this.label17.Text = "解除禁言1234567";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label16.Location = new System.Drawing.Point(18, 280);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(133, 13);
+            this.label16.TabIndex = 10;
+            this.label16.Text = "添加全局黑名单1234567";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label15.Location = new System.Drawing.Point(258, 10);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(127, 13);
+            this.label15.TabIndex = 9;
+            this.label15.Text = "禁言1234567时间1分钟";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label14.Location = new System.Drawing.Point(18, 250);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(109, 13);
+            this.label14.TabIndex = 8;
+            this.label14.Text = "添加黑名单1234567";
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -566,81 +637,21 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "撤回1234567最近消息5条";
             // 
-            // label14
+            // label21
             // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label14.Location = new System.Drawing.Point(18, 250);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(109, 13);
-            this.label14.TabIndex = 8;
-            this.label14.Text = "添加黑名单1234567";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label15.Location = new System.Drawing.Point(258, 10);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(127, 13);
-            this.label15.TabIndex = 9;
-            this.label15.Text = "禁言1234567时间1分钟";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label16.Location = new System.Drawing.Point(18, 280);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(133, 13);
-            this.label16.TabIndex = 10;
-            this.label16.Text = "添加全局黑名单1234567";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label17.Location = new System.Drawing.Point(258, 40);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(97, 13);
-            this.label17.TabIndex = 11;
-            this.label17.Text = "解除禁言1234567";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label18.Location = new System.Drawing.Point(18, 310);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(109, 13);
-            this.label18.TabIndex = 12;
-            this.label18.Text = "删除黑名单1234567";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label19.Location = new System.Drawing.Point(258, 70);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(55, 13);
-            this.label19.TabIndex = 13;
-            this.label19.Text = "全员禁言";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label20.Location = new System.Drawing.Point(258, 100);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(79, 13);
-            this.label20.TabIndex = 14;
-            this.label20.Text = "解除全员禁言";
+            this.label21.AutoSize = true;
+            this.label21.ForeColor = System.Drawing.Color.DarkOliveGreen;
+            this.label21.Location = new System.Drawing.Point(213, 10);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(0, 13);
+            this.label21.TabIndex = 12;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(514, 378);
+            this.Controls.Add(this.label21);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form1";
@@ -660,6 +671,7 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -718,5 +730,6 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
     }
 }

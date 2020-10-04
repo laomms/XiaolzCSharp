@@ -26,12 +26,12 @@ namespace XiaolzCSharp
 				{
 					if (szGroupID == szQQID)
 					{
-						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), 0);
+						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, PInvoke.RobotQQ, 0);
 						return Marshal.PtrToStringAnsi( ImgUrl);
 					}
 					else
 					{
-						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, long.Parse(PInvoke.RobotQQ), long.Parse(szGroupID));
+						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, PInvoke.RobotQQ, long.Parse(szGroupID));
 						return Marshal.PtrToStringAnsi(ImgUrl);
 					}
 				}
@@ -203,6 +203,18 @@ namespace XiaolzCSharp
 							}
 						}
 					}
+				}
+				else if (sMsg.MessageContent == "查询资源占用")
+                {
+					string SendQQ = sMsg.SenderQQ.ToString();
+					long GroupQQ = sMsg.MessageGroupQQ;
+					new Thread(() =>
+					{
+						string text =string.Join(Environment.NewLine, CpuMemoryCapacity.HardwareInfo());
+						text= text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.MemoryAvailable());
+						text = text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.GetUsage());
+						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine +  text, false);
+					}).Start();
 				}
 				else if (sMsg.MessageContent == "机器人菜单")
                 {

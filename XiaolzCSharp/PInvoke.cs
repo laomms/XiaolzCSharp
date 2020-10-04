@@ -14,7 +14,7 @@ namespace XiaolzCSharp
 		public static string jsonstr;
 		public static string plugin_key;
 		public static bool PluginStatus;
-		public static string RobotQQ="";
+		public static long RobotQQ=0;
 		public static string MasterQQ ="";
 		public static long FeedbackGroup =0;
 		public static string RobotMenu = "机器人命令大全:" + Environment.NewLine +

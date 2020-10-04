@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
@@ -112,7 +113,21 @@ namespace XiaolzCSharp
                 textBox4.Text = MasterInfo[0][0];
                 textBox5.Text = MasterInfo[0][1];
             }
-
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    List<string> status = CpuMemoryCapacity.GetUsage();
+                    try
+                    {
+                        label21.Invoke((MethodInvoker)(() => label21.Text = string.Join(" ", status)));
+                    }
+                    catch { }                    
+                    Thread.Sleep(2000);
+                }
+                   
+            }).Start();
+            
         }
 
         private void 修改ToolStripMenuItem_Click(object sender, EventArgs e)

@@ -199,6 +199,7 @@ namespace XiaolzCSharp
 				case EventTypeEnum.This_SignInSuccess:
 					Console.WriteLine("登录成功");
 					MyQQ = EvenType.ThisQQ;
+					RobotQQ= EvenType.ThisQQ;
 					try
                     {
 						List<List<string>> MasterInfo = SqliHelper.ReadData("主人信息", new string[] { "FeedbackGroup", "MasterQQ", }, "", "FeedbackGroup like '%%'");
