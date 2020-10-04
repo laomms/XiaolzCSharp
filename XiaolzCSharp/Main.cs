@@ -204,6 +204,36 @@ namespace XiaolzCSharp
 						}
 					}
 				}
+				else if (sMsg.MessageContent == "查询CPU占用")
+                {
+					string SendQQ = sMsg.SenderQQ.ToString();
+					long GroupQQ = sMsg.MessageGroupQQ;
+					new Thread(() =>
+					{
+						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.GetCpuUsage());
+						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
+					}).Start();
+				}
+				else if (sMsg.MessageContent == "查询内存占用")
+				{
+					string SendQQ = sMsg.SenderQQ.ToString();
+					long GroupQQ = sMsg.MessageGroupQQ;
+					new Thread(() =>
+					{
+						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.GetMemoryUsage());
+						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
+					}).Start();
+				}
+				else if (sMsg.MessageContent == "查询内存占用")
+				{
+					string SendQQ = sMsg.SenderQQ.ToString();
+					long GroupQQ = sMsg.MessageGroupQQ;
+					new Thread(() =>
+					{
+						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.GetMemoryUsage());
+						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
+					}).Start();
+				}
 				else if (sMsg.MessageContent == "查询资源占用")
                 {
 					string SendQQ = sMsg.SenderQQ.ToString();

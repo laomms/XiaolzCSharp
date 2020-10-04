@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Text;
@@ -81,34 +82,47 @@ namespace XiaolzCSharp
         {
             List<string> status = new List<string>();
             var process = Process.GetCurrentProcess();
-            var name = string.Empty;
-            foreach (var instance in new PerformanceCounterCategory("Process").GetInstanceNames())
-            {
-                if (instance.StartsWith(process.ProcessName))
-                {
-                    using (var processId = new PerformanceCounter("Process", "ID Process", instance, true))
-                    {
-                        if (process.Id == (int)processId.RawValue)
-                        {
-                            name = instance;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            var cpu = new PerformanceCounter("Process", "% Processor Time", name, true);
-            var ram = new PerformanceCounter("Process", "Private Bytes", name, true);
-
+            var cpu = new PerformanceCounter("Processor", "% Processor Time", "_Total", Environment.MachineName);
+            var ram = new PerformanceCounter("Process", "Private Bytes", process.ProcessName, true);
             cpu.NextValue();
             ram.NextValue();
-
-            Thread.Sleep(500);
-            //long memory = notepads[0].PrivateMemorySize64;
-            dynamic result = new ExpandoObject();
+            System.Threading.Thread.Sleep(500);
             status.Add("机器人CPU使用率: " + Math.Round(cpu.NextValue() / Environment.ProcessorCount, 2).ToString() +"%");
             status.Add("机器人使用内存:" + Math.Round(ram.NextValue() / 1024 / 1024, 2).ToString() + "M");
             return status;
+        }
+     
+        public static List<string> GetMemoryUsage()
+        {
+            List<string> status = new List<string>();
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PerfFormattedData_PerfProc_Process"))
+            {
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    PerformanceCounter memCounter = new PerformanceCounter("Memory", "Available MBytes");
+                    string mem = memCounter.NextValue().ToString();
+                    status.Add(string.Format("{0:0000.00}", Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2)) + "MB (使用内存)  " + Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + "进程名称: " + obj["Name"].ToString());
+                }
+            }
+            status.Sort();
+            status.Reverse();
+            return status.Take(10).ToList();
+        }
+        public static List<string> GetCpuUsage()
+        {
+            List<string> status = new List<string>();
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2","SELECT * FROM Win32_PerfFormattedData_PerfProc_Process"))
+                {
+                    foreach (ManagementObject obj in searcher.Get())
+                    {
+                    PerformanceCounter memCounter = new PerformanceCounter("Memory", "Available MBytes");
+                    string mem = memCounter.NextValue().ToString();
+                    status.Add(string.Format("{0:00.00}", Math.Round(double.Parse(obj["PercentProcessorTime"].ToString())) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " +obj["Name"].ToString());
+                    }
+                }                
+            status.Sort();
+            status.Reverse();
+            return status.Take(10).ToList();
         }
     }
 }
