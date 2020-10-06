@@ -101,7 +101,7 @@ namespace XiaolzCSharp
                 {
                     PerformanceCounter memCounter = new PerformanceCounter("Memory", "Available MBytes");
                     string mem = memCounter.NextValue().ToString();
-                    status.Add(string.Format("{0:0000.00}", Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2)) + "MB (使用内存)  " + Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + "进程名称: " + obj["Name"].ToString());
+                    status.Add(string.Format("{0:0000.00}", Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2)) + "MB (使用内存)  " + Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) , 2).ToString() + "% (CPU占用)  " + "进程名称: " + obj["Name"].ToString());
                 }
             }
             status.Sort();
@@ -117,7 +117,7 @@ namespace XiaolzCSharp
                     {
                     PerformanceCounter memCounter = new PerformanceCounter("Memory", "Available MBytes");
                     string mem = memCounter.NextValue().ToString();
-                    status.Add(string.Format("{0:00.00}", Math.Round(double.Parse(obj["PercentProcessorTime"].ToString())) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " +obj["Name"].ToString());
+                    status.Add(Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) , 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " +obj["Name"].ToString());
                     }
                 }                
             status.Sort();
