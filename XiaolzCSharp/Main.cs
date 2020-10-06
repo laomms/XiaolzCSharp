@@ -204,7 +204,7 @@ namespace XiaolzCSharp
 						}
 					}
 				}
-				else if (sMsg.MessageContent == "查询CPU占用")
+				else if (sMsg.MessageContent.ToUpper()== "查询CPU占用")
                 {
 					string SendQQ = sMsg.SenderQQ.ToString();
 					long GroupQQ = sMsg.MessageGroupQQ;

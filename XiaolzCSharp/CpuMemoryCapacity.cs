@@ -95,7 +95,7 @@ namespace XiaolzCSharp
         public static List<string> GetMemoryUsage()
         {
             List<string> status = new List<string>();
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PerfFormattedData_PerfProc_Process"))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PerfFormattedData_PerfProc_Process Where Name <> '_Total' AND Name <> 'Idle'"))
             {
                 foreach (ManagementObject obj in searcher.Get())
                 {
@@ -111,15 +111,13 @@ namespace XiaolzCSharp
         public static List<string> GetCpuUsage()
         {
             List<string> status = new List<string>();
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2","SELECT * FROM Win32_PerfFormattedData_PerfProc_Process"))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT IDProcess,Name,PercentProcessorTime,WorkingSetPrivate FROM Win32_PerfFormattedData_PerfProc_Process Where Name <> '_Total' AND Name <> 'Idle'"))
+            {
+                foreach (ManagementObject obj in searcher.Get())
                 {
-                    foreach (ManagementObject obj in searcher.Get())
-                    {
-                    PerformanceCounter memCounter = new PerformanceCounter("Memory", "Available MBytes");
-                    string mem = memCounter.NextValue().ToString();
-                    status.Add(Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) , 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " +obj["Name"].ToString());
-                    }
-                }                
+                    status.Add(Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " + obj["Name"].ToString());
+                }
+            }
             status.Sort();
             status.Reverse();
             return status.Take(10).ToList();
