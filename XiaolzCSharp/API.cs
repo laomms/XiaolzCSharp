@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 using static XiaolzCSharp.PInvoke;
 
 namespace XiaolzCSharp
@@ -107,6 +108,8 @@ namespace XiaolzCSharp
 		public delegate int DelegateAppEnable();
 		public static int appEnable()		
 		{
+			Application.ThreadException += Application_ThreadException;
+			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 			InitFunction();
 			string res = CallGetLoginQQ();
 			string sqlite3path = System.Environment.CurrentDirectory + "\\bin\\sqlite3.dll"; 
@@ -892,6 +895,18 @@ namespace XiaolzCSharp
 		public delegate bool UpdataGroupName(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string NewGroupName);
 
 		#endregion
-		
+
+		#region 全局异常
+		static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+		{
+			Exception ex = e.Exception;
+			MessageBox.Show(string.Format("捕获到未处理异常：{0}\r\n异常信息：{1}\r\n异常堆栈：{2}", ex.GetType(), ex.Message, ex.StackTrace));
+		}
+		static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Exception ex = e.ExceptionObject as Exception;
+			MessageBox.Show(string.Format("捕获到未处理异常：{0}\r\n异常信息：{1}\r\n异常堆栈：{2}\r\nCLR即将退出：{3}", ex.GetType(), ex.Message, ex.StackTrace, e.IsTerminating));
+		}
+		#endregion
 	}
 }
