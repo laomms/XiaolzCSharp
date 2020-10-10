@@ -384,9 +384,9 @@ namespace XiaolzCSharp
 				dynamic result = new JavaScriptSerializer().DeserializeObject(res);
 				string Gender = "";
 				if (result["Gender"] == 1)
-					Gender = "男";
-				else if (result["Gender"] == 2)
 					Gender = "女";
+				else if (result["Gender"] == 2)
+					Gender = "男";
 				else
 					Gender = "未知";
 				return "QQ资料信息: " + Environment.NewLine + "昵称: " + result["Name"] + Environment.NewLine + "年龄: " + Gender + Environment.NewLine + "等级: " + result["Level"] + Environment.NewLine + "国籍: " + result["Nation"] + Environment.NewLine + "签名: " + result["Signature"];
