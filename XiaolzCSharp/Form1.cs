@@ -55,7 +55,6 @@ namespace XiaolzCSharp
             }
         }
 
-
         private void button3_Click(object sender, EventArgs e)
         {
             if (textBox2.Text == "") return;
