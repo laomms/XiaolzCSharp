@@ -1,7 +1,7 @@
 # XiaolzCSharp
 小栗子C# SDK  
 使用前先在VS还原nuget包.    
-如果编译还有错误,下载安装：  
+如果编译出现RGiesecke.DllExport.targets(58,3): error MSB4062类似错误,下载安装：  
 [Microsoft Build Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159)  
 [.NET 3.5](https://www.microsoft.com/en-us/download/details.aspx?id=21) .    
 
