@@ -1,7 +1,4 @@
-﻿
-
-using RGiesecke.DllExport;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -15,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using static XiaolzCSharp.PInvoke;
+
 
 namespace XiaolzCSharp
 {

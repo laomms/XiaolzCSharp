@@ -20,14 +20,14 @@ namespace XiaolzCSharp
 		public string GetImageCallBack(string szGroupID, string szQQID, string szContent)
 		{
 			if (szContent.Contains("[pic,hash="))
-			{				
+			{
 				MatchCollection matches = Regex.Matches(szContent, "\\[pic,hash.*?\\]", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 				foreach (Match match in matches)
 				{
 					if (szGroupID == szQQID)
 					{
 						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, PInvoke.RobotQQ, 0);
-						return Marshal.PtrToStringAnsi( ImgUrl);
+						return Marshal.PtrToStringAnsi(ImgUrl);
 					}
 					else
 					{
@@ -50,10 +50,10 @@ namespace XiaolzCSharp
 			if (SqliHelper.CheckDataExsit("中级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在中级权限里不反馈
 			{
 				if (sMsg.SenderQQ != sMsg.ThisQQ)
-                {
+				{
 
-                }
-					
+				}
+
 			}
 			if (sMsg.SenderQQ != sMsg.ThisQQ)
 			{
@@ -94,19 +94,19 @@ namespace XiaolzCSharp
 		public delegate int RecviceGroupMsg(ref GroupMessageEvent sMsg);
 		public static int RecvicetGroupMessage(ref GroupMessageEvent sMsg)
 		{
-		
-			if (API.MsgRecod==true)
+
+			if (API.MsgRecod == true)
 				SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture), sMsg.MessageContent }); ;
 			//SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), ((long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds).ToString(), sMsg.MessageContent }); ;
 			if (SqliHelper.CheckDataExsit("授权群号", "GroupID", sMsg.MessageGroupQQ.ToString()) == false)//如果不在高级权限里不反馈
-            {
+			{
 				return 0;
 			}
-				
-			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false && API.GetAdministratorLists(sMsg.ThisQQ, sMsg.MessageGroupQQ).Contains(sMsg.SenderQQ.ToString())==false)//如果不在高级权限里不反馈
+
+			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false && API.GetAdministratorLists(sMsg.ThisQQ, sMsg.MessageGroupQQ).Contains(sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
 			{
 				if (sMsg.SenderQQ != sMsg.ThisQQ)
-					API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.",false);
+					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.", false);
 				return 0;
 			}
 
@@ -132,13 +132,13 @@ namespace XiaolzCSharp
 
 
 				}
-				else if (sMsg.MessageContent=="开启消息记录")
-                {
+				else if (sMsg.MessageContent == "开启消息记录")
+				{
 					API.MsgRecod = true;
 					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已开始消息记录.", false);
 				}
 				else if (sMsg.MessageContent.Contains("添加黑名单"))
-                {
+				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
 					if ((new Regex("(?i)[^添加黑名单]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
@@ -149,12 +149,12 @@ namespace XiaolzCSharp
 					}
 					if (m.Success)
 					{
-						if (API.DeleteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ,sMsg.MessageGroupQQ,long.Parse( m.Value), true))
-                        {
+						if (API.DeleteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(m.Value), true))
+						{
 							if (SqliHelper.CheckDataExsit("黑名单", "QQID", m.Value) == false)
 							{
 								SqliHelper.InsertData("黑名单", new string[] { "QQID", "time" }, new string[] { m.Value, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture) });
-								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已将"+ m.Value+ "移除群并添加到黑名单!", false);
+								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已将" + m.Value + "移除群并添加到黑名单!", false);
 							}
 						}
 					}
@@ -197,14 +197,14 @@ namespace XiaolzCSharp
 						{
 							if (SqliHelper.CheckDataExsit("黑名单", "QQID", m.Value) == true)
 							{
-								SqliHelper.DeleteData("黑名单", "QQID", "QQID", "QQID like'" + m.Value + "'" );
+								SqliHelper.DeleteData("黑名单", "QQID", "QQID", "QQID like'" + m.Value + "'");
 								API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已解除黑名单:" + m.Value, false);
 							}
 						}
 					}
 				}
-				else if (sMsg.MessageContent.ToUpper()== "查询CPU占用")
-                {
+				else if (sMsg.MessageContent.ToUpper() == "查询CPU占用")
+				{
 					string SendQQ = sMsg.SenderQQ.ToString();
 					long GroupQQ = sMsg.MessageGroupQQ;
 					new Thread(() =>
@@ -225,24 +225,24 @@ namespace XiaolzCSharp
 					}).Start();
 				}
 				else if (sMsg.MessageContent == "查询资源占用")
-                {
+				{
 					string SendQQ = sMsg.SenderQQ.ToString();
 					long GroupQQ = sMsg.MessageGroupQQ;
 					new Thread(() =>
 					{
-						string text =string.Join(Environment.NewLine, CpuMemoryCapacity.HardwareInfo());
-						text= text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.MemoryAvailable());
+						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.HardwareInfo());
+						text = text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.MemoryAvailable());
 						text = text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.GetUsage());
-						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine +  text, false);
+						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
 					}).Start();
 				}
 				else if (sMsg.MessageContent == "机器人菜单")
-                {
+				{
 					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + Environment.NewLine + PInvoke.RobotMenu, false);
 				}
-				else if (sMsg.MessageContent=="全员禁言")
-				{					
-					if (API.MuteGroupAll(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ,true))
+				else if (sMsg.MessageContent == "全员禁言")
+				{
+					if (API.MuteGroupAll(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, true))
 						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "已开启全员禁言!", false);
 				}
 				else if (sMsg.MessageContent == "解除全员禁言")
@@ -250,8 +250,8 @@ namespace XiaolzCSharp
 					if (API.MuteGroupAll(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, true))
 						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "已解除全员禁言!", false);
 				}
-				else if (sMsg.MessageContent.Contains("禁言") && sMsg.MessageContent.Contains("时间") && sMsg.MessageContent.Contains("分钟") )
-                {
+				else if (sMsg.MessageContent.Contains("禁言") && sMsg.MessageContent.Contains("时间") && sMsg.MessageContent.Contains("分钟"))
+				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
 					if ((new Regex("(?i)[^禁言时间分钟]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
@@ -271,7 +271,7 @@ namespace XiaolzCSharp
 						}
 					}
 					if (API.MuteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(szQQID), minute * 60))
-						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, szQQID +  "已被禁言" + minute.ToString() + "分钟!", false);
+						API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, szQQID + "已被禁言" + minute.ToString() + "分钟!", false);
 				}
 				else if (sMsg.MessageContent.Contains("解除禁言"))
 				{
@@ -285,17 +285,17 @@ namespace XiaolzCSharp
 					}
 					if (m.Success)
 					{
-						if (API.MuteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(m.Value),0))
+						if (API.MuteGroupMember(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, long.Parse(m.Value), 0))
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "已解除" + m.Value + "的禁言", false);
-					}					
+					}
 				}
-				else if (sMsg.MessageContent=="取群列表")
+				else if (sMsg.MessageContent == "取群列表")
 				{
 
 					API.GetGroupLists(sMsg.ThisQQ, sMsg.MessageGroupQQ);
 
 				}
-				else if (sMsg.MessageContent=="取群成员列表")
+				else if (sMsg.MessageContent == "取群成员列表")
 				{
 
 					API.GetGroupMemberlists(sMsg.ThisQQ, sMsg.MessageGroupQQ);
@@ -314,10 +314,10 @@ namespace XiaolzCSharp
 					if (m.Success)
 					{
 						try
-						{							
-							API.GroupVerificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Friend_FriendRequest, "同意入群");
+						{
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Friend_FriendRequest, "同意入群");
 							API.EventDics.Remove(long.Parse(m.Value));
-							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
 						catch (Exception ex)
 						{
@@ -340,9 +340,9 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.GroupVerificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Deny, PInvoke.EventTypeEnum.Friend_FriendRequest, "拒绝入群");
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Deny, PInvoke.EventTypeEnum.Friend_FriendRequest, "拒绝入群");
 							API.EventDics.Remove(long.Parse(m.Value));
-							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
 						catch (Exception ex)
 						{
@@ -352,7 +352,7 @@ namespace XiaolzCSharp
 
 				}
 				else if (sMsg.MessageContent.Contains("同意进群"))
-                {
+				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
 					if ((new Regex("(?i)[^同意进群]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
@@ -365,7 +365,7 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							var ret= API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_Invited, "同意入群");
+							var ret = API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_Invited, "同意入群");
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已加入群:" + m.Value, false);
 						}
@@ -376,7 +376,7 @@ namespace XiaolzCSharp
 					}
 				}
 				else if (sMsg.MessageContent.Contains("拒绝进群"))
-                {
+				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
 					if ((new Regex("(?i)[^拒绝进群]")).IsMatch(output.Replace(" ", "")) == true)
 						return 0;
@@ -413,9 +413,9 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.FriendverificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, FriendVerificationOperateEnum.Agree);
+							API.FriendverificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, FriendVerificationOperateEnum.Agree);
 							API.EventDics.Remove(long.Parse(m.Value));
-							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
 						catch (Exception ex)
 						{
@@ -438,9 +438,9 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.FriendverificationEvent(PInvoke.plugin_key,sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, FriendVerificationOperateEnum.Deny);
+							API.FriendverificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, FriendVerificationOperateEnum.Deny);
 							API.EventDics.Remove(long.Parse(m.Value.ToString()));
-							API.SendGroupMsg(PInvoke.plugin_key,sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.",false);
+							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
 						catch (Exception ex)
 						{
@@ -450,23 +450,23 @@ namespace XiaolzCSharp
 					}
 				}
 				else if (sMsg.MessageContent.Contains("撤回") && sMsg.MessageContent.Contains("最近消息") && sMsg.MessageContent.Contains("条"))
-                {
+				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d-]", string.Empty);
 					if (new Regex("(?i)[^撤回最近消息条]").IsMatch(output.Replace(" ", "")) == true)
 						return 0;
-					string szQQID="123";
-					int Number=0;
+					string szQQID = "123";
+					int Number = 0;
 					MatchCollection matches = new Regex("\\d+").Matches(sMsg.MessageContent);
 					if (matches.Count > 2) return 0;
 					foreach (Match match in matches)
 					{
-						if (match.Value.ToString().Length >=6 )
+						if (match.Value.ToString().Length >= 6)
 						{
-							szQQID= match.Value;
+							szQQID = match.Value;
 						}
-						else if(match.Value.ToString().Length < 3)
-                        {
-							Number= int.Parse(match.Value);
+						else if (match.Value.ToString().Length < 3)
+						{
+							Number = int.Parse(match.Value);
 						}
 					}
 					List<List<string>> MsgList = SqliHelper.ReadData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp" }, "ORDER BY ID DESC LIMIT " + Number, "QQID like '" + szQQID + "'");
@@ -478,11 +478,11 @@ namespace XiaolzCSharp
 						if (sucess)
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已撤回" + szQQID + "最近消息" + n.ToString() + "条", false);
 					}
-					
+
 
 				}
-				else if (sMsg.MessageContent=="压力测试")
-                {
+				else if (sMsg.MessageContent == "压力测试")
+				{
 					token = cts.Token;
 					Task.Factory.StartNew(() =>
 					{
@@ -492,7 +492,7 @@ namespace XiaolzCSharp
 							i = i + 1;
 							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" + DateTime.Now.ToString(), false);
 							//API.SendGroupMsg(API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" +DateTime.Now.ToString());
-							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, i.ToString(),false);
+							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, i.ToString(), false);
 							Thread.Sleep(500);
 						}
 					}, token);

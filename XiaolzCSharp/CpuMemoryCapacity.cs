@@ -99,7 +99,7 @@ namespace XiaolzCSharp
             {
                 foreach (ManagementObject obj in searcher.Get())
                 {
-                    status.Add(string.Format("{0:0000.00}", Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2)) + "MB (使用内存)  "+ "进程名称: " + obj["Name"].ToString());
+                    status.Add(string.Format("{0:0000.00}", Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2)) + "MB (使用内存)  " + "进程名称: " + obj["Name"].ToString());
                 }
                 status.Sort();
                 status.Reverse();
@@ -107,42 +107,42 @@ namespace XiaolzCSharp
             }
         }
         public static List<string> GetCpuUsage()
+        {
+            List<string> status = new List<string>();
+            //using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT IDProcess,Name,PercentProcessorTime,WorkingSetPrivate,Timestamp_Sys100NS FROM Win32_PerfFormattedData_PerfProc_Process Where Name <> '_Total' AND Name <> 'Idle'"))
+            //{
+            //    foreach (ManagementObject obj in searcher.Get())
+            //    {
+            //        var T = obj["Timestamp_Sys100NS"];
+            //        Thread.Sleep(100);
+            //       status.Add(Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " + obj["Name"].ToString());
+            //    }
+            //}
+
+            var mos = new ManagementObjectSearcher("SELECT * FROM Win32_PerfRawData_PerfProc_Process Where Name <> 'Idle'");
+            var run1 = mos.Get().Cast<ManagementObject>().ToDictionary(mo => mo.Properties["Name"].Value, mo => (ulong)mo.Properties["PercentProcessorTime"].Value);
+            Thread.Sleep(1000);
+            var run2 = mos.Get().Cast<ManagementObject>().ToDictionary(mo => mo.Properties["Name"].Value, mo => (ulong)mo.Properties["PercentProcessorTime"].Value);
+
+            var total = run2["_Total"] - run1["_Total"];
+
+            foreach (var kvp in run1)
             {
-                List<string> status = new List<string>();
-                //using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT IDProcess,Name,PercentProcessorTime,WorkingSetPrivate,Timestamp_Sys100NS FROM Win32_PerfFormattedData_PerfProc_Process Where Name <> '_Total' AND Name <> 'Idle'"))
-                //{
-                //    foreach (ManagementObject obj in searcher.Get())
-                //    {
-                //        var T = obj["Timestamp_Sys100NS"];
-                //        Thread.Sleep(100);
-                //       status.Add(Math.Round(double.Parse(obj["PercentProcessorTime"].ToString()) / Environment.ProcessorCount, 2).ToString() + "% (CPU占用)  " + Math.Round(double.Parse(obj["WorkingSetPrivate"].ToString()) / 1024 / 1024, 2).ToString() + "MB (使用内存)  " + "进程名称: " + obj["Name"].ToString());
-                //    }
-                //}
-
-                var mos = new ManagementObjectSearcher("SELECT * FROM Win32_PerfRawData_PerfProc_Process Where Name <> 'Idle'");
-                var run1 = mos.Get().Cast<ManagementObject>().ToDictionary(mo => mo.Properties["Name"].Value, mo => (ulong)mo.Properties["PercentProcessorTime"].Value);
-                Thread.Sleep(1000);
-                var run2 = mos.Get().Cast<ManagementObject>().ToDictionary(mo => mo.Properties["Name"].Value, mo => (ulong)mo.Properties["PercentProcessorTime"].Value);
-
-                var total = run2["_Total"] - run1["_Total"];
-
-                foreach (var kvp in run1)
+                var proc = kvp.Key;
+                var p1 = kvp.Value;
+                if (run2.ContainsKey(proc))
                 {
-                    var proc = kvp.Key;
-                    var p1 = kvp.Value;
-                    if (run2.ContainsKey(proc))
-                    {
-                        var p2 = run2[proc];
-                        Debug.WriteLine("{0:P}:{1}", (double)(p2 - p1) / total, proc);
-                        status.Add(String.Format("{0:P}", (double)(p2 - p1) / total) + " (CPU占用)  " + "进程名称: " + proc.ToString());
-                    }
+                    var p2 = run2[proc];
+                    Debug.WriteLine("{0:P}:{1}", (double)(p2 - p1) / total, proc);
+                    status.Add(String.Format("{0:P}", (double)(p2 - p1) / total) + " (CPU占用)  " + "进程名称: " + proc.ToString());
                 }
-
-                status.Sort();
-                status.Reverse();
-
-                return status.Take(10).ToList();
             }
+
+            status.Sort();
+            status.Reverse();
+
+            return status.Take(10).ToList();
         }
+    }
 
 }
