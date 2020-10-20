@@ -7,6 +7,8 @@
 
 ![image](https://github.com/laomms/XiaolzCSharp/blob/master/admin.png)   
 
+https://youtu.be/pk-73TZQruk 
+
 
 
 
