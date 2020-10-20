@@ -17,27 +17,6 @@ namespace XiaolzCSharp
 		public static CancellationTokenSource cts = new CancellationTokenSource();
 		public static CancellationToken token = CancellationToken.None;
 
-		public string GetImageCallBack(string szGroupID, string szQQID, string szContent)
-		{
-			if (szContent.Contains("[pic,hash="))
-			{
-				MatchCollection matches = Regex.Matches(szContent, "\\[pic,hash.*?\\]", RegexOptions.Multiline | RegexOptions.IgnoreCase);
-				foreach (Match match in matches)
-				{
-					if (szGroupID == szQQID)
-					{
-						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, PInvoke.RobotQQ, 0);
-						return Marshal.PtrToStringAnsi(ImgUrl);
-					}
-					else
-					{
-						IntPtr ImgUrl = API.GetImageDownloadLink(PInvoke.plugin_key, match.Value, PInvoke.RobotQQ, long.Parse(szGroupID));
-						return Marshal.PtrToStringAnsi(ImgUrl);
-					}
-				}
-			}
-			return "";
-		}
 
 		#region 收到私聊消息
 		public static Delegate funRecvicePrivateMsg = new RecvicePrivateMsg(RecvicetPrivateMessage);
@@ -45,6 +24,7 @@ namespace XiaolzCSharp
 		public delegate int RecvicePrivateMsg(ref PrivateMessageEvent sMsg);
 		public static int RecvicetPrivateMessage(ref PrivateMessageEvent sMsg)
 		{
+			API.MyQQ = sMsg.ThisQQ;
 			long MessageRandom = 0;
 			uint MessageReq = 0;
 			if (SqliHelper.CheckDataExsit("中级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在中级权限里不反馈
@@ -94,7 +74,7 @@ namespace XiaolzCSharp
 		public delegate int RecviceGroupMsg(ref GroupMessageEvent sMsg);
 		public static int RecvicetGroupMessage(ref GroupMessageEvent sMsg)
 		{
-
+			API.MyQQ = sMsg.ThisQQ;
 			if (API.MsgRecod == true)
 				SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture), sMsg.MessageContent }); ;
 			//SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), ((long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds).ToString(), sMsg.MessageContent }); ;
@@ -207,33 +187,36 @@ namespace XiaolzCSharp
 				{
 					string SendQQ = sMsg.SenderQQ.ToString();
 					long GroupQQ = sMsg.MessageGroupQQ;
+					long thisqq = sMsg.ThisQQ;
 					new Thread(() =>
 					{
 						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.GetCpuUsage());
-						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
+						API.SendGroupMsg(PInvoke.plugin_key, thisqq, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
 					}).Start();
 				}
 				else if (sMsg.MessageContent == "查询内存占用")
 				{
 					string SendQQ = sMsg.SenderQQ.ToString();
 					long GroupQQ = sMsg.MessageGroupQQ;
+					long thisqq = sMsg.ThisQQ;
 					new Thread(() =>
 					{
 						string[] strArray = CpuMemoryCapacity.GetMemoryUsage().ToArray(); ;
 						strArray = strArray.Select(s => s.TrimStart('0')).ToArray();
-						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + string.Join(Environment.NewLine, strArray), false);
+						API.SendGroupMsg(PInvoke.plugin_key, thisqq, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + string.Join(Environment.NewLine, strArray), false);
 					}).Start();
 				}
 				else if (sMsg.MessageContent == "查询资源占用")
 				{
 					string SendQQ = sMsg.SenderQQ.ToString();
 					long GroupQQ = sMsg.MessageGroupQQ;
+					long thisqq = sMsg.ThisQQ;
 					new Thread(() =>
 					{
 						string text = string.Join(Environment.NewLine, CpuMemoryCapacity.HardwareInfo());
 						text = text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.MemoryAvailable());
 						text = text + Environment.NewLine + string.Join(Environment.NewLine, CpuMemoryCapacity.GetUsage());
-						API.SendGroupMsg(PInvoke.plugin_key, PInvoke.RobotQQ, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
+						API.SendGroupMsg(PInvoke.plugin_key, thisqq, GroupQQ, "[@" + SendQQ + "]" + Environment.NewLine + text, false);
 					}).Start();
 				}
 				else if (sMsg.MessageContent == "机器人菜单")
@@ -474,7 +457,7 @@ namespace XiaolzCSharp
 					foreach (List<string> list in MsgList)
 					{
 						n = n + 1;
-						bool sucess = API.Undo_GroupEvent(PInvoke.plugin_key, API.MyQQ, long.Parse(list[0]), long.Parse(list[3]), int.Parse(list[2]));
+						bool sucess = API.Undo_GroupEvent(PInvoke.plugin_key, sMsg.ThisQQ, long.Parse(list[0]), long.Parse(list[3]), int.Parse(list[2]));
 						if (sucess)
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已撤回" + szQQID + "最近消息" + n.ToString() + "条", false);
 					}
@@ -484,15 +467,16 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent == "压力测试")
 				{
 					token = cts.Token;
+					long thisqq = sMsg.ThisQQ;
 					Task.Factory.StartNew(() =>
 					{
 						int i = 0;
 						while (!token.IsCancellationRequested)
 						{
 							i = i + 1;
-							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" + DateTime.Now.ToString(), false);
+							API.SendGroupMsg(plugin_key, thisqq, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" + DateTime.Now.ToString(), false);
 							//API.SendGroupMsg(API.MyQQ, 66847886, "小栗子机器人插件\r\n发送群消息压力测试\r\n测试~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n" +DateTime.Now.ToString());
-							API.SendGroupMsg(plugin_key, API.MyQQ, 66847886, i.ToString(), false);
+							API.SendGroupMsg(plugin_key, thisqq, 66847886, i.ToString(), false);
 							Thread.Sleep(500);
 						}
 					}, token);
