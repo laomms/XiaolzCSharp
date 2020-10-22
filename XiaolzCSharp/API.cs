@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using static XiaolzCSharp.PInvoke;
 
 
 namespace XiaolzCSharp
@@ -26,8 +26,8 @@ namespace XiaolzCSharp
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
 		public static IntPtr apprun([MarshalAs(UnmanagedType.LPStr)] string apidata, [MarshalAs(UnmanagedType.LPStr)] string pluginkey)
 		{
-			jsonstr = apidata;
-			plugin_key = pluginkey;
+			PInvoke.jsonstr = apidata;
+			PInvoke.plugin_key = pluginkey;
 			string json = "";
 			Dictionary<string, string> JosnDict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(apidata);
 			foreach (KeyValuePair<string, string> KeyList in JosnDict)
@@ -53,7 +53,7 @@ namespace XiaolzCSharp
 			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
 			string resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 
-			var App_Info = new AppInfo();
+			var App_Info = new PInvoke.AppInfo();
 			App_Info.data = new JavaScriptSerializer().Deserialize<Object>(resultJson);
 			App_Info.sdkv = "2.7.5";
 			App_Info.appname = "群管1.0";
@@ -79,9 +79,9 @@ namespace XiaolzCSharp
 		}
 		public static string AddPermission(string desc, string json)
 		{
-			var Permission = new MyData
+			var Permission = new PInvoke.MyData
 			{
-				PermissionList = new Needapilist
+				PermissionList = new PInvoke.Needapilist
 				{
 					state = "1",
 					safe = "1",
@@ -145,7 +145,7 @@ namespace XiaolzCSharp
 		#region 取框架QQ
 		public static string CallGetLoginQQ()
 		{
-			string RetJson =Marshal.PtrToStringAnsi( GetLoginQQ(plugin_key));
+			string RetJson =Marshal.PtrToStringAnsi( GetLoginQQ(PInvoke.plugin_key));
 			try
 			{
 				dynamic root = new JavaScriptSerializer().Deserialize<Dictionary<string, Dictionary<string, object>>>(RetJson);
@@ -177,7 +177,7 @@ namespace XiaolzCSharp
 				Console.WriteLine(ex.Message.ToString());
 			}
 			//PluginStatus = false;
-			PluginStatus = true;//自己改下
+			PInvoke.PluginStatus = true;//自己改下
 			return "";
 		}
 		#endregion
@@ -192,12 +192,12 @@ namespace XiaolzCSharp
 		#endregion
 		#region 插件事件
 		public static DelegatefunEvent funEvent = new DelegatefunEvent(OnEvent);
-		public delegate void DelegatefunEvent(ref EventTypeBase EvenType);
-		public static void OnEvent(ref EventTypeBase EvenType)
+		public delegate void DelegatefunEvent(ref PInvoke.EventTypeBase EvenType);
+		public static void OnEvent(ref PInvoke.EventTypeBase EvenType)
 		{			
 			switch (EvenType.EventType)
 			{
-				case EventTypeEnum.This_SignInSuccess:
+				case PInvoke.EventTypeEnum.This_SignInSuccess:
 					Console.WriteLine("登录成功");
 					MyQQ = EvenType.ThisQQ;
 					//RobotQQ= EvenType.ThisQQ;
@@ -215,72 +215,72 @@ namespace XiaolzCSharp
 						Console.WriteLine(ex.Message.ToString());
                     }					
 					break;
-				case EventTypeEnum.Friend_NewFriend:
+				case PInvoke.EventTypeEnum.Friend_NewFriend:
 					Console.WriteLine("有新好友");
 					break;
-				case EventTypeEnum.Friend_FriendRequest:
+				case PInvoke.EventTypeEnum.Friend_FriendRequest:
 					Console.WriteLine("好友请求");					
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent + ",是否同意?", false);
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent + ",是否同意?", false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
-				case EventTypeEnum.Friend_FriendRequestAccepted:
+				case PInvoke.EventTypeEnum.Friend_FriendRequestAccepted:
 					Console.WriteLine("对方同意了您的好友请求");
 					break;
-				case EventTypeEnum.Friend_FriendRequestRefused:
+				case PInvoke.EventTypeEnum.Friend_FriendRequestRefused:
 					Console.WriteLine("对方拒绝了您的好友请求");
 					break;
-				case EventTypeEnum.Friend_Removed:
+				case PInvoke.EventTypeEnum.Friend_Removed:
 					Console.WriteLine("被好友删除");
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人删除", false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人删除", false);
 					break;
-				case EventTypeEnum.Friend_Blacklist:
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单", false);
+				case PInvoke.EventTypeEnum.Friend_Blacklist:
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人加入黑名单", false);
 					break;
-				case EventTypeEnum.Group_MemberVerifying:
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
+				case PInvoke.EventTypeEnum.Group_MemberVerifying:
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 想加入群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, (uint)EvenType.EventType));
 					break;
-				case EventTypeEnum.Group_Invited:
+				case PInvoke.EventTypeEnum.Group_Invited:
 					Console.WriteLine("我被邀请加入群");
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + EvenType.OperateQQName+ "(" + EvenType.OperateQQ.ToString() + " ) 想邀请机器人进群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetGroupData(EvenType.ThisQQ, EvenType.SourceGroupQQ), false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + EvenType.OperateQQName+ "(" + EvenType.OperateQQ.ToString() + " ) 想邀请机器人进群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetGroupData(EvenType.ThisQQ, EvenType.SourceGroupQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.SourceGroupQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.OperateQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
-				case EventTypeEnum.Group_MemberJoined:
+				case PInvoke.EventTypeEnum.Group_MemberJoined:
 					Console.WriteLine("某人加入了群");
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" + EvenType.TriggerQQName + ",欢迎你加入本群!", false);
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" + EvenType.TriggerQQName + ",欢迎你加入本群!", false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					break;
-				case EventTypeEnum.Group_MemberQuit:
+				case PInvoke.EventTypeEnum.Group_MemberQuit:
 					Console.WriteLine("某人退出了群");
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!", false);
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!", false);
 					break;
-				case EventTypeEnum.Group_MemberUndid:
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 撤回了一条消息,内容如下:" + EvenType.MessageContent, false);
+				case PInvoke.EventTypeEnum.Group_MemberUndid:
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 撤回了一条消息,内容如下:" + EvenType.MessageContent, false);
 					break;
-				case EventTypeEnum.Group_MemberInvited:
+				case PInvoke.EventTypeEnum.Group_MemberInvited:
 					Console.WriteLine("某人被邀请入群");
 
 					break;
-				case EventTypeEnum.Group_AllowUploadFile:
+				case PInvoke.EventTypeEnum.Group_AllowUploadFile:
 					Console.WriteLine("群事件_允许上传群文件");
 					break;
-				case EventTypeEnum.Group_ForbidUploadFile:
+				case PInvoke.EventTypeEnum.Group_ForbidUploadFile:
 					Console.WriteLine("群事件_禁止上传群文件");
 					break;
-				case EventTypeEnum.Group_AllowUploadPicture:
+				case PInvoke.EventTypeEnum.Group_AllowUploadPicture:
 					Console.WriteLine("群事件_允许上传相册");
 					break;
-				case EventTypeEnum.Group_ForbidUploadPicture:
+				case PInvoke.EventTypeEnum.Group_ForbidUploadPicture:
 					Console.WriteLine("群事件_禁止上传相册");
 					break;
-				case EventTypeEnum.Group_MemberKickOut:
-					API.SendGroupMsg(plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "你已被提出了群:" + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + ")", false);
+				case PInvoke.EventTypeEnum.Group_MemberKickOut:
+					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "你已被提出了群:" + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + ")", false);
 					break;
 				default:
 					Console.WriteLine(EvenType.EventType.ToString());
@@ -293,10 +293,10 @@ namespace XiaolzCSharp
 		{
 			Bitmap bitmap = new Bitmap(picpath);
 			byte[] picture = GetByteArrayByImage(bitmap);
-			IntPtr piccode = UploadFriendImage(plugin_key, thisQQ, friendQQ, is_flash, picture, picture.Length);
+			IntPtr piccode = UploadFriendImage(PInvoke.plugin_key, thisQQ, friendQQ, is_flash, picture, picture.Length);
 			long MessageRandom = 0;
 			uint MessageReq = 0;
-			IntPtr res= SendPrivateMsg(plugin_key, thisQQ, friendQQ, Marshal.PtrToStringAnsi(piccode), ref MessageRandom, ref MessageReq);
+			IntPtr res= SendPrivateMsg(PInvoke.plugin_key, thisQQ, friendQQ, Marshal.PtrToStringAnsi(piccode), ref MessageRandom, ref MessageReq);
 			return Marshal.PtrToStringAnsi(res);
 		}	
 		private byte[] GetByteArrayByImage(Bitmap bitmap)
@@ -325,33 +325,33 @@ namespace XiaolzCSharp
 		{
 			Bitmap bitmap = new Bitmap(picpath);
 			byte[] picture = GetByteArrayByImage(bitmap);
-			IntPtr piccode = UploadGroupImage(plugin_key, thisQQ, groupQQ, is_flash, picture, picture.Length);
-			IntPtr res=SendGroupMsg(plugin_key, thisQQ, groupQQ, Marshal.PtrToStringAnsi(piccode), false);
+			IntPtr piccode = UploadGroupImage(PInvoke.plugin_key, thisQQ, groupQQ, is_flash, picture, picture.Length);
+			IntPtr res=SendGroupMsg(PInvoke.plugin_key, thisQQ, groupQQ, Marshal.PtrToStringAnsi(piccode), false);
 			return Marshal.PtrToStringAnsi(res);
 		}
 		#endregion
 		#region 获取图片地址		
 		public static string GetImageLink(long thisQQ, long sendQQ, long groupQQ, string ImgGuid)
 		{
-			var ImgUrl = GetImageDownloadLink(plugin_key, ImgGuid, thisQQ, groupQQ);
+			var ImgUrl = GetImageDownloadLink(PInvoke.plugin_key, ImgGuid, thisQQ, groupQQ);
 			if (groupQQ == 0)
 			{
 				long MessageRandom = 0;
 				uint MessageReq = 0;
-				SendPrivateMsg(plugin_key, thisQQ, sendQQ, "图片地址为:" + ImgUrl + "\r\n",ref MessageRandom,ref MessageReq);
+				SendPrivateMsg(PInvoke.plugin_key, thisQQ, sendQQ, "图片地址为:" + ImgUrl + "\r\n",ref MessageRandom,ref MessageReq);
 			}
 			else
 			{
-				SendGroupMsg(plugin_key, thisQQ, groupQQ, "图片地址为:" + ImgUrl + "\r\n",false);
+				SendGroupMsg(PInvoke.plugin_key, thisQQ, groupQQ, "图片地址为:" + ImgUrl + "\r\n",false);
 			}
 			return "";
 		}
 		#endregion
 		#region 取好友列表		
 		public static int GetFriendLists(long thisQQ, long sendQQ)
-		{		
-			DataArray[] ptrArray = new DataArray[2];
-			int count = GetFriendList(plugin_key, thisQQ, ref ptrArray);
+		{
+			PInvoke.DataArray[] ptrArray = new PInvoke.DataArray[2];
+			int count = GetFriendList(PInvoke.plugin_key, thisQQ, ref ptrArray);
 			if (count > 0)
 			{
 				List<string> list = new List<string>();
@@ -361,12 +361,12 @@ namespace XiaolzCSharp
 					byte[] readByte = new byte[4];
 					Array.Copy(pAddrBytes, i * 4, readByte, 0, readByte.Length);
 					IntPtr StuctPtr = new IntPtr(BitConverter.ToInt32(readByte, 0));
-					FriendInfo info = (FriendInfo)Marshal.PtrToStructure(StuctPtr, typeof(FriendInfo));
+					PInvoke.FriendInfo info = (PInvoke.FriendInfo)Marshal.PtrToStructure(StuctPtr, typeof(PInvoke.FriendInfo));
 					list.Add(info.QQNumber.ToString() + "-" + info.Name);
 				}
 				long MessageRandom = 0;
 				uint MessageReq = 0;
-				SendPrivateMsg(plugin_key, thisQQ, sendQQ, "好友列表:" + "\r\n" + string.Join("\r\n", list), ref MessageRandom, ref MessageReq);
+				SendPrivateMsg(PInvoke.plugin_key, thisQQ, sendQQ, "好友列表:" + "\r\n" + string.Join("\r\n", list), ref MessageRandom, ref MessageReq);
 			}
 			return count;
 		}
@@ -375,8 +375,8 @@ namespace XiaolzCSharp
 		public static string GetFriendData(long thisQQ, long otherQQ)
 		{
 			string res = "";
-			GetFriendDataInfo[] pFriendInfo = new GetFriendDataInfo[2];
-			if (GetFriendInfo(plugin_key, thisQQ, otherQQ, ref pFriendInfo) == true)
+			PInvoke.GetFriendDataInfo[] pFriendInfo = new PInvoke.GetFriendDataInfo[2];
+			if (GetFriendInfo(PInvoke.plugin_key, thisQQ, otherQQ, ref pFriendInfo) == true)
 			{
 				res= new JavaScriptSerializer().Serialize(pFriendInfo[0].friendInfo);
 				dynamic result = new JavaScriptSerializer().DeserializeObject(res);
@@ -395,38 +395,41 @@ namespace XiaolzCSharp
 		#endregion
 		#region 取群成员列表
 		public static int GetGroupMemberlists(long thisQQ, long groupQQ)
-		{			
-			DataArray[] ptrArray = new DataArray[2];			
-			int count = GetGroupMemberlist(plugin_key, thisQQ, groupQQ, ref ptrArray);
+		{
+			PInvoke.DataArray[] ptrArray = new PInvoke.DataArray[2];			
+			int count = GetGroupMemberlist(PInvoke.plugin_key, thisQQ, groupQQ, ref ptrArray);
 			if (count > 0)
 			{
-				try
-                {
-					List<string> list = new List<string>();
-					byte[] pAddrBytes = ptrArray[0].pAddrList;
+				List<string> list = new List<string>();
+				{
+					PInvoke.ReadBytes = new byte[ptrArray[0].pAddrList.Length];
+					ptrArray[0].pAddrList.CopyTo(PInvoke.ReadBytes, 0);
 					for (int i = 0; i < count; i++)
 					{
-						byte[] readByte = new byte[4];
-						Array.Copy(pAddrBytes, i * 4, readByte, 0, readByte.Length);
-						IntPtr StuctPtr = new IntPtr(BitConverter.ToInt32(readByte, 0));
-						GroupMemberInfo info = (GroupMemberInfo)Marshal.PtrToStructure(StuctPtr, typeof(GroupMemberInfo));
-						list.Add(info.QQNumber + "-" + info.Name);
+						PInvoke.readbyte = new byte[4];
+						Array.Copy(PInvoke.ReadBytes, i * 4, PInvoke.readbyte, 0, PInvoke.readbyte.Length);
+						PInvoke.pStruct = new IntPtr(BitConverter.ToInt32(PInvoke.readbyte, 0));
+						try
+                        {
+							PInvoke.GroupMemberInfo info = (PInvoke.GroupMemberInfo)Marshal.PtrToStructure(PInvoke.pStruct, typeof(PInvoke.GroupMemberInfo));
+							list.Add(info.QQNumber + "-" + info.Name);
+						}
+						catch
+                        {
+							break;
+                        }						
 					}
-					SendGroupMsg(plugin_key, thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list), false);
-				}
-				catch
-                {
-
-                }			
+				}				
+				SendGroupMsg(PInvoke.plugin_key, thisQQ, groupQQ, "群成员列表:" + "\r\n" + string.Join("\r\n", list), false);	
 			}
 			return count;
 		}
 		#endregion
 		#region 取群列表
 		public static int GetGroupLists(long thisQQ, long groupQQ)
-		{		
-			DataArray[] ptrArray = new DataArray[2];
-			int count = GetGroupList(plugin_key, thisQQ, ref ptrArray);
+		{
+			PInvoke.DataArray[] ptrArray = new PInvoke.DataArray[2];
+			int count = GetGroupList(PInvoke.plugin_key, thisQQ, ref ptrArray);
 			if (count > 0)
 			{
 				List<string> list = new List<string>();
@@ -436,10 +439,10 @@ namespace XiaolzCSharp
 					byte[] readByte = new byte[4];
 					Array.Copy(pAddrBytes, i * 4, readByte, 0, readByte.Length);
 					IntPtr StuctPtr = new IntPtr(BitConverter.ToInt32(readByte, 0));
-					GroupInfo info = (GroupInfo)Marshal.PtrToStructure(StuctPtr, typeof(GroupInfo));
+					PInvoke.GroupInfo info = (PInvoke.GroupInfo)Marshal.PtrToStructure(StuctPtr, typeof(PInvoke.GroupInfo));
 					list.Add(info.GroupID.ToString() + "-" + info.GroupName);
 				}
-				SendGroupMsg(plugin_key, thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list),false);
+				SendGroupMsg(PInvoke.plugin_key, thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list),false);
 			}
 			return count;
 		}
@@ -447,10 +450,10 @@ namespace XiaolzCSharp
 		#region 取管理列表
 		public static string[] GetAdministratorLists(long thisQQ, long gruopNumber)
 		{		
-			string ret =Marshal.PtrToStringAnsi(GetAdministratorList(plugin_key, thisQQ, gruopNumber));
+			string ret =Marshal.PtrToStringAnsi(GetAdministratorList(PInvoke.plugin_key, thisQQ, gruopNumber));
 			string[] adminlist = ret.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 			Array.Resize(ref adminlist, adminlist.Length + 1);
-			adminlist[adminlist.Length - 1] = MasterQQ;
+			adminlist[adminlist.Length - 1] = PInvoke.MasterQQ;
 			return adminlist;
 		}
 		#endregion
@@ -458,32 +461,32 @@ namespace XiaolzCSharp
 		public static string GetGroupData(long thisQQ, long otherGroupQQ)
 		{
 			string res = "";
-			GroupCardInfoDatList[] pGroupInfo = new GroupCardInfoDatList[2];
-			if (GetGroupInfo(plugin_key, thisQQ, otherGroupQQ, ref pGroupInfo))
+			PInvoke.GroupCardInfoDatList[] pGroupInfo = new PInvoke.GroupCardInfoDatList[2];
+			if (GetGroupInfo(PInvoke.plugin_key, thisQQ, otherGroupQQ, ref pGroupInfo))
 			{
-				GroupCardInfo groupinfo = pGroupInfo[0].groupCardInfo;
+				PInvoke.GroupCardInfo groupinfo = pGroupInfo[0].groupCardInfo;
 				return "该群信息: " + Environment.NewLine + "群名称: " + groupinfo.GroupName + Environment.NewLine + "群介绍: " + groupinfo.GroupDescription ;
 			}
 			return res;
 		}
 		#endregion			
 		#region 取群文件列表	
-		public delegate string GetGroupFileLists(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref GroupFileInfoDataList[] groupFileInfoDataLists);
-		public List<GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
+		public delegate string GetGroupFileLists(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref PInvoke.GroupFileInfoDataList[] groupFileInfoDataLists);
+		public List<PInvoke.GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
 		{
-		
-			GroupFileInfoDataList[] pdatalist = new GroupFileInfoDataList[2];
-			GetGroupFileList(plugin_key, thisQQ, groupQQ, folder, ref pdatalist);
+
+			PInvoke.GroupFileInfoDataList[] pdatalist = new PInvoke.GroupFileInfoDataList[2];
+			GetGroupFileList(PInvoke.plugin_key, thisQQ, groupQQ, folder, ref pdatalist);
 			if (pdatalist[0].Amount > 0)
 			{
-				List<GroupFileInformation> list = new List<GroupFileInformation>();
+				List<PInvoke.GroupFileInformation> list = new List<PInvoke.GroupFileInformation>();
 				int i = 0;
 				while (i < pdatalist[0].Amount)
 				{
 					byte[] recbyte = new byte[4];
 					Array.Copy(pdatalist[0].pAddrList, i * 4, recbyte, 0, recbyte.Length);
 					IntPtr pStruct = new IntPtr(BitConverter.ToInt32(recbyte, 0));
-					GroupFileInformation gf = (GroupFileInformation)Marshal.PtrToStructure(pStruct, typeof(GroupFileInformation));
+					PInvoke.GroupFileInformation gf = (PInvoke.GroupFileInformation)Marshal.PtrToStructure(pStruct, typeof(PInvoke.GroupFileInformation));
 					list.Add(gf);
 					i += 1;
 				}
@@ -496,7 +499,7 @@ namespace XiaolzCSharp
 		public static void InitFunction()
 		{
 			//Dictionary<String, int> jsonDic = new JavaScriptSerializer().Deserialize<Dictionary<String, int>> (jsonstr);
-			dynamic json = new JavaScriptSerializer().DeserializeObject(jsonstr);
+			dynamic json = new JavaScriptSerializer().DeserializeObject(PInvoke.jsonstr);
 			RestartDelegate ReStartAPI = (RestartDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["框架重启"]), typeof(RestartDelegate));
 			restart = ReStartAPI;
 			GC.KeepAlive(restart);
@@ -615,15 +618,15 @@ namespace XiaolzCSharp
 		//获取好友列表
 		public static GetFriendListDelegate GetFriendList = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate int GetFriendListDelegate(string pkey, long thisQQ, ref DataArray[] DataInfo);
+		public delegate int GetFriendListDelegate(string pkey, long thisQQ, ref PInvoke.DataArray[] DataInfo);
 		//获取群列表
 		public static GetGroupListDelegate GetGroupList = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate int GetGroupListDelegate(string pkey, long thisQQ, ref DataArray[] DataInfo);
+		public delegate int GetGroupListDelegate(string pkey, long thisQQ, ref PInvoke.DataArray[] DataInfo);
 		//获取群会员列表
 		public static GetGroupMemberlistDelegate GetGroupMemberlist = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate int GetGroupMemberlistDelegate(string pkey, long thisQQ, long groupQQ, ref DataArray[] DataInfo);
+		public delegate int GetGroupMemberlistDelegate(string pkey, long thisQQ, long groupQQ, ref PInvoke.DataArray[] DataInfo);
 		//获取管理员列表
 		public static GetAdministratorListDelegate GetAdministratorList = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
@@ -643,11 +646,11 @@ namespace XiaolzCSharp
 		//处理好友验证事件
 		public static FriendverificationEventDelegate FriendverificationEvent = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate void FriendverificationEventDelegate(string pkey, long thisQQ, long triggerQQ, long message_seq, FriendVerificationOperateEnum operate_type);
+		public delegate void FriendverificationEventDelegate(string pkey, long thisQQ, long triggerQQ, long message_seq, PInvoke.FriendVerificationOperateEnum operate_type);
 		//处理群验证事件
 		public static GroupVerificationEventDelegate GroupVerificationEvent = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate bool GroupVerificationEventDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, GroupVerificationOperateEnum operate_type, EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
+		public delegate bool GroupVerificationEventDelegate(string pkey, long thisQQ, long source_groupQQ, long triggerQQ, long message_seq, PInvoke.GroupVerificationOperateEnum operate_type, PInvoke.EventTypeEnum event_type, [MarshalAs(UnmanagedType.LPStr)] string refuse_reason);
 		//获取图片下载链接
 		public static GetImageDownloadLinkDelegate GetImageDownloadLink = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
@@ -655,14 +658,14 @@ namespace XiaolzCSharp
 		//查询好友信息
 		public static GetFriendInfoDelegate GetFriendInfo = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate bool GetFriendInfoDelegate(string pkey, long thisQQ, long otherQQ, ref GetFriendDataInfo[] friendInfos);
+		public delegate bool GetFriendInfoDelegate(string pkey, long thisQQ, long otherQQ, ref PInvoke.GetFriendDataInfo[] friendInfos);
 		//查询群信息
 		public static GetGroupInfoDelegate GetGroupInfo = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate bool GetGroupInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GroupCardInfoDatList[] GroupInfos);
+		public delegate bool GetGroupInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref PInvoke.GroupCardInfoDatList[] GroupInfos);
 		//取群名片
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate bool GetGroupCardInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref GroupCardInfoDatList[] groupCardInfo);
+		public delegate bool GetGroupCardInfoDelegate(string pkey, long thisQQ, long otherGroupQQ, ref PInvoke.GroupCardInfoDatList[] groupCardInfo);
 		//设置群名片
 		public static SetupGroupCardInfoDelegate SetupGroupCardInfo = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
@@ -707,10 +710,10 @@ namespace XiaolzCSharp
 		public delegate bool ModifyPrivateMessageContent(string pkey, [MarshalAs(UnmanagedType.SysInt)] int data_pointer, [MarshalAs(UnmanagedType.LPStr)] string new_message_content);
 		//群聊画图红包
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GroupDrawRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial, ref GetCaptchaInfoDataList[] captchaInfo);
+		public delegate IntPtr GroupDrawRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial, ref PInvoke.GetCaptchaInfoDataList[] captchaInfo);
 		//好友普通红包
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr FriendNormalRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, int skinID, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial, ref GetCaptchaInfoDataList[] ciDataLists);
+		public delegate IntPtr FriendNormalRedEnvelope(string pkey, long thisQQ, int total_number, int total_amount, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string question, int skinID, [MarshalAs(UnmanagedType.LPStr)] string payment_password, int card_serial, ref PInvoke.GetCaptchaInfoDataList[] ciDataLists);
 		// 好友文件转发至好友
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool FriendFileToFriend(string pkey, long thisQQ, long sourceQQ, long targetQQ, [MarshalAs(UnmanagedType.LPStr)] string fileID, [MarshalAs(UnmanagedType.LPStr)] string file_name, long file_size, ref int msgReq, ref long Random, ref int time);
@@ -725,7 +728,7 @@ namespace XiaolzCSharp
 		public delegate IntPtr GetPSKey(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
 		// 获取订单信息
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GetOrderDetail(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string orderID, ref OrderDetaildDataList[] data);
+		public delegate IntPtr GetOrderDetail(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string orderID, ref PInvoke.OrderDetaildDataList[] data);
 		// 解散群
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool DissolveGroup(string pkey, long thisQQ, long gruopNumber);
@@ -734,7 +737,8 @@ namespace XiaolzCSharp
 		public delegate IntPtr GetNameForce(string pkey, long thisQQ, long otherQQ);
 		// 取QQ钱包个人信息
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GetQQWalletPersonalInformation(string pkey, long thisQQ, ref QQWalletInfoDataList[] qQWalletInfoDataLists);
+		public delegate IntPtr GetOrderDetailDegelte(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string orderID, ref PInvoke.OrderDetaildDataList[] data);
+		public delegate IntPtr GetQQWalletPersonalInformation(string pkey, long thisQQ, ref PInvoke.QQWalletInfoDataList[] qQWalletInfoDataLists);
 		// 从缓存获取昵称
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetNameFromCache(string pkey, long otherQQ);
@@ -744,7 +748,7 @@ namespace XiaolzCSharp
 		//获取群文件列表
 		public static GetGroupFileListDelegate GetGroupFileList = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GetGroupFileListDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref GroupFileInfoDataList[] groupFileInfoDataLists);
+		public delegate IntPtr GetGroupFileListDelegate(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref PInvoke.GroupFileInfoDataList[] groupFileInfoDataLists);
 		// 群权限_新成员查看历史消息
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GroupPermission_SetInviteMethod(string pkey, long thisQQ, long groupQQ, int method);
@@ -867,7 +871,7 @@ namespace XiaolzCSharp
 		public delegate bool Modifyinformation(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string json);
 		// 取群未领红包
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GetRedEnvelope(string pkey, long thisQQ, long GroupQQ, ref RedEnvelopesDataList[] reDataList);
+		public delegate IntPtr GetRedEnvelope(string pkey, long thisQQ, long GroupQQ, ref PInvoke.RedEnvelopesDataList[] reDataList);
 		// 打好友电话
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void CallPhone(string pkey, long thisQQ, long otherQQ);
@@ -896,7 +900,7 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GroupNoticeMethod(string pkey, long thisQQ, long GroupQQ, long otherQQ, int metohd);
 		// 修改群名称
-		public delegate IntPtr GetGroupMemberBriefInfo(string pkey, long thisQQ, long GroupQQ, ref GMBriefDataList[] gMBriefDataLists);
+		public delegate IntPtr GetGroupMemberBriefInfo(string pkey, long thisQQ, long GroupQQ, ref PInvoke.GMBriefDataList[] gMBriefDataLists);
 		public delegate bool UpdataGroupName(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string NewGroupName);
 
 		#endregion

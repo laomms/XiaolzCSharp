@@ -36,6 +36,10 @@ namespace XiaolzCSharp
 
 		#endregion
 
+		public static byte[] ReadBytes { get; set; }
+		public static byte[] readbyte { get; set; }
+		public static IntPtr pStruct { get; set; }
+		public static GroupMemberInfo GMInfo { get; set; }
 
 		#region 结构体
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
@@ -145,9 +149,9 @@ namespace XiaolzCSharp
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct DataArray
 		{
-			public uint index;
-			public uint Amount;
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 4096)]
+			public int index;
+			public int Amount;
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024*100)]
 			public byte[] pAddrList;
 		}
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]

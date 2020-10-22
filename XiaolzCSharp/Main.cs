@@ -86,7 +86,7 @@ namespace XiaolzCSharp
 			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false && API.GetAdministratorLists(sMsg.ThisQQ, sMsg.MessageGroupQQ).Contains(sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
 			{
 				if (sMsg.SenderQQ != sMsg.ThisQQ)
-					API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.", false);
+					//API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.", false);
 				return 0;
 			}
 
