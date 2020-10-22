@@ -400,17 +400,24 @@ namespace XiaolzCSharp
 			int count = GetGroupMemberlist(plugin_key, thisQQ, groupQQ, ref ptrArray);
 			if (count > 0)
 			{
-				List<string> list = new List<string>();
-				byte[] pAddrBytes = ptrArray[0].pAddrList;
-				for (int i = 0; i < count; i++)
-				{
-					byte[] readByte = new byte[4];
-					Array.Copy(pAddrBytes, i * 4, readByte, 0, readByte.Length);
-					IntPtr StuctPtr = new IntPtr(BitConverter.ToInt32(readByte, 0));
-					GroupMemberInfo info = (GroupMemberInfo)Marshal.PtrToStructure(StuctPtr, typeof(GroupMemberInfo));
-					list.Add(info.QQNumber + "-" + info.Name);
+				try
+                {
+					List<string> list = new List<string>();
+					byte[] pAddrBytes = ptrArray[0].pAddrList;
+					for (int i = 0; i < count; i++)
+					{
+						byte[] readByte = new byte[4];
+						Array.Copy(pAddrBytes, i * 4, readByte, 0, readByte.Length);
+						IntPtr StuctPtr = new IntPtr(BitConverter.ToInt32(readByte, 0));
+						GroupMemberInfo info = (GroupMemberInfo)Marshal.PtrToStructure(StuctPtr, typeof(GroupMemberInfo));
+						list.Add(info.QQNumber + "-" + info.Name);
+					}
+					SendGroupMsg(plugin_key, thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list), false);
 				}
-				SendGroupMsg(plugin_key, thisQQ, groupQQ, "群列表:" + "\r\n" + string.Join("\r\n", list),false);
+				catch
+                {
+
+                }			
 			}
 			return count;
 		}
