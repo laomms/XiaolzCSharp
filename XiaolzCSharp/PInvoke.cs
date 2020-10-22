@@ -147,7 +147,7 @@ namespace XiaolzCSharp
 		{
 			public uint index;
 			public uint Amount;
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1024)]
+			[MarshalAs(UnmanagedType.ByValArray, SizeConst = 4096)]
 			public byte[] pAddrList;
 		}
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
