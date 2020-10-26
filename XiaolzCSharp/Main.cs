@@ -236,7 +236,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("禁言") && sMsg.MessageContent.Contains("时间") && sMsg.MessageContent.Contains("分钟"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^禁言时间分钟]")).IsMatch(output.Replace(" ", "")) == true)
+					if (new Regex("(?i)[^禁言时间分钟]").IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					string szQQID = "123";
 					uint minute = 0;
@@ -287,7 +287,7 @@ namespace XiaolzCSharp
 				else if (sMsg.MessageContent.Contains("同意") && sMsg.MessageContent.Contains("入群"))
 				{
 					string output = Regex.Replace(sMsg.MessageContent, @"[\d]", string.Empty);
-					if ((new Regex("(?i)[^同意入群]")).IsMatch(output.Replace(" ", "")) == true)
+					if (new Regex("(?i)[^同意入群]").IsMatch(output.Replace(" ", "")) == true)
 						return 0;
 					Match m = new Regex("\\d+").Match(sMsg.MessageContent);
 					if (m.Value.Length < 7)

@@ -385,7 +385,7 @@ namespace XiaolzCSharp
 				{
 					while (sqlite3_step(stmt) == SQLITE_ROW)
 					{
-						SubItemList.Clear();
+						SubItemList=new List<string>();
 						int columnCount = sqlite3_column_count(stmt);
 						for (var i = 0; i < columnCount; i++)
 						{
