@@ -491,7 +491,7 @@ namespace XiaolzCSharp
 		public static PInvoke.GroupMemberBriefInfo GetGroupMemberBriefInfoEvent(long thisQQ, long GroupQQ)
 		{
             PInvoke.GMBriefDataList[] gMBriefDataLists = new PInvoke.GMBriefDataList[2];
-			string ret = Marshal.PtrToStringAnsi(GetGroupMemberBriefInfo(plugin_key, thisQQ, GroupQQ,ref gMBriefDataLists));
+			string ret = Marshal.PtrToStringAnsi(GetGroupMemberBriefInfo(PInvoke.plugin_key, thisQQ, GroupQQ,ref gMBriefDataLists));
             PInvoke.AdminListDataList adminList = (PInvoke.AdminListDataList)Marshal.PtrToStructure(gMBriefDataLists[0].groupMemberBriefInfo.AdminiList, typeof(PInvoke.AdminListDataList));
             PInvoke.GroupMemberBriefInfo groupMemberBriefInfo = new PInvoke.GroupMemberBriefInfo();
 			groupMemberBriefInfo.GroupMAax = gMBriefDataLists[0].groupMemberBriefInfo.GroupMAax;
@@ -521,7 +521,7 @@ namespace XiaolzCSharp
 			IntPtr ret = new IntPtr();
 			try
 			{
-				ret = GetQQWalletPersonalInfo(plugin_key, thisQQ, ref QQWallet);
+				ret = GetQQWalletPersonalInfo(PInvoke.plugin_key, thisQQ, ref QQWallet);
 				Marshal.FreeHGlobal(ptr);
 			}
 			catch (Exception ex)
@@ -1014,9 +1014,7 @@ namespace XiaolzCSharp
 		//取群成员简略信息
 		public static GetGroupMemberBriefInfoDelegate GetGroupMemberBriefInfo = null;
 
-        public static string plugin_key { get; private set; }
-
-        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+          [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetGroupMemberBriefInfoDelegate(string pkey, long thisQQ, long GroupQQ, ref PInvoke.GMBriefDataList[] gMBriefDataLists);
 		//修改群名称
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
