@@ -1,5 +1,6 @@
 # XiaolzCSharp
 小栗子C# SDK  
+框架主页: https://www.xiaolz.cn/    
 使用前先在VS还原nuget包.    
     
 
