@@ -28,34 +28,31 @@ namespace XiaolzCSharp
 		{
 			PInvoke.jsonstr = apidata;
 			PInvoke.plugin_key = pluginkey;
-			string json = "";
-			Dictionary<string, string> JosnDict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(apidata);
+
+			var json = "";
+			Dictionary<string, string> JosnDict = (new JavaScriptSerializer()).Deserialize<Dictionary<string, string>>(apidata);
 			foreach (KeyValuePair<string, string> KeyList in JosnDict)
 			{
-				json= AddPermission(KeyList.Key, json);
+				json = AddPermission(KeyList.Key, json);
 			}
-			//如果要指定权限:	
-			//json = AddPermission("输出日志", json);
-			//json = AddPermission("发送好友消息", json);
-			//json = AddPermission("查询好友信息", json);
-			//json = AddPermission("查询群信息", json);
-			//json = AddPermission("发送群消息", json);
-			//json = AddPermission("取图片下载地址", json);
-			//json = AddPermission("取好友列表", json);
-			//json = AddPermission("取群成员列表", json);
-			//json = AddPermission("取群列表", json);
-			//json = AddPermission("取框架QQ", json);
-			//json = AddPermission("处理好友验证事件", json);
-			//json = AddPermission("处理群验证事件", json);
-			//json = AddPermission("撤回消息_群聊", json);
-			//json = AddPermission("撤回消息_私聊本身", json);
-			//json = AddPermission("取管理列表", json);
-			object jsonkey = new JavaScriptSerializer().DeserializeObject(json);
-			string resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
+			//json = AddPermission("输出日志", json)
+			//json = AddPermission("发送好友消息", json)
+			//json = AddPermission("查询好友信息", json)
+			//json = AddPermission("发送群消息", json)
+			//json = AddPermission("取图片下载地址", json)
+			//json = AddPermission("取好友列表", json)
+			//json = AddPermission("取群成员列表", json)
+			//json = AddPermission("取群列表", json)
+			//json = AddPermission("取框架QQ", json)
+			//json = AddPermission("框架重启", json)
+
+			object jsonkey = (new JavaScriptSerializer()).DeserializeObject(json);
+			string resultJson = (new JavaScriptSerializer()).Serialize(new { needapilist = jsonkey });
 
 			var App_Info = new PInvoke.AppInfo();
-			App_Info.data = new JavaScriptSerializer().Deserialize<Object>(resultJson);
-			App_Info.sdkv = "2.7.5";
+			App_Info.data = (new JavaScriptSerializer()).Deserialize<object>(resultJson);
+
+			App_Info.sdkv = "2.8.7.5";
 			App_Info.appname = "群管1.0";
 			App_Info.author = "网中行";
 			App_Info.describe = "这是一个群管插件,具体菜单下[机器人菜单]命令获取.";
@@ -73,24 +70,44 @@ namespace XiaolzCSharp
 			GC.KeepAlive(Main.funRecviceGroupMsg);
 			App_Info.groupmsaddres = Marshal.GetFunctionPointerForDelegate(Main.funRecviceGroupMsg).ToInt64();
 			GC.KeepAlive(funEvent);
-			App_Info.eventmsaddres = Marshal.GetFunctionPointerForDelegate(funEvent).ToInt64();
-			string res= new JavaScriptSerializer().Serialize(App_Info);
-			return Marshal.StringToHGlobalAnsi(res);
+			App_Info.banproaddres = Marshal.GetFunctionPointerForDelegate(AppDisabledEvent).ToInt64();
+			string jsonstring = (new JavaScriptSerializer()).Serialize(App_Info);
+			return Marshal.StringToHGlobalAnsi(jsonstring);
+
 		}
 		public static string AddPermission(string desc, string json)
 		{
-			var Permission = new PInvoke.MyData
+			var jsonstring = "";
+			string SensitivePermissions = "QQ点赞|获取clientkey|获取pskey|获取skey|解散群|删除好友|退群|置屏蔽好友|修改个性签名|修改昵称|上传头像|框架重启|取QQ钱包个人信息|更改群聊消息内容|更改私聊消息内容";
+			if (SensitivePermissions.Contains(desc))
 			{
-				PermissionList = new PInvoke.Needapilist
-				{
-					state = "1",
-					safe = "1",
-					desc = desc
-				}
-			};
-			JavaScriptSerializer serializer = new JavaScriptSerializer();
-			var jsonstring = serializer.Serialize(Permission).Replace("PermissionList", desc);
-			if (string.IsNullOrEmpty(json))
+				var Permission = new PInvoke.MyData
+                {
+					PermissionList = new PInvoke.Needapilist
+					{
+						state = "0",
+						safe = "0",
+						desc = desc
+					}
+				};
+				JavaScriptSerializer serializer = new JavaScriptSerializer();
+				jsonstring = serializer.Serialize(Permission).Replace("PermissionList", desc);
+			}
+			else
+			{
+				var Permission = new PInvoke.MyData
+                {
+					PermissionList = new PInvoke.Needapilist
+					{
+						state = "1",
+						safe = "1",
+						desc = desc
+					}
+				};
+				JavaScriptSerializer serializer = new JavaScriptSerializer();
+				jsonstring = serializer.Serialize(Permission).Replace("PermissionList", desc);
+			}
+			if (json == "")
 			{
 				return jsonstring;
 			}
@@ -109,8 +126,8 @@ namespace XiaolzCSharp
 			Application.ThreadException += Application_ThreadException;
 			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 			InitFunction();
-			string res = CallGetLoginQQ();
-			string sqlite3path = System.Environment.CurrentDirectory + "\\bin\\sqlite3.dll"; 
+			//string res = CallGetLoginQQ();
+			string sqlite3path = System.Environment.CurrentDirectory + "\\main\\corn\\sqlite3.dll"; 
 			SqliHelper.SetDllDirectory(sqlite3path);
 			var tablevalue = new List<string[]>() {
 				new string[]{ "`FeedbackGroup` TEXT", "`MasterQQ` TEXT" },
@@ -130,7 +147,7 @@ namespace XiaolzCSharp
 		public static int AppUnInstall()
 		{
 			//托管程序集插件不支持FreeLibrary的方式卸载插件,只支持AppDomain的方式卸载,所以要删除插件,必须先关掉框架,手动删除.
-			return 0;
+			return 1;
 		}
 
 		#endregion
@@ -139,7 +156,7 @@ namespace XiaolzCSharp
 		public delegate int DelegateAppDisabled();
 		public static int appDisable()
 		{
-			return 0;
+			return 1;
 		}
 		#endregion
 		#region 取框架QQ
@@ -469,7 +486,67 @@ namespace XiaolzCSharp
 			}
 			return res;
 		}
-		#endregion			
+		#endregion
+		#region 取群成员简略信息
+		public static PInvoke.GroupMemberBriefInfo GetGroupMemberBriefInfoEvent(long thisQQ, long GroupQQ)
+		{
+            PInvoke.GMBriefDataList[] gMBriefDataLists = new PInvoke.GMBriefDataList[2];
+			string ret = Marshal.PtrToStringAnsi(GetGroupMemberBriefInfo(plugin_key, thisQQ, GroupQQ,ref gMBriefDataLists));
+            PInvoke.AdminListDataList adminList = (PInvoke.AdminListDataList)Marshal.PtrToStructure(gMBriefDataLists[0].groupMemberBriefInfo.AdminiList, typeof(PInvoke.AdminListDataList));
+            PInvoke.GroupMemberBriefInfo groupMemberBriefInfo = new PInvoke.GroupMemberBriefInfo();
+			groupMemberBriefInfo.GroupMAax = gMBriefDataLists[0].groupMemberBriefInfo.GroupMAax;
+			groupMemberBriefInfo.GroupOwner = gMBriefDataLists[0].groupMemberBriefInfo.GroupOwner;
+			groupMemberBriefInfo.GruoupNum = gMBriefDataLists[0].groupMemberBriefInfo.GruoupNum;
+			return groupMemberBriefInfo;
+		}
+		#endregion
+		#region 取QQ钱包个人信息
+		public static string GetQQWalletPersonalInformationEvent(long thisQQ)
+		{
+			var ptr = Marshal.AllocHGlobal(4);
+            PInvoke.CardInformation CardInfo = new PInvoke.CardInformation();
+			Marshal.StructureToPtr(CardInfo, ptr, false);
+            PInvoke.CardListIntptr[] ptrs = new PInvoke.CardListIntptr[1];
+			ptrs[0].addr = ptr;
+
+            PInvoke.QQWalletInformation QQWalletInfo = new PInvoke.QQWalletInformation();
+			QQWalletInfo.balance = "";
+			QQWalletInfo.realname = "";
+			QQWalletInfo.id = "";
+			QQWalletInfo.cardlist = ptrs;
+
+            PInvoke.QQWalletDataList[] QQWallet = new PInvoke.QQWalletDataList[1];
+			QQWallet[0].QQWalletInfo = QQWalletInfo;
+
+			IntPtr ret = new IntPtr();
+			try
+			{
+				ret = GetQQWalletPersonalInfo(plugin_key, thisQQ, ref QQWallet);
+				Marshal.FreeHGlobal(ptr);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message.ToString());         
+	     	}
+            PInvoke.DataArray DataList = (PInvoke.DataArray)Marshal.PtrToStructure(QQWallet[0].QQWalletInfo.cardlist[0].addr, typeof(PInvoke.DataArray));
+			List<PInvoke.CardInformation> list = new List<PInvoke.CardInformation>();
+			if (DataList.Amount > 0)
+			{
+				byte[] pAddrBytes = DataList.pAddrList;
+				for (int i = 0; i < DataList.Amount; i++)
+				{
+					byte[] readByte = new byte[4];
+					Array.Copy(pAddrBytes, i * 4, readByte, 0, readByte.Length);
+					IntPtr StuctPtr = new IntPtr(BitConverter.ToInt32(readByte, 0));
+                    PInvoke.CardInformation info = (PInvoke.CardInformation)Marshal.PtrToStructure(StuctPtr, typeof(PInvoke.CardInformation));
+					list.Add(info);
+				}
+			}
+			//Return retQQWalletInformation
+			return Marshal.PtrToStringAnsi(ret);
+		}
+		#endregion
+
 		#region 取群文件列表	
 		public delegate string GetGroupFileLists(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref PInvoke.GroupFileInfoDataList[] groupFileInfoDataLists);
 		public List<PInvoke.GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
@@ -590,6 +667,27 @@ namespace XiaolzCSharp
 			SetupAdministratorDelegate SetupAdministratorAPI = (SetupAdministratorDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["设置管理员"]), typeof(SetupAdministratorDelegate));
 			SetupAdministrator = SetupAdministratorAPI;
 			GC.KeepAlive(SetupAdministrator);
+			ShareMusicDelegate ShareMusicAPI = (ShareMusicDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["分享音乐"]), typeof(ShareMusicDelegate));
+			ShareMusic = ShareMusicAPI;
+			GC.KeepAlive(ShareMusic);
+			GetQQWalletPersonalInformation GetQQWalletPersonalInformationAPI = (GetQQWalletPersonalInformation)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取QQ钱包个人信息"]), typeof(GetQQWalletPersonalInformation));
+			GetQQWalletPersonalInfo = GetQQWalletPersonalInformationAPI;
+			GC.KeepAlive(GetQQWalletPersonalInfo);
+			GetMoneyCookieDelegate GetMoneyCookieAPI = (GetMoneyCookieDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取钱包cookie"]), typeof(GetMoneyCookieDelegate));
+			GetMoneyCookie = GetMoneyCookieAPI;
+			GC.KeepAlive(GetMoneyCookie);
+			GetClientKeyDelegate GetClientKeyAPI = (GetClientKeyDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["获取clientkey"]), typeof(GetClientKeyDelegate));
+			GetClientKey = GetClientKeyAPI;
+			GC.KeepAlive(GetClientKey);
+			GetPSKeyDelegate GetPSKeyAPI = (GetPSKeyDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["获取pskey"]), typeof(GetPSKeyDelegate));
+			GetPSKey = GetPSKeyAPI;
+			GC.KeepAlive(GetPSKey);
+			GetSKeyDelegate GetSKeyAPI = (GetSKeyDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["获取skey"]), typeof(GetSKeyDelegate));
+			GetSKey = GetSKeyAPI;
+			GC.KeepAlive(GetSKey);
+			GetGroupMemberBriefInfoDelegate GetGroupMemberBriefInfoAPI = (GetGroupMemberBriefInfoDelegate)Marshal.GetDelegateForFunctionPointer(new IntPtr(json["取群成员简略信息"]), typeof(GetGroupMemberBriefInfoDelegate));
+			GetGroupMemberBriefInfo = GetGroupMemberBriefInfoAPI;
+			GC.KeepAlive(GetGroupMemberBriefInfo);
 		}
 		#endregion
 		#region 函数委托指针
@@ -700,8 +798,9 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate void ReadForwardedChatHistoryDelegate(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string resID, [MarshalAs(UnmanagedType.LPStr)] ref string retPtr);
 		//分享音乐
+		public static ShareMusicDelegate ShareMusic = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate bool ShareMusic(string pkey, long thisQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string music_name, [MarshalAs(UnmanagedType.LPStr)] string artist_name, [MarshalAs(UnmanagedType.LPStr)] string redirect_link, [MarshalAs(UnmanagedType.LPStr)] string cover_link, [MarshalAs(UnmanagedType.LPStr)] string file_path, int app_type, int share_type);
+		public delegate bool ShareMusicDelegate(string pkey, long thisQQ, long otherQQ, [MarshalAs(UnmanagedType.LPStr)] string music_name, [MarshalAs(UnmanagedType.LPStr)] string artist_name, [MarshalAs(UnmanagedType.LPStr)] string redirect_link, [MarshalAs(UnmanagedType.LPStr)] string cover_link, [MarshalAs(UnmanagedType.LPStr)] string file_path, PInvoke.MusicAppTypeEnum app_type, PInvoke.MusicShare_Type share_type);
 		//更改群聊消息内容
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool ModifyGroupMessageContent(string pkey, [MarshalAs(UnmanagedType.SysInt)] int data_pointer, [MarshalAs(UnmanagedType.LPStr)] string new_message_content);
@@ -721,11 +820,17 @@ namespace XiaolzCSharp
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetPluginDataDirectory(string pkey);
 		// 获取ClientKey
+		public static GetClientKeyDelegate GetClientKey = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GetClientKey(string pkey, long thisQQ);
+		public delegate IntPtr GetClientKeyDelegate(string pkey, long thisQQ);
 		// 获取PSKey
+		public static GetPSKeyDelegate GetPSKey = null;
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
-		public delegate IntPtr GetPSKey(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
+		public delegate IntPtr GetPSKeyDelegate(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string domain);
+		// 获取SKey
+		public static GetSKeyDelegate GetSKey = null;
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr GetSKeyDelegate(string pkey, long thisQQ);
 		// 获取订单信息
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetOrderDetail(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string orderID, ref PInvoke.OrderDetaildDataList[] data);
@@ -735,10 +840,17 @@ namespace XiaolzCSharp
 		// 强制取昵称
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetNameForce(string pkey, long thisQQ, long otherQQ);
-		// 取QQ钱包个人信息
+		
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetOrderDetailDegelte(string pkey, long thisQQ, [MarshalAs(UnmanagedType.LPStr)] string orderID, ref PInvoke.OrderDetaildDataList[] data);
-		public delegate IntPtr GetQQWalletPersonalInformation(string pkey, long thisQQ, ref PInvoke.QQWalletInfoDataList[] qQWalletInfoDataLists);
+		// 取QQ钱包个人信息
+		public static GetQQWalletPersonalInformation GetQQWalletPersonalInfo = null;
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr GetQQWalletPersonalInformation(string pkey, long thisQQ, ref PInvoke.QQWalletDataList[] qQWalletInfoDataLists);
+		// 取钱包cookie
+		public static GetMoneyCookieDelegate GetMoneyCookie = null;
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr GetMoneyCookieDelegate(string pkey, long thisQQ);
 		// 从缓存获取昵称
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate IntPtr GetNameFromCache(string pkey, long otherQQ);
@@ -899,9 +1011,16 @@ namespace XiaolzCSharp
 		// 置群内消息通知
 		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
 		public delegate bool GroupNoticeMethod(string pkey, long thisQQ, long GroupQQ, long otherQQ, int metohd);
-		// 修改群名称
-		public delegate IntPtr GetGroupMemberBriefInfo(string pkey, long thisQQ, long GroupQQ, ref PInvoke.GMBriefDataList[] gMBriefDataLists);
-		public delegate bool UpdataGroupName(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string NewGroupName);
+		//取群成员简略信息
+		public static GetGroupMemberBriefInfoDelegate GetGroupMemberBriefInfo = null;
+
+        public static string plugin_key { get; private set; }
+
+        [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate IntPtr GetGroupMemberBriefInfoDelegate(string pkey, long thisQQ, long GroupQQ, ref PInvoke.GMBriefDataList[] gMBriefDataLists);
+		//修改群名称
+		[UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Ansi)]
+		public delegate bool UpdataGroupNameDelegate(string pkey, long thisQQ, long GroupQQ, [MarshalAs(UnmanagedType.LPStr)] string NewGroupName);
 
 		#endregion
 

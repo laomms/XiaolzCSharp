@@ -58,6 +58,11 @@ namespace XiaolzCSharp
 				{
 					API.GetFriendData(sMsg.ThisQQ, sMsg.SenderQQ);
 				}
+				else if (sMsg.MessageContent== "取钱包")
+				{
+					var ret=API.GetQQWalletPersonalInformationEvent(sMsg.ThisQQ);
+					API.SendPrivateMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.SenderQQ, ret, ref MessageRandom, ref MessageReq);
+				}
 				else
 				{
 					//复读机
