@@ -8,7 +8,11 @@
 
 ![image](https://github.com/laomms/XiaolzCSharp/blob/master/admin.png)   
 
+![image](https://github.com/laomms/XiaolzCSharp/blob/master/dllexport2.gif)   
+
 https://youtu.be/pk-73TZQruk 
+
+
 
 
 
