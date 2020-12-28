@@ -303,7 +303,7 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberVerifying, "同意入群");
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberVerifying, null);
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
