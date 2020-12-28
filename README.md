@@ -1,5 +1,6 @@
 # XiaolzCSharp
 小栗子C# SDK  
+框架主页: https://www.xiaolz.cn/    
 使用前先在VS还原nuget包.    
     
 
@@ -7,7 +8,11 @@
 
 ![image](https://github.com/laomms/XiaolzCSharp/blob/master/admin.png)   
 
+![image](https://github.com/laomms/XiaolzCSharp/blob/master/dllexport2.gif)   
+
 https://youtu.be/pk-73TZQruk 
+
+
 
 
 
