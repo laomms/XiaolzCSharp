@@ -506,14 +506,14 @@ namespace XiaolzCSharp
 			var ptr = Marshal.AllocHGlobal(4);
             PInvoke.CardInformation CardInfo = new PInvoke.CardInformation();
 			Marshal.StructureToPtr(CardInfo, ptr, false);
-            PInvoke.CardListIntptr[] ptrs = new PInvoke.CardListIntptr[1];
-			ptrs[0].addr = ptr;
+            PInvoke.CardListIntptr[] ptrCardList = new PInvoke.CardListIntptr[1];
+			ptrCardList[0].addr = ptr;
 
             PInvoke.QQWalletInformation QQWalletInfo = new PInvoke.QQWalletInformation();
 			QQWalletInfo.balance = "";
 			QQWalletInfo.realname = "";
 			QQWalletInfo.id = "";
-			QQWalletInfo.cardlist = ptrs;
+			QQWalletInfo.cardlist = ptrCardList;
 
             PInvoke.QQWalletDataList[] QQWallet = new PInvoke.QQWalletDataList[1];
 			QQWallet[0].QQWalletInfo = QQWalletInfo;
@@ -546,7 +546,6 @@ namespace XiaolzCSharp
 			return Marshal.PtrToStringAnsi(ret);
 		}
 		#endregion
-
 		#region 取群文件列表	
 		public delegate string GetGroupFileLists(string pkey, long thisQQ, long groupQQ, [MarshalAs(UnmanagedType.LPStr)] string folder, ref PInvoke.GroupFileInfoDataList[] groupFileInfoDataLists);
 		public List<PInvoke.GroupFileInformation> GetGroupFileListEvent(long thisQQ, long groupQQ, string folder)
@@ -572,6 +571,7 @@ namespace XiaolzCSharp
 			return null;
 		}
 		#endregion
+
 		#region 初始化传入的函数指针
 		public static void InitFunction()
 		{

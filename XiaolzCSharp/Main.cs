@@ -303,7 +303,7 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Friend_FriendRequest, "同意入群");
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberVerifying, "同意入群");
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
@@ -328,7 +328,7 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Deny, PInvoke.EventTypeEnum.Friend_FriendRequest, "拒绝入群");
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Deny, PInvoke.EventTypeEnum.Group_MemberVerifying, "拒绝入群");
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已处理完毕.", false);
 						}
@@ -377,7 +377,7 @@ namespace XiaolzCSharp
 					{
 						try
 						{
-							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Agree, PInvoke.EventTypeEnum.Group_MemberInvited, "同意入群");
+							API.GroupVerificationEvent(PInvoke.plugin_key, sMsg.ThisQQ, API.EventDics[long.Parse(m.Value)].Item1, long.Parse(m.Value), API.EventDics[long.Parse(m.Value)].Item3, GroupVerificationOperateEnum.Deny, PInvoke.EventTypeEnum.Group_MemberInvited, "拒绝进群");
 							API.EventDics.Remove(long.Parse(m.Value));
 							API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "已拒绝邀请.", false);
 						}
