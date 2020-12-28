@@ -404,7 +404,7 @@ namespace XiaolzCSharp
 					Gender = "男";
 				else
 					Gender = "未知";
-				return "QQ资料信息: " + Environment.NewLine + "昵称: " + result["Name"] + Environment.NewLine + "年龄: " + Gender + Environment.NewLine + "等级: " + result["Level"] + Environment.NewLine + "国籍: " + result["Nation"] + Environment.NewLine + "签名: " + result["Signature"];
+				return "QQ资料信息: " + Environment.NewLine + "昵称: " + result["Name"] + Environment.NewLine + "性别: " + Gender + Environment.NewLine + "年龄: " + result["Age"] + Environment.NewLine + "等级: " + result["Level"] + Environment.NewLine + "国籍: " + result["Nation"] + Environment.NewLine + "签名: " + result["Signature"];
 					
 			}
 			return res;
