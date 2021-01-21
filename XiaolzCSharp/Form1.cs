@@ -294,7 +294,7 @@ namespace XiaolzCSharp
                 {
                     foreach (ListViewItem item in listView4.SelectedItems)
                     {
-                        bool sucess = API.Undo_GroupEvent(PInvoke.plugin_key, API.MyQQ, long.Parse(item.SubItems[1].Text), long.Parse(item.SubItems[4].Text), int.Parse(item.SubItems[3].Text));
+                        bool sucess = API.Undo_GroupEvent(PInvoke.plugin_key, PInvoke.RobotQQ, long.Parse(item.SubItems[1].Text), long.Parse(item.SubItems[4].Text), int.Parse(item.SubItems[3].Text));
                         if (sucess)
                             MessageBox.Show("已撤回该消息.");
                     }

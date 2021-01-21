@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,7 +18,7 @@ namespace XiaolzCSharp
 	{
 		public static CancellationTokenSource cts = new CancellationTokenSource();
 		public static CancellationToken token = CancellationToken.None;
-
+		private long RobotQQ = 0;
 
 		#region 收到私聊消息
 		public static Delegate funRecvicePrivateMsg = new RecvicePrivateMsg(RecvicetPrivateMessage);
@@ -24,21 +26,31 @@ namespace XiaolzCSharp
 		public delegate int RecvicePrivateMsg(ref PrivateMessageEvent sMsg);
 		public static int RecvicetPrivateMessage(ref PrivateMessageEvent sMsg)
 		{
-			API.MyQQ = sMsg.ThisQQ;
+			PInvoke.RobotQQ = sMsg.ThisQQ;
 			long MessageRandom = 0;
 			uint MessageReq = 0;
-			if (SqliHelper.CheckDataExsit("中级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在中级权限里不反馈
-			{
-				if (sMsg.SenderQQ != sMsg.ThisQQ)
-				{
+			//if (SqliHelper.CheckDataExsit("中级权限", "QQID", sMsg.SenderQQ.ToString()) == false)//如果不在中级权限里不反馈
+			//{
+			//	if (sMsg.SenderQQ != sMsg.ThisQQ)
+			//	{
 
-				}
+			//	}
 
-			}
+			//}
 			if (sMsg.SenderQQ != sMsg.ThisQQ)
 			{
-
-				if (sMsg.MessageContent.Contains("[pic,hash="))
+				if (sMsg.MessageContent.Contains("发图片"))
+                {
+					//自带资源
+					Bitmap image1 = new Bitmap(Properties.Resources.PIC);
+					byte[] picture = API.GetByteArrayByImage(image1);
+					//指定文件
+					//Image.Save(My.Computer.FileSystem.SpecialDirectories.Temp + "\1_temp.gif", ImageFormat.Gif)
+					//Dim picture() As Byte = File.ReadAllBytes(My.Computer.FileSystem.SpecialDirectories.Temp + "\1_temp.gif")
+					string piccode = Marshal.PtrToStringAnsi(API.UploadFriendImage(plugin_key, sMsg.ThisQQ,sMsg.SenderQQ, false, picture, picture.Length));
+					API.SendPrivateMsg(plugin_key, sMsg.ThisQQ, sMsg.SenderQQ, piccode,  ref MessageRandom, ref MessageReq);
+				}
+				else if (sMsg.MessageContent.Contains("[pic,hash="))
 				{
 					MatchCollection matches = Regex.Matches(sMsg.MessageContent, "\\[pic,hash.*?\\]", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
@@ -79,25 +91,36 @@ namespace XiaolzCSharp
 		public delegate int RecviceGroupMsg(ref GroupMessageEvent sMsg);
 		public static int RecvicetGroupMessage(ref GroupMessageEvent sMsg)
 		{
-			API.MyQQ = sMsg.ThisQQ;
+			PInvoke.RobotQQ = sMsg.ThisQQ;
 			if (API.MsgRecod == true)
 				SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss tt", CultureInfo.InvariantCulture), sMsg.MessageContent }); ;
 			//SqliHelper.InsertData("消息记录", new string[] { "GroupID", "QQID", "MessageReq", "MessageRandom", "TimeStamp", "Msg" }, new string[] { sMsg.MessageGroupQQ.ToString(), sMsg.SenderQQ.ToString(), sMsg.MessageReq.ToString(), sMsg.MessageRandom.ToString(), ((long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds).ToString(), sMsg.MessageContent }); ;
-			if (SqliHelper.CheckDataExsit("授权群号", "GroupID", sMsg.MessageGroupQQ.ToString()) == false)//如果不在高级权限里不反馈
-			{
-				return 0;
-			}
+			//if (SqliHelper.CheckDataExsit("授权群号", "GroupID", sMsg.MessageGroupQQ.ToString()) == false)//如果不在高级权限里不反馈
+			//{
+			//	return 0;
+			//}
 
-			if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false && API.GetAdministratorLists(sMsg.ThisQQ, sMsg.MessageGroupQQ).Contains(sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
-			{
-				if (sMsg.SenderQQ != sMsg.ThisQQ)
-					//API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.", false);
-				return 0;
-			}
+			//if (SqliHelper.CheckDataExsit("高级权限", "QQID", sMsg.SenderQQ.ToString()) == false && API.GetAdministratorLists(sMsg.ThisQQ, sMsg.MessageGroupQQ).Contains(sMsg.SenderQQ.ToString()) == false)//如果不在高级权限里不反馈
+			//{
+			//	if (sMsg.SenderQQ != sMsg.ThisQQ)
+			//		//API.SendGroupMsg(PInvoke.plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, "[@" + sMsg.SenderQQ.ToString() + "]" + "抱歉!你的QQ号不在高级授权名单.", false);
+			//	return 0;
+			//}
 
 			if (sMsg.SenderQQ != sMsg.ThisQQ)
 			{
-				if (sMsg.MessageContent.Contains("[pic,hash="))
+				if (sMsg.MessageContent.Contains("发图片"))
+				{
+					//自带资源
+					Bitmap image1 = new Bitmap(Properties.Resources.PIC);
+					byte[] picture = API.GetByteArrayByImage(image1);
+					//指定文件
+					//Image.Save(My.Computer.FileSystem.SpecialDirectories.Temp + "\1_temp.gif", ImageFormat.Gif)
+					//Dim picture() As Byte = File.ReadAllBytes(My.Computer.FileSystem.SpecialDirectories.Temp + "\1_temp.gif")
+					string piccode = Marshal.PtrToStringAnsi(API.UploadGroupImage(plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, false, picture, picture.Length));
+					API.SendGroupMsg(plugin_key, sMsg.ThisQQ, sMsg.MessageGroupQQ, piccode, false);
+				}
+				else if (sMsg.MessageContent.Contains("[pic,hash="))
 				{
 					MatchCollection matches = Regex.Matches(sMsg.MessageContent, "\\[pic,hash.*?\\]", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 

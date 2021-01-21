@@ -20,7 +20,6 @@ namespace XiaolzCSharp
 	{
 		public static Dictionary<long, Tuple<long, string, long, uint>> EventDics = new Dictionary<long, Tuple<long, string, long, uint>>();
 		public static bool MsgRecod=false;
-		public static long MyQQ = 0;
 
 		#region 导出函数给框架并取到两个参数值
 		[DllExport(CallingConvention = CallingConvention.StdCall)]
@@ -216,8 +215,6 @@ namespace XiaolzCSharp
 			{
 				case PInvoke.EventTypeEnum.This_SignInSuccess:
 					Console.WriteLine("登录成功");
-					MyQQ = EvenType.ThisQQ;
-					//RobotQQ= EvenType.ThisQQ;
 					try
                     {
 						List<List<string>> MasterInfo = SqliHelper.ReadData("主人信息", new string[] { "FeedbackGroup", "MasterQQ", }, "", "FeedbackGroup like '%%'");
@@ -315,8 +312,8 @@ namespace XiaolzCSharp
 			uint MessageReq = 0;
 			IntPtr res= SendPrivateMsg(PInvoke.plugin_key, thisQQ, friendQQ, Marshal.PtrToStringAnsi(piccode), ref MessageRandom, ref MessageReq);
 			return Marshal.PtrToStringAnsi(res);
-		}	
-		private byte[] GetByteArrayByImage(Bitmap bitmap)
+		}
+		public static byte[] GetByteArrayByImage(Bitmap bitmap)
 		{
 			byte[] result = null;
 			try
