@@ -18,7 +18,7 @@ namespace XiaolzCSharp
 	{
 		public static CancellationTokenSource cts = new CancellationTokenSource();
 		public static CancellationToken token = CancellationToken.None;
-		private long RobotQQ = 0;
+	
 
 		#region 收到私聊消息
 		public static Delegate funRecvicePrivateMsg = new RecvicePrivateMsg(RecvicetPrivateMessage);

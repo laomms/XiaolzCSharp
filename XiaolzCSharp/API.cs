@@ -29,29 +29,19 @@ namespace XiaolzCSharp
 			PInvoke.plugin_key = pluginkey;
 
 			var json = "";
-			Dictionary<string, string> JosnDict = (new JavaScriptSerializer()).Deserialize<Dictionary<string, string>>(apidata);
+			Dictionary<string, string> JosnDict = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(apidata);
 			foreach (KeyValuePair<string, string> KeyList in JosnDict)
 			{
 				json = AddPermission(KeyList.Key, json);
 			}
-			//json = AddPermission("输出日志", json)
-			//json = AddPermission("发送好友消息", json)
-			//json = AddPermission("查询好友信息", json)
-			//json = AddPermission("发送群消息", json)
-			//json = AddPermission("取图片下载地址", json)
-			//json = AddPermission("取好友列表", json)
-			//json = AddPermission("取群成员列表", json)
-			//json = AddPermission("取群列表", json)
-			//json = AddPermission("取框架QQ", json)
-			//json = AddPermission("框架重启", json)
 
-			object jsonkey = (new JavaScriptSerializer()).DeserializeObject(json);
-			string resultJson = (new JavaScriptSerializer()).Serialize(new { needapilist = jsonkey });
+			dynamic jsonkey = new JavaScriptSerializer().DeserializeObject(json);
+			string resultJson = new JavaScriptSerializer().Serialize(new { needapilist = jsonkey });
 
 			var App_Info = new PInvoke.AppInfo();
-			App_Info.data = (new JavaScriptSerializer()).Deserialize<object>(resultJson);
+			App_Info.data = new JavaScriptSerializer().Deserialize<object>(resultJson);
 
-			App_Info.sdkv = "2.8.7.5";
+			App_Info.sdkv = "2.9.5";
 			App_Info.appname = "群管1.0";
 			App_Info.author = "网中行";
 			App_Info.describe = "这是一个群管插件,具体菜单下[机器人菜单]命令获取.";
@@ -69,10 +59,9 @@ namespace XiaolzCSharp
 			GC.KeepAlive(Main.funRecviceGroupMsg);
 			App_Info.groupmsaddres = Marshal.GetFunctionPointerForDelegate(Main.funRecviceGroupMsg).ToInt64();
 			GC.KeepAlive(funEvent);
-			App_Info.banproaddres = Marshal.GetFunctionPointerForDelegate(AppDisabledEvent).ToInt64();
-			string jsonstring = (new JavaScriptSerializer()).Serialize(App_Info);
+			App_Info.eventmsaddres = Marshal.GetFunctionPointerForDelegate(funEvent).ToInt64();
+			string jsonstring = new JavaScriptSerializer().Serialize(App_Info);
 			return Marshal.StringToHGlobalAnsi(jsonstring);
-
 		}
 		public static string AddPermission(string desc, string json)
 		{
@@ -190,7 +179,7 @@ namespace XiaolzCSharp
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message.ToString());
+				Debug.Print(ex.Message.ToString());
 			}
 			//PluginStatus = false;
 			PInvoke.PluginStatus = true;//自己改下
@@ -200,11 +189,42 @@ namespace XiaolzCSharp
 		#region 插件设置
 		public static DelegateAppSetting AppSettingEvent = new DelegateAppSetting(AppSetting);
 		public delegate void DelegateAppSetting();
+		private static string currentAppSetting;
 		public static void AppSetting()
+		{
+			currentAppSetting = "AppSetting1";
+			ShowAppSettingMenu();
+		}
+
+		private static void ShowAppSettingMenu()
+		{
+			ContextMenuStrip appSettingMenu = new ContextMenuStrip();
+			if (currentAppSetting == "AppSetting1")
+			{
+				ToolStripMenuItem childMenuItem1 = new ToolStripMenuItem("设置");
+				childMenuItem1.Click += new EventHandler(ChildMenuItem1_Click);
+				ToolStripMenuItem childMenuItem2 = new ToolStripMenuItem("权限");
+				childMenuItem2.Click += new EventHandler(ChildMenuItem2_Click);
+				appSettingMenu.Items.Add(childMenuItem1);
+				appSettingMenu.Items.Add(childMenuItem2);
+			}
+			else if (currentAppSetting == "AppSetting2")
+			{
+
+			}
+			appSettingMenu.Show(Cursor.Position);
+		}
+		private static void ChildMenuItem1_Click(object sender, EventArgs e)
 		{
 			Form1 frm = new Form1();
 			frm.Show();
 		}
+		private static void ChildMenuItem2_Click(object sender, EventArgs e)
+		{
+			Form2 frm = new Form2();
+			frm.Show();
+		}
+
 		#endregion
 		#region 插件事件
 		public static DelegatefunEvent funEvent = new DelegatefunEvent(OnEvent);
@@ -214,7 +234,7 @@ namespace XiaolzCSharp
 			switch (EvenType.EventType)
 			{
 				case PInvoke.EventTypeEnum.This_SignInSuccess:
-					Console.WriteLine("登录成功");
+					Debug.Print("登录成功");
 					try
                     {
 						List<List<string>> MasterInfo = SqliHelper.ReadData("主人信息", new string[] { "FeedbackGroup", "MasterQQ", }, "", "FeedbackGroup like '%%'");
@@ -226,27 +246,27 @@ namespace XiaolzCSharp
 					}
 					catch (Exception ex)
                     {
-						Console.WriteLine(ex.Message.ToString());
+						Debug.Print(ex.Message.ToString());
                     }					
 					break;
 				case PInvoke.EventTypeEnum.Friend_NewFriend:
-					Console.WriteLine("有新好友");
+					Debug.Print("有新好友");
 					break;
 				case PInvoke.EventTypeEnum.Friend_FriendRequest:
-					Console.WriteLine("好友请求");					
+					Debug.Print("好友请求");					
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + ")欲加机器人为好友,发送了这样的消息:" + EvenType.MessageContent + ",是否同意?", false);
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
 				case PInvoke.EventTypeEnum.Friend_FriendRequestAccepted:
-					Console.WriteLine("对方同意了您的好友请求");
+					Debug.Print("对方同意了您的好友请求");
 					break;
 				case PInvoke.EventTypeEnum.Friend_FriendRequestRefused:
-					Console.WriteLine("对方拒绝了您的好友请求");
+					Debug.Print("对方拒绝了您的好友请求");
 					break;
 				case PInvoke.EventTypeEnum.Friend_Removed:
-					Console.WriteLine("被好友删除");
+					Debug.Print("被好友删除");
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 将机器人删除", false);
 					break;
 				case PInvoke.EventTypeEnum.Friend_Blacklist:
@@ -259,47 +279,68 @@ namespace XiaolzCSharp
 						EventDics.Add(EvenType.TriggerQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.TriggerQQName, EvenType.MessageSeq, (uint)EvenType.EventType));
 					break;
 				case PInvoke.EventTypeEnum.Group_Invited:
-					Console.WriteLine("我被邀请加入群");
+					Debug.Print("我被邀请加入群");
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + EvenType.OperateQQName+ "(" + EvenType.OperateQQ.ToString() + " ) 想邀请机器人进群: " + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + " )", false);
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetGroupData(EvenType.ThisQQ, EvenType.SourceGroupQQ), false);
 					if (EventDics.ContainsKey(EvenType.TriggerQQ) == false)
 						EventDics.Add(EvenType.SourceGroupQQ, new Tuple<long, string, long, uint>(EvenType.SourceGroupQQ, EvenType.OperateQQName, EvenType.MessageSeq, EvenType.EventSubType));
 					break;
 				case PInvoke.EventTypeEnum.Group_MemberJoined:
-					Console.WriteLine("某人加入了群");
+					Debug.Print("某人加入了群");
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "[@" + EvenType.TriggerQQ.ToString() + "]" + EvenType.TriggerQQName + ",欢迎你加入本群!", false);
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, PInvoke.FeedbackGroup, "[@"+ PInvoke.MasterQQ + "]" + Environment.NewLine + GetFriendData(EvenType.ThisQQ, EvenType.TriggerQQ), false);
 					break;
 				case PInvoke.EventTypeEnum.Group_MemberQuit:
-					Console.WriteLine("某人退出了群");
+					Debug.Print("某人退出了群");
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "已退出本群!", false);
 					break;
 				case PInvoke.EventTypeEnum.Group_MemberUndid:
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, EvenType.TriggerQQName + "(" + EvenType.TriggerQQ.ToString() + " ) 撤回了一条消息,内容如下:" + EvenType.MessageContent, false);
 					break;
 				case PInvoke.EventTypeEnum.Group_MemberInvited:
-					Console.WriteLine("某人被邀请入群");
+					Debug.Print("某人被邀请入群");
 
 					break;
 				case PInvoke.EventTypeEnum.Group_AllowUploadFile:
-					Console.WriteLine("群事件_允许上传群文件");
+					Debug.Print("群事件_允许上传群文件");
 					break;
 				case PInvoke.EventTypeEnum.Group_ForbidUploadFile:
-					Console.WriteLine("群事件_禁止上传群文件");
+					Debug.Print("群事件_禁止上传群文件");
 					break;
 				case PInvoke.EventTypeEnum.Group_AllowUploadPicture:
-					Console.WriteLine("群事件_允许上传相册");
+					Debug.Print("群事件_允许上传相册");
 					break;
 				case PInvoke.EventTypeEnum.Group_ForbidUploadPicture:
-					Console.WriteLine("群事件_禁止上传相册");
+					Debug.Print("群事件_禁止上传相册");
 					break;
 				case PInvoke.EventTypeEnum.Group_MemberKickOut:
 					API.SendGroupMsg(PInvoke.plugin_key, EvenType.ThisQQ, EvenType.SourceGroupQQ, "你已被提出了群:" + EvenType.SourceGroupName + "(" + EvenType.SourceGroupQQ.ToString() + ")", false);
 					break;
 				default:
-					Console.WriteLine(EvenType.EventType.ToString());
+					Debug.Print(EvenType.EventType.ToString());
 					break;
 			}
+		}
+		#endregion
+
+		#region 处理群验证事件
+		public static Delegate funGroupEvent = new delegateGroupEvent(GroupEvent);
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		public delegate int delegateGroupEvent(ref PInvoke.EventTypeBase EvenType);
+		public static int GroupEvent(ref PInvoke.EventTypeBase EvenType)
+		{
+			OnEvent(ref EvenType);
+			return 0;
+		}
+		#endregion
+		#region 处理好友验证事件
+		public static Delegate funPrivateEvent = new delegateGroupEvent(PrivateEvent);
+		[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+		public delegate int delegatePrivateEvent(ref PInvoke.EventTypeBase EvenType);
+		public static int PrivateEvent(ref PInvoke.EventTypeBase EvenType)
+		{
+			OnEvent(ref EvenType);
+			return 0;
 		}
 		#endregion
 		#region 发送好友图片
@@ -523,7 +564,7 @@ namespace XiaolzCSharp
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message.ToString());         
+				Debug.Print(ex.Message.ToString());         
 	     	}
             PInvoke.DataArray DataList = (PInvoke.DataArray)Marshal.PtrToStructure(QQWallet[0].QQWalletInfo.cardlist[0].addr, typeof(PInvoke.DataArray));
 			List<PInvoke.CardInformation> list = new List<PInvoke.CardInformation>();
