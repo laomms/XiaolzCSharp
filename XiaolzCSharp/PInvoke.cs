@@ -482,24 +482,34 @@ namespace XiaolzCSharp
 			Deny = 12, //拒绝
 			Ignore = 14 //忽略
 		}
-		public enum EventTypeEnum
+
+        public enum MsgDealEnum
+        {
+            Ignore = 0, //消息处理_忽略
+            Deny = 1 //消息处理_拦截
+        }
+
+
+        #region 事件类型
+        public enum EventTypeEnum
 		{
-			Friend_Removed = 100,// 好友事件_被好友删除
-			Friend_SignatureChanged = 101, // 好友事件_签名变更	
-			Friend_NameChanged = 102,// 好友事件_昵称改变
-			Friend_UserUndid = 103,// 好友事件_某人撤回事件
-			Friend_NewFriend = 104,// 好友事件_有新好友
-			Friend_FriendRequest = 105,// 好友事件_好友请求
-			Friend_FriendRequestAccepted = 106, //好友事件_对方同意了您的好友请求
-			Friend_FriendRequestRefused = 107,// 好友事件_对方拒绝了您的好友请求
-			Friend_InformationLiked = 108,// 好友事件_资料卡点赞
-			Friend_SignatureLiked = 109,// 好友事件_签名点赞
-			Friend_SignatureReplied = 110,// 好友事件_签名回复
-			Friend_TagLiked = 111,// 好友事件_个性标签点赞
-			Friend_StickerLiked = 112,// 好友事件_随心贴回复
-			Friend_StickerAdded = 113, // 好友事件_随心贴增添
-			Friend_Blacklist = 64, // 好友事件_加入黑名单
-			Group_Invited = 1,// 群事件_我被邀请加入群
+            Friend_Blacklist = 64, // 好友事件_加入黑名单          
+            Friend_Removed = 100,// 好友事件_被好友删除
+            Friend_SignatureChanged = 101, // 好友事件_签名变更	
+            Friend_NameChanged = 102,// 好友事件_昵称改变
+            Friend_UserUndid = 103,// 好友事件_某人撤回事件
+            Friend_NewFriend = 104,// 好友事件_有新好友
+            Friend_FriendRequest = 105,// 好友事件_好友请求
+            Friend_FriendRequestAccepted = 106, //好友事件_对方同意了您的好友请求
+            Friend_FriendRequestRefused = 107,// 好友事件_对方拒绝了您的好友请求
+            Friend_InformationLiked = 108,// 好友事件_资料卡点赞
+            Friend_SignatureLiked = 109,// 好友事件_签名点赞
+            Friend_SignatureReplied = 110,// 好友事件_签名回复
+            Friend_TagLiked = 111,// 好友事件_个性标签点赞
+            Friend_StickerLiked = 112,// 好友事件_随心贴回复
+            Friend_StickerAdded = 113, // 好友事件_随心贴增添
+            Friend_SystemPrompts = 114,// 好友事件_系统提示
+            Group_Invited = 1,// 群事件_我被邀请加入群
 			Group_MemberJoined = 2,// 群事件_某人加入了群
 			Group_MemberVerifying = 3,// 群事件_某人申请加群
 			Group_GroupDissolved = 4, // 群事件_群被解散
@@ -518,8 +528,8 @@ namespace XiaolzCSharp
 			Group_AllowGroupTemporary = 17,// 群事件_允许群临时会话
 			Group_ForbidGroupTemporary = 18,// 群事件_禁止群临时会话
 			Group_AllowCreateGroup = 19,// 群事件_允许发起新的群聊
-			Group_ForbidCreateGroup = 20,// 群事件_允许发起新的群聊
-			Group_AllowUploadFile = 21,// 群事件_允许上传群文件			
+			Group_ForbidCreateGroup = 20,// 群事件_禁止发起新的群聊
+            Group_AllowUploadFile = 21,// 群事件_允许上传群文件			
 			Group_ForbidUploadFile = 22,// 群事件_禁止上传群文件			
 			Group_AllowUploadPicture = 23,// 群事件_允许上传相册			
 			Group_ForbidUploadPicture = 24,// 群事件_禁止上传相册			
@@ -531,8 +541,13 @@ namespace XiaolzCSharp
 			Group_MemberKickOut = 30,// 群事件_我被踢出
 			This_SignInSuccess = 31,// 框架事件_登录成功
 			Group_GroupNameUpdate = 32,// 群事件_群名变更
-		}
-		public enum PermissionEnum
+            Group_SystemPrompts = 33,// 群事件_系统提示
+            Group_GroupAvatar = 34,// 群事件_群头像事件
+            Group_EntryEffect = 35,// 群事件_入场特效
+        }
+        #endregion
+        #region 权限,程序默认已经授权所有权限
+        public enum PermissionEnum
 		{
 			OutputLog = 0, // 输出日志
 			SendFriendMessage = 1, // 发送好友消息
@@ -623,7 +638,8 @@ namespace XiaolzCSharp
 			FriendAudioRedEnvelope = 90, // 好友语音红包
 			FriendFollowRedEnvelope = 91 // 好友接龙红包
 		}
-		public enum StatusOnlineTypeEnum
+        #endregion
+        public enum StatusOnlineTypeEnum
 		{
 			Normal = 0,
 			Battery = 1000,
@@ -652,15 +668,18 @@ namespace XiaolzCSharp
 			TalkToMe = 60,
 			DoNotDisturb = 70
 		}
-		public enum MessageTypeEnum
+
+        #region 消息类型
+        public enum MessageTypeEnum
 		{
-			Temporary = 141, // 临时会话
-			FriendUsualMessage = 166, // 好友通常消息
-			FriendFile = 529, // 好友文件
-			FriendAudio = 208, // 好友语音
-			GroupRedEnvelope = 78, // 群红包
-			GroupUsualMessage = 134 // 群聊通常消息
-		}
+            GroupTemporary = 0, // 消息类型_临时会话_群临时
+            TemporaryOfficialAccount = 129, // 消息类型_临时会话_公众号
+			GroupUsualMessage = 134, // 群聊通常消息
+            Temporary = 141, // 临时会话    
+            FriendUsualMessage = 166, // 好友通常消息		
+            WebQQ_Message = 201, // 消息类型_临时会话_网页QQ咨询		
+        }
+
 		public enum MessageSubTypeEnum
 		{
 			Temporary_Group = 0, // 临时会话_群
@@ -724,9 +743,9 @@ namespace XiaolzCSharp
 			GroupMsg = 1
 		}
 
-
-		#endregion
-		public class MyData
+        #endregion
+        #endregion
+        public class MyData
 		{
 			public Needapilist PermissionList;
 		}

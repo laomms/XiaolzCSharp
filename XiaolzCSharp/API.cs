@@ -299,7 +299,6 @@ namespace XiaolzCSharp
 					break;
 				case PInvoke.EventTypeEnum.Group_MemberInvited:
 					Debug.Print("某人被邀请入群");
-
 					break;
 				case PInvoke.EventTypeEnum.Group_AllowUploadFile:
 					Debug.Print("群事件_允许上传群文件");
